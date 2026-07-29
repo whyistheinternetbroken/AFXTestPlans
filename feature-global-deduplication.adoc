@@ -51,7 +51,7 @@ AFX::*> run local flexaggr global_dedup enable -all
 ----
 
 
-NOTE: This process can take a few minutes to complete. 
+NOTE: This process can take a few minutes to complete.
 
 You can check the current status with:
 

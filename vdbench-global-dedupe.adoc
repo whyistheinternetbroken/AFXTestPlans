@@ -1,4 +1,4 @@
-= VDBench Test Plan: NFS Storage Performance Testing
+﻿= VDBench Test Plan: NFS Storage Performance Testing
 :author: NetAIChat
 :revdate: 2026-07-27
 :revnumber: 1.0
@@ -8,6 +8,19 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
+
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 :description: NFSv4.1 with pNFS and Session Trunking - Performance Test Plan targeting 12+ GB/s throughput with 5:1 deduplication datasets
 
 == Executive Summary
@@ -18,7 +31,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 === Throughput Budget per Client
 
-[cols="2,3",options="header"]
+[.light-gray-header,cols="2,3",options="header"]
 |===
 | Parameter | Value
 
@@ -37,7 +50,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 === Client Hardware Specifications
 
-[cols="2,4",options="header"]
+[.light-gray-header,cols="2,4",options="header"]
 |===
 | Component | Specification
 
@@ -62,7 +75,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 === Network Infrastructure
 
-[cols="2,4",options="header"]
+[.light-gray-header,cols="2,4",options="header"]
 |===
 | Component | Specification
 
@@ -85,7 +98,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 Verify the ONTAP NFS server is configured with the following settings before running tests:
 
-[cols="2,2",options="header"]
+[.light-gray-header,cols="2,2",options="header"]
 |===
 | Setting | Required Value
 
@@ -193,7 +206,7 @@ To achieve a *5:1 dedupe ratio*, 80% of the data blocks must be duplicates and 2
 
 === Dedupe Parameters
 
-[cols="2,1,4",options="header"]
+[.light-gray-header,cols="2,1,4",options="header"]
 |===
 | Parameter | Value | Purpose
 
@@ -714,7 +727,7 @@ done
 
 === Performance Targets
 
-[cols="2,2,2,3",options="header"]
+[.light-gray-header,cols="2,2,2,3",options="header"]
 |===
 | Test Phase | Metric | Target | Pass Criteria
 
@@ -756,7 +769,7 @@ done
 
 === Data Efficiency Targets
 
-[cols="2,3",options="header"]
+[.light-gray-header,cols="2,3",options="header"]
 |===
 | Metric | Target
 
@@ -772,7 +785,7 @@ done
 
 === Stability Criteria
 
-[cols="2,4",options="header"]
+[.light-gray-header,cols="2,4",options="header"]
 |===
 | Metric | Criteria
 
@@ -791,7 +804,7 @@ done
 
 == Test Schedule
 
-[cols="1,3,2,2",options="header"]
+[.light-gray-header,cols="1,3,2,2",options="header"]
 |===
 | Phase | Description | Duration | Cumulative
 
@@ -910,7 +923,7 @@ grep -v "^$\|Starting\|Vdbench" ${OUTDIR}/flatfile.html | \
 
 == Troubleshooting Guide
 
-[cols="2,3,4",options="header"]
+[.light-gray-header,cols="2,3,4",options="header"]
 |===
 | Issue | Diagnosis | Resolution
 

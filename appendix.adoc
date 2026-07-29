@@ -6,6 +6,18 @@
 :source-highlighter: highlight.js
 :doctype: book
 
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 xref:index.adoc[<- Back to Index]
 
 The following sections provide supplemental reference information for this test plan.
@@ -14,7 +26,7 @@ The following sections provide supplemental reference information for this test 
 
 The following appendices provide supplemental reference information for this test plan.
 
-[cols="1,3",options="header"]
+[.light-gray-header,cols="1,3",options="header"]
 |===
 | Section | Description
 

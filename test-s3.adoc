@@ -1,10 +1,23 @@
-= Optional Test 14: S3 in ONTAP
+﻿= Optional Test 14: S3 in ONTAP
 :toc: left
 :toclevels: 4
 :sectnums:
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
+
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 
 xref:test-plans.adoc[â† Back to Test Plans]
 
@@ -20,11 +33,11 @@ This optional test plan covers configuration of S3 for use with the datasets cre
 .Test ) OPTIONAL: S3 in ONTAP
 
 
-[cols="1,1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1,1",options="header"]
 |===
-| Section | Details |  |  | 
-| Test 14 | Tester: |  | Date: | 
-| Test requirements: | No specific requirements. |  |  | 
+| Section | Details |  |  |
+| Test 14 | Tester: |  | Date: |
+| Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
 Enable S3 on the SVM +
  +
@@ -148,13 +161,13 @@ New files created via NFS will immediately show in the S3 bucket. Permissions wi
 -rw-r--r-- 1 root root 0 May 22  2025 /aiml/dataset/testfile +
  +
 # ls -la /mnt/s3_bucket/testfile +
--rw-r----- 1 root root 0 May 22  2025 /mnt/s3_bucket/testfile |  |  |  | 
+-rw-r----- 1 root root 0 May 22  2025 /mnt/s3_bucket/testfile |  |  |  |
 | Expected outcome(s): +
 A volume will be able to be presented to both NAS and object clients. +
-The same data is accessible to both NAS and object clients without needing to move. |  |  |  | 
-| Test results: |  |  |  | 
-| Test summary: |  |  |  | 
-| Comments: |  |  |  | 
+The same data is accessible to both NAS and object clients without needing to move. |  |  |  |
+| Test results: |  |  |  |
+| Test summary: |  |  |  |
+| Comments: |  |  |  |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

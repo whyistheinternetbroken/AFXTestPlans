@@ -1,10 +1,23 @@
-= Appendix: Client Tuning Considerations
+﻿= Appendix: Client Tuning Considerations
 :toc: left
 :toclevels: 4
 :sectnums:
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
+
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 
 xref:appendix.adoc[â† Back to Appendix]
 
@@ -37,7 +50,7 @@ Fewer IOPS mean fewer operations for the CPU to handle. Rather, the CPU will now
 
 When a larger window size is specified, smaller block sizes will be able to travel over a single operation and will not be broken up. For instance, 64K over 1MB will generate a single IOP.
 If multiple blocks are sent over a larger window size, then they get sent in a single packet, rather than a packet per operation. However, larger sizes can increase the latency of operations, since the storage can take longer to process the packet and send a response. If latency is critical to your workload, then setting the wsize/rsize to an optimized size might create better overall results. For instance, if your application is latency sensitive and sends 64K application blocks, then the wsize/rsize should be set to 64K.
-Larger window sizes for mount points offer flexibility across a variety of workloads, regardless of the application block sizes involved. 
+Larger window sizes for mount points offer flexibility across a variety of workloads, regardless of the application block sizes involved.
 
 [[other-considerations]]
 ==== Other considerations
@@ -55,7 +68,7 @@ The recommendation for this test plan is to use a 1MB block size for mount point
 === Close-to-open consistency and cache attribute timers
 
 NFS uses a loose consistency model. The consistency is loose because the application doesn't have to go to shared storage and fetch data every time to use it. Such a scenario would have a tremendous impact to application performance. There are two mechanisms that manage this process: cache attribute timers and close-to-open consistency.
-_If the client has complete ownership of data, that is, it's not shared between multiple nodes or systems, there is guaranteed consistency.__ If the dataset is rarely changed during the course of a read workload, then consistency can be assumed._ 
+_If the client has complete ownership of data, that is, it's not shared between multiple nodes or systems, there is guaranteed consistency.__ If the dataset is rarely changed during the course of a read workload, then consistency can be assumed._
 In that case, you can reduce the getattr access operations to storage and speed up the application by turning off close-to-open (cto) consistency (nocto as a mount option) and by turning up the timeouts for the attribute cache management (actimeo=600 as a mount option changes the timer to 10m versus the defaults acregmin=3,acregmax=30,acdirmin=30,acdirmax=60). In some testing, nocto reduces approximately 65-70% of the getattr access calls, and adjusting actimeo reduces these calls another 20-25%. Getattr calls can be costly to overall performance, so if the calls are unnecessary because the data is guaranteed consistent, it is best to reduce those calls as much as possible.
 
 [[how-attribute-cache-timers-work]]
@@ -89,9 +102,9 @@ The recommendation for this test plan is to use the _actimeo=600_ and _nocto_ mo
 [[nconnect]]
 === Nconnect
 
-Using the nconnect mount option allows you to specify the number of connections (network flows) that should be established between the NFS client and NFS endpoint up to a limit of 16. Traditionally, an NFS client uses a single connection between itself and the endpoint. Increasing the number of network flows can increase the upper limits of I/O and throughput significantly. 
+Using the nconnect mount option allows you to specify the number of connections (network flows) that should be established between the NFS client and NFS endpoint up to a limit of 16. Traditionally, an NFS client uses a single connection between itself and the endpoint. Increasing the number of network flows can increase the upper limits of I/O and throughput significantly.
 
-NOTE: nconnect does not operate well with session trunking and pNFS. 
+NOTE: nconnect does not operate well with session trunking and pNFS.
 
 
 [[recommendation]]
@@ -106,10 +119,10 @@ For workloads that leverage NFSv4.1 + pNFS + session trunking, nconnect is not a
 NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystems rsize. For details on rsize/wsize, see the section above.
 The following table shows the default read-ahead values for each given rsize mount option.
 
-.Table ) Default readahead values -- older Linux versions
+.Default readahead values -- older Linux versions
 
 
-[cols="1,1",options="header"]
+[.light-gray-header,cols="1,1",options="header"]
 |===
 | Rsize value | Blocks read-ahead default
 | 64 KiB | 960 KiB
@@ -120,10 +133,10 @@ The following table shows the default read-ahead values for each given rsize mou
 RHEL 8.3 and Ubuntu 18.04 introduced changes that might negatively impact client sequential read performance. Unlike earlier releases, these distributions set read-ahead to a default of 128 KiB regardless of the rsize mount option used. Upgrading from releases with the larger read-ahead value to releases with the 128-KiB default experienced decreases in sequential read performance. However, read-ahead values may be tuned upward both dynamically and persistently. For example, testing found the 15,360 KiB read value optimal compared to 3,840 KiB, 960 KiB, and 128 KiB. Not enough tests have been run beyond 15,360 KiB to determine positive or negative impact.
 The following table shows the default read-ahead values for each currently available distribution.
 
-.Table ) Default readahead values -- newer releases
+.Default readahead values -- newer releases
 
 
-[cols="1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1",options="header"]
 |===
 | Distribution | Release | Blocks read-ahead default
 | RHEL | 8.3 | 128 KiB
@@ -139,7 +152,7 @@ The following table shows the default read-ahead values for each currently avail
 ==== Managing readahead values on clients
 
 NFS read-ahead is defined at the mount point for an NFS filesystem. The default setting can be viewed and set both dynamically and persistently. For convenience, the following bash script written by Red Hat is provided for viewing or dynamically setting read-ahead for amounted NFS filesystem.
-Read-ahead can be defined either dynamically per NFS mount or persistently using udev rules as shown in the sections below. 
+Read-ahead can be defined either dynamically per NFS mount or persistently using udev rules as shown in the sections below.
 
 [[viewing-readahead-values-on-clients]]
 ==== Viewing readahead values on clients

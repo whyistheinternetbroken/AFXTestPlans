@@ -11,6 +11,10 @@
 table.light-gray-header thead th {
   background-color: #f2f2f2;
 }
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
 </style>
 ++++
 
@@ -59,7 +63,7 @@ From an application/solution perspective, relevant workloads include:
 [[if-you-are-currently-using-ontap]]
 ==== If you are currently using ONTAP
 
-If ONTAP is currently running your production workloads, this test plan will use SnapMirror to efficiently and quickly replicate volumes to NetApp AFX. 
+If ONTAP is currently running your production workloads, this test plan will use SnapMirror to efficiently and quickly replicate volumes to NetApp AFX.
 Some considerations:
 * SnapMirror *_from_* unified ONTAP to NetApp AFX can be performed with any unified ONTAP version within 2 major releases (ie, ONTAP 9.16.1 -> 9.18.1).
 * SnapMirror *_to_* unified ONTAP from NetApp AFX is only supported on unified ONTAP running ONTAP 9.16.1 when replicating FlexGroup volumes. FlexVol volumes can still use the 2 version compatibility rule.
@@ -80,16 +84,19 @@ NetApp AFX is compatible with the following data protocols:
 |===
 | NFS | SMB | Object
 
-| NFSv3
-NFSv4.0
-NFSv4.1 / NFSv4.2 (with pNFS)
-NFS over RDMA
-| SMB2.x
-SMB3.x
-Dual protocol NAS (SMB and NFS)
-| S3
-S3 + NFS dual access
-File / object multiprotocol (present an existing NAS volume as an S3 bucket)
+a|
+* NFSv3
+* NFSv4.0
+* NFSv4.1 / NFSv4.2 (with pNFS)
+* NFS over RDMA
+a|
+* SMB2.x
+* SMB3.x
+* Dual protocol NAS (SMB and NFS)
+a|
+* S3
+* S3 + NFS dual access
+* File / object multiprotocol (present an existing NAS volume as an S3 bucket)
 |===
 
 NOTE: As mentioned previously, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
@@ -98,12 +105,12 @@ NOTE: As mentioned previously, this test plan currently focuses mainly on NFS an
 [[recommended-nas-protocol-features]]
 === Recommended NAS protocol features
 
-Most modern clients have support for specific NFS features that workloads running on NetApp AFX systems can leverage and benefit from. 
+Most modern clients have support for specific NFS features that workloads running on NetApp AFX systems can leverage and benefit from.
 
 NOTE: When using NFSv4.x, use only NFSv4.1 and later.
 
 
-.Table 1. NFS features
+.NFS features
 
 
 [.light-gray-header,cols="1,1,1,1",options="header"]
@@ -122,7 +129,7 @@ Nconnect + session trunking + pNFS = not recommended | Yes | Yes
 [[volume-type-recommendation]]
 === Volume type recommendation
 
-It is highly recommended to leverage FlexGroup volumes in this test plan due to their ability to spread a working dataset across multiple nodes and CPU threads for higher performance. 
+It is highly recommended to leverage FlexGroup volumes in this test plan due to their ability to spread a working dataset across multiple nodes and CPU threads for higher performance.
 To create a FlexGroup volume in the AFX command line:
 
 [source,console]
@@ -146,7 +153,7 @@ link:https://docs.netapp.com/us-en/ontap-afx/rest/api-reference.html[REST API Re
 === S3 specific features
 
 ONTAP S3 supports a limited number of S3 features and functionality. Support for these features spans both NetApp AFX and Unified ONTAP.
-For details and recommendations, see: 
+For details and recommendations, see:
 link:https://docs.netapp.com/us-en/ontap/s3-config/index.html[Learn about S3 configuration]
 
 [[ontap-limits-considerations]]
@@ -155,7 +162,7 @@ link:https://docs.netapp.com/us-en/ontap/s3-config/index.html[Learn about S3 con
 NetApp AFX runs ONTAP, and because of that, you need to be aware of what file system limits are present in ONTAP, since testing/benchmarking can run into errors if these limits are reached.
 The following table spells out specific limits and what their impact may be on testing. The test plans attempt to build most of these into the tests to avoid unforeseen issues. For more information, see the Performance testing configuration section.
 
-.Table 2. ONTAP limits and their potential impact on testing
+.ONTAP limits and their potential impact on testing
 
 
 [.light-gray-header,cols="1,1,1",options="header"]

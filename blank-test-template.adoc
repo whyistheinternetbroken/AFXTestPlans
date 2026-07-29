@@ -6,6 +6,18 @@
 :source-highlighter: highlight.js
 :doctype: book
 
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 Use this template for any performance tests outside of the scenarios described in this test plan.
 
 
@@ -17,16 +29,16 @@ Use this template for any performance tests outside of the scenarios described a
 .Test ) Blank test template
 
 
-[cols="1,1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1,1",options="header"]
 |===
-| Section | Details |  |  | 
-| <Insert cross reference> | Tester: |  | Date: | 
-| Test requirements: |  |  |  | 
-| Test procedure: |  |  |  | 
-| Expected outcome(s): |  |  |  | 
-| Test results: |  |  |  | 
-| Test summary: |  |  |  | 
-| Comments: |  |  |  | 
+| Section | Details |  |  |
+| <Insert cross reference> | Tester: |  | Date: |
+| Test requirements: |  |  |  |
+| Test procedure: |  |  |  |
+| Expected outcome(s): |  |  |  |
+| Test results: |  |  |  |
+| Test summary: |  |  |  |
+| Comments: |  |  |  |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

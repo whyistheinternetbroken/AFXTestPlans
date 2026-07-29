@@ -29,7 +29,7 @@ If you prefer to use Ansible playbooks, you can generate sample YAML files in Sy
 === Generate an AUTH_TOKEN
 
 Auth_tokens authenticate a user to the ONTAP cluster when using the REST API. This token is required to run the scripts below.
-One way to create the AUTH_TOK value is to use the command below substituting the password string for the password provided by the account team. 
+One way to create the AUTH_TOK value is to use the command below substituting the password string for the password provided by the account team.
 
 [source,console]
 ----

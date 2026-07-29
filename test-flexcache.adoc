@@ -1,10 +1,23 @@
-= Optional Test 13: FlexCache Volume Functionality
+﻿= Optional Test 13: FlexCache Volume Functionality
 :toc: left
 :toclevels: 4
 :sectnums:
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
+
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 
 xref:test-plans.adoc[â† Back to Test Plans]
 
@@ -19,11 +32,11 @@ NetApp FlexCache volumes provide a way to localize reads on remote datasets by p
 .Test ) OPTIONAL: Use FlexCache between unified and NetApp AFX
 
 
-[cols="1,1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1,1",options="header"]
 |===
-| Section | Details |  |  | 
-| Test 13 | Tester: |  | Date: | 
-| Test requirements: | No specific requirements. |  |  | 
+| Section | Details |  |  |
+| Test 13 | Tester: |  | Date: |
+| Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
 Navigate to the NetApp AFX System Manager and login +
  +
@@ -91,15 +104,15 @@ Your data path will vary based on the data you have populated. +
  +
  +
 Run a performance test against the origin volume in unified ONTAP. Then, run it again on the pre-warmed FlexCache volume on the same dataset.  +
-Run a 2nd performance test against a different folder in unified ONTAP. Then, re-run it on a FlexCache that has not been pre-warmed to see the performance hit on a cache that needs to populate data. |  |  |  | 
+Run a 2nd performance test against a different folder in unified ONTAP. Then, re-run it on a FlexCache that has not been pre-warmed to see the performance hit on a cache that needs to populate data. |  |  |  |
 | Expected outcome(s): +
 FlexCache peering and creation should be identical to how unified ONTAP creates FlexCache volumes. +
 FlexCache in NetApp AFX should be able to leverage a unified ONTAP origin. +
 FlexCache pre-populate should allow for pre-warming of cache data. +
-FlexCache should improve read performance for local reads over remote reads. |  |  |  | 
-| Test results: |  |  |  | 
-| Test summary: |  |  |  | 
-| Comments: |  |  |  | 
+FlexCache should improve read performance for local reads over remote reads. |  |  |  |
+| Test results: |  |  |  |
+| Test summary: |  |  |  |
+| Comments: |  |  |  |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

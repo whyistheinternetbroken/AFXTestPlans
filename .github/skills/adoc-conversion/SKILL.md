@@ -59,3 +59,19 @@ Convert a DOCX document into a multi-file AsciiDoc set with consistent navigatio
 - [ ] `scripts.adoc` exists with NAS scripts link
 - [ ] Cross-links resolve
 - [ ] Any consolidation/conflict decisions are documented in notes
+
+## Table formatting conventions
+
+- Use light gray header styling for all content tables, but only the header row should be shaded:
+  - Apply the class to the table and scope CSS to `thead th` for gray headers.
+  - Force `tbody td` / `tbody th` back to white when the theme shades the full table.
+- Keep header cell labels on a single row using spaced pipes (for example: `| NFS | SMB | Object`).
+- For multi-value content inside a single table cell, use AsciiDoc cell blocks with bullets:
+  - Put `a|` immediately before the list content.
+  - Do not insert a blank line between `a|` and the first bullet.
+- Preserve special AsciiDoc table cell syntax (`a|`, `>|`, `+` line continuations) when normalizing formatting.
+- Keep table row formatting consistent:
+  - Use `|===` for table delimiters.
+  - Prefer `| ` (pipe + space) for standard cell starts.
+  - Remove trailing whitespace.
+- Use caption syntax like `.NFS features`, not `.Table 1. NFS features`; let the renderer add the table number.

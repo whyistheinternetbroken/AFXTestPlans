@@ -6,6 +6,18 @@
 :source-highlighter: highlight.js
 :doctype: book
 
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 xref:index.adoc[<- Back to Index]
 
 The following sections outline the testing NetApp encourages customers to complete as part of this test plan.
@@ -23,7 +35,7 @@ NOTE: Images in these test plans may differ from your actual lab environment. Fo
 
 == Core Tests
 
-[cols="1,3,1",options="header"]
+[.light-gray-header,cols="1,3,1",options="header"]
 |===
 | Test | Description | File
 
@@ -78,7 +90,7 @@ NOTE: Images in these test plans may differ from your actual lab environment. Fo
 
 == Optional Functional Tests
 
-[cols="1,3,1",options="header"]
+[.light-gray-header,cols="1,3,1",options="header"]
 |===
 | Test | Description | File
 
@@ -101,7 +113,7 @@ NOTE: Images in these test plans may differ from your actual lab environment. Fo
 
 == New Feature Tests (ONTAP 9.19.1)
 
-[cols="1,3,1",options="header"]
+[.light-gray-header,cols="1,3,1",options="header"]
 |===
 | Feature | Description | File
 

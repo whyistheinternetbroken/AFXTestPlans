@@ -1,10 +1,23 @@
-= Appendix: Statistics Counters
+﻿= Appendix: Statistics Counters
 :toc: left
 :toclevels: 4
 :sectnums:
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
+
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 
 xref:appendix.adoc[â† Back to Appendix]
 
@@ -21,10 +34,10 @@ This section lists relevant statistics counters for some of the sections listed 
 
 The following table defines the NFS operation types seen in ONTAP performance statistics and classifies them by metadata or IO.
 
-.Table ) NFS operation glossary
+.NFS operation glossary
 
 
-[cols="1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1",options="header"]
 |===
 | Operation | Use case | Category
 | ACCESS | Permission checks/verifcation of files/directory. | Metadata

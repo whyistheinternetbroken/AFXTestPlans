@@ -29,7 +29,7 @@ The following scripts can be used to create/delete network interfaces.
 [[netapp-afx-reinitialization-script]]
 === NetApp AFX reinitialization script
 
-If you need to re-initialize a cluster during this test plan, the following script can help with that. 
+If you need to re-initialize a cluster during this test plan, the following script can help with that.
 Be sure to review the README file. Reach out to  for any questions or improvements.
 
 [[maximum-files-monitor]]

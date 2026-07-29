@@ -1,10 +1,23 @@
-= Appendix: Storage Benchmark Testing
+﻿= Appendix: Storage Benchmark Testing
 :toc: left
 :toclevels: 4
 :sectnums:
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
+
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 
 xref:appendix.adoc[â† Back to Appendix]
 
@@ -26,12 +39,12 @@ We will be using the SPEC SFS 2020 benchmark to simulate EDA frontend, backend a
 
 The following table shows the NFS operations involved in the SPECSFS 2020 benchmark.
 
-.Table ) Frontend EDA NFS operations -- SPECSFS 2020
+.Frontend EDA NFS operations -- SPECSFS 2020
 
 
-[cols="1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1",options="header"]
 |===
-| NFS operation distribution |  |  | 
+| NFS operation distribution |  |  |
 | Operation type | % | Operation type | %
 | read | 0 | read file | 7
 | mmap read | 0 | random read | 8
@@ -57,12 +70,12 @@ NOTE: Due to the metadata-heavy nature of frontend EDA workloads, it is recommen
 
 The following table shows the NFS operations involved in the SPECSFS 2020 benchmark.
 
-.Table ) Backend EDA NFS operations -- SPECSFS 2020
+.Backend EDA NFS operations -- SPECSFS 2020
 
 
-[cols="1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1",options="header"]
 |===
-| NFS operation distribution |  |  | 
+| NFS operation distribution |  |  |
 | Operation type | % | Operation type | %
 | read | 50 | read file | 0
 | mmap read | 0 | random read | 0
@@ -88,10 +101,10 @@ NOTE: Since backend EDA workloads are read/write heavy with very little metadata
 
 The following section attempts to define the operations mentioned in the frontend and backend workload sections above.
 
-.Table ) NFS operation types in SPEC SFS 2020
+.NFS operation types in SPEC SFS 2020
 
 
-[cols="1,1",options="header"]
+[.light-gray-header,cols="1,1",options="header"]
 |===
 | Operation type | What it does
 | read | Sequential reads to an already open file.
@@ -246,19 +259,19 @@ Cosmoflow is a deep learning model that attempts to model the universe and predi
 The following table shows a breakdown of the NFS operations seen during a training run of each model. The point of this table is to help make decisions about how to best configure storage and clients for these benchmark runs.
 These were generated using default NFS mount options and a 1MB rsize.
 
-.Table ) NFS operations percent per model during runs
+.NFS operations percent per model during runs
 
 
-[cols="1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1",options="header"]
 |===
 |  | U-Net3D | Resnet50 | Cosmoflow
 | Number of files trained | 12000 | 2395 | 242954
 | ACCESS | <1% |  | 5%
 | CLOSE | <1% |  | 5%
 | COMPOUND | 90% | 98% | 31%
-| CREATE | <1% |  | 
+| CREATE | <1% |  |
 | GETATTR | <1% |  | 8%
-| GETDEVICEINFO (pNFS) | <1% |  | 
+| GETDEVICEINFO (pNFS) | <1% |  |
 | OPEN | <1% |  | 5%
 | PUTFH | 4% | <1% | 25%
 | READ | 89% | 98% | 17%
@@ -271,20 +284,20 @@ These were generated using default NFS mount options and a 1MB rsize.
 
 The following table shows the incoming block sizes observed for each training workload test on a 1MB mount using default mount options.
 
-.Table ) Block size for READ operations
+.Block size for READ operations
 
 
-[cols="1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1",options="header"]
 |===
 |  | U-Net3D | Resnet50 | Cosmoflow
 | Number of files trained | 12000 | 2395 | 242954
 | Average file size | ~140MB | ~136MB | ~2.7MB
-| <= 512B | 1636 |  | 
+| <= 512B | 1636 |  |
 | <= 1KB | 1794 | - | 4
 | <= 2KB | 3478 | - | 12
 | <= 4KB | 951114 | 147209 | 18581
 | <= 8KB | 5915 | 8813 | 1889
-| <= 32KB | 687 | - | 
+| <= 32KB | 687 | - |
 | <= 64KB | 1428 | 13 | -
 | <= 128KB | 2915 | 6506810 | -
 | <= 256KB | 7151 | 3259423 | -

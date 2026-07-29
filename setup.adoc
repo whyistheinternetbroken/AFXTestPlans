@@ -6,6 +6,18 @@
 :source-highlighter: highlight.js
 :doctype: book
 
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 This section covers hardware requirements, client configurations, networking, and NFS server configuration. See also xref:appendix-client-tuning.adoc[Client Tuning] for detailed NFS performance tuning.
 
 
@@ -172,7 +184,7 @@ All data network interfaces in an ONTAP SVM should be routable to all clients fo
 
 The following shows the NFS server options that should be configured for this test plan. Other NFS server options can be enabled as well (for instance, NFSv4 ACL support), but they are outside of the scope of this NetApp AFX-focused test plan.
 
-[cols="1,1",options="header"]
+[.light-gray-header,cols="1,1",options="header"]
 |===
 | Option | Value
 | v4.1 | Enabled

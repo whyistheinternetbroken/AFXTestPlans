@@ -1,10 +1,23 @@
-= Optional Test 15: Snapshots and SnapMirror
+﻿= Optional Test 15: Snapshots and SnapMirror
 :toc: left
 :toclevels: 4
 :sectnums:
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
+
+++++
+<style>
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
+</style>
+++++
+
 
 xref:test-plans.adoc[â† Back to Test Plans]
 
@@ -19,12 +32,12 @@ Snapshots and SnapMirror are integral to a complete data protection story for ON
 .Test ) OPTIONAL: Snapshots and SnapMirror during live workloads.
 
 
-[cols="1,1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1,1",options="header"]
 |===
-| Section | Details |  |  | 
-| Test 15 | Tester: |  | Date: | 
+| Section | Details |  |  |
+| Test 15 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. +
-Performance testing being run during mirroring and snapshots. |  |  | 
+Performance testing being run during mirroring and snapshots. |  |  |
 | Test procedure: +
 Snapshot steps +
 Verify benchmarks or performance workloads are running during these tests. +
@@ -101,12 +114,12 @@ cluster: cluster.cluster: 5/12/2025 12:14:46 +
      2074   1.66MB    373MB +
  +
 From the NetApp AFX GUI, update the SnapMirror relationship you created in the Data Migration section while the job is running +
-Navigate to Protection -> Replication on the NetApp AFX GUI |  |  |  | 
+Navigate to Protection -> Replication on the NetApp AFX GUI |  |  |  |
 | Expected outcome(s): +
-Snapshots and SnapMirror should not impact production workload performance in any meaningful way. |  |  |  | 
-| Test results: |  |  |  | 
-| Test summary: |  |  |  | 
-| Comments: |  |  |  | 
+Snapshots and SnapMirror should not impact production workload performance in any meaningful way. |  |  |  |
+| Test results: |  |  |  |
+| Test summary: |  |  |  |
+| Comments: |  |  |  |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
