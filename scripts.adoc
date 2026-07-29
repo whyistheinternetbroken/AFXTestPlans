@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[← Back to Appendix]
+xref:appendix.adoc[â† Back to Appendix]
 
 Scripts to support volume management, LIF management, cluster reinitialization, and NAS benchmarking.
 
@@ -44,3 +44,10 @@ A collection of NAS-specific benchmark and automation scripts is maintained in t
 link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP[https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP]
 * link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volumes[Volume creation and deletion scripts]
 * link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/networking[LIF creation and cleanup scripts]
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:appendix-statistics-counters.adoc[< Previous]
+>| xref:blank-test-template.adoc[Next >]
+|===
+// navigation-links:end

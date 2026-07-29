@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[← Back to Appendix]
+xref:appendix.adoc[â† Back to Appendix]
 
 ONTAP REST API examples for authentication, FlexGroup volume creation, deletion, network interfaces, and NFS server configuration.
 
@@ -142,4 +142,10 @@ curl -k -X GET "https://[CLUS_MGMT_IP]/api/protocols/nfs/services?fields=*&max_r
 -H  "accept: application/json" \
 -H  "authorization: Basic [INSERT AUTH_TOKEN]"
 ----
-
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:appendix-client-tuning.adoc[< Previous]
+>| xref:appendix-storage-benchmark.adoc[Next >]
+|===
+// navigation-links:end

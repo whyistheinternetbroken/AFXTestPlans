@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[← Back to Appendix]
+xref:appendix.adoc[â† Back to Appendix]
 
 Defines EDA workload terminology used throughout this test plan.
 
@@ -19,3 +19,10 @@ Specifically, these workloads are defined as follows:
 *Frontend* -- large number of small files, higher metadata
 *Backend* -- lower number of large files, 50/50 read write (sequential)
 *Blended* -- A mix of both frontend and backend workloads
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:appendix.adoc[< Previous]
+>| xref:appendix-nfs-considerations.adoc[Next >]
+|===
+// navigation-links:end

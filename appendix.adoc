@@ -45,3 +45,10 @@ The following appendices provide supplemental reference information for this tes
 | xref:additional-references.adoc[Additional References]
 | Links to NetApp technical reports and external documentation
 |===
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:feature-fabricpool.adoc[< Previous]
+>| xref:appendix-eda-terminology.adoc[Next >]
+|===
+// navigation-links:end

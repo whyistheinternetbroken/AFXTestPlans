@@ -127,3 +127,10 @@ NOTE: Images in these test plans may differ from your actual lab environment. Fo
 For NFS export policy, volume configuration, mount options, client and network configuration, and ONTAP feature settings used during performance testing, see xref:performance-test-plan.adoc[Performance Test Plan: Configuration Sections].
 
 For NFS server configuration reference, see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration].
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:datasets-workloads.adoc[< Previous]
+>| xref:performance-test-plan.adoc[Next >]
+|===
+// navigation-links:end

@@ -69,3 +69,10 @@ NetApp documentation for NetApp AFX can be found here:
 == Licensing requirements
 
 No special licenses are needed for NetApp AFX. It uses the same ONTAP licensing as unified ONTAP.
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:index.adoc[< Previous]
+>| xref:setup.adoc[Next >]
+|===
+// navigation-links:end

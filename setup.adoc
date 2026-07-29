@@ -222,3 +222,10 @@ NOTE: RDMA reduces latency and increases throughput for most workloads -- roughl
 ----
 set advanced; nfs modify -vserver [SVM] -v3 enabled -v4.1 enabled -v4.0 disabled -v4-id-domain [yourdomain.com] -v4.1-pnfs enabled -v4.1-trunking enabled -v4-64bit-identifiers enabled -v3-64bit-identifiers enabled -chown-mode unrestricted -tcp-max-xfer-size 262144 -mount-rootonly disabled -nfs-rootonly disabled -v3-hide-snapshot enabled -rdma [enabled optional]
 ----
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:overview.adoc[< Previous]
+>| xref:datasets-workloads.adoc[Next >]
+|===
+// navigation-links:end

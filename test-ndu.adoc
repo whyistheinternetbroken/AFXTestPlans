@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:test-plans.adoc[← Back to Test Plans]
+xref:test-plans.adoc[â† Back to Test Plans]
 
 This optional test validates the non-disruptive upgrade process for NetApp AFX.
 
@@ -49,7 +49,7 @@ AFX::*> cluster image package delete -version [version] +
 Package Delete Operation Completed Successfully +
  +
 Execute the upload and upgrade of ONTAP +
-AFX::> cluster image package get -url http://<webserver>/image.tgz +
+AFX::> cluster image package get -urlÂ http://<webserver>/image.tgz +
 Package download completed. +
 Package processing completed. +
  +
@@ -142,3 +142,10 @@ ONTAP Cluster will be updated with new version of ONTAP. |  |  |  |
 | Test summary: |  |  |  | 
 | Comments: |  |  |  | 
 |===
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:test-snapshots-snapmirror.adoc[< Previous]
+>| xref:feature-global-deduplication.adoc[Next >]
+|===
+// navigation-links:end

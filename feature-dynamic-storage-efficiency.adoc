@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:test-plans.adoc[← Back to Test Plans]
+xref:test-plans.adoc[â† Back to Test Plans]
 
 Dynamic storage efficiency provides adaptive compression and compaction to maximize storage space savings without impacting foreground I/O performance.
 
@@ -89,3 +89,10 @@ Delta write throughput 10 samples (in MBps):
 
 [[test-plan----dynamic-storage-efficiency]]
 === Test plan -- Dynamic storage efficiency
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:feature-global-deduplication.adoc[< Previous]
+>| xref:feature-aggressive-readahead.adoc[Next >]
+|===
+// navigation-links:end
