@@ -120,8 +120,7 @@ mount -t nfs4 -o \
   wsize=262144,\
   hard,\
   intr,\
-  nconnect=16,\
-  max_connect=16,\
+  trunkdiscovery,\
   sec=sys,\
   actimeo=0,\
   noac,\
@@ -129,18 +128,16 @@ mount -t nfs4 -o \
   <storage_ip>:/export/vdbench_test /mnt/vdbench
 ----
 
-NOTE: `nconnect=16` creates multiple TCP connections (session trunking) to the same server. `max_connect=16` (Linux 6.3+) enables connections to multiple server IPs for the same mount (clientid trunking).
+NOTE: Use either `nconnect` or session trunking (`trunkdiscovery`) with these options, but not both due to some unpredictable client behavior when combining them with pNFS.
 
-.Multi-path trunking (Linux kernel 6.3+ with max_connect)
+.Multi-path trunking (Linux kernel 6.3+ with trunkdiscovery)
 [source,bash]
 ----
-mount -t nfs4 -o vers=4.1,nconnect=8,max_connect=16,proto=tcp,rsize=262144,wsize=262144 \
+mount -t nfs4 -o vers=4.1,trunkdiscovery,proto=tcp,rsize=262144,wsize=262144 \
   storage-ip1:/export/vdbench_test /mnt/vdbench
 
-# Then add trunkable connections to additional server IPs:
-# (handled automatically by the kernel if max_connect > nconnect)
-# Or mount additional paths explicitly if kernel doesn't support auto-trunking:
-mount -t nfs4 -o vers=4.1,nconnect=8,proto=tcp,rsize=262144,wsize=262144 \
+# Optional: mount an additional path explicitly if your environment requires it:
+mount -t nfs4 -o vers=4.1,trunkdiscovery,proto=tcp,rsize=262144,wsize=262144 \
   storage-ip2:/export/vdbench_test /mnt/vdbench2
 ----
 
@@ -943,7 +940,7 @@ grep -v "^$\|Starting\|Vdbench" ${OUTDIR}/flatfile.html | \
 
 | `nconnect` ignored
 | Kernel too old
-| Requires Linux kernel ≥ 5.3 for `nconnect`, ≥ 6.3 for `max_connect`
+| Requires Linux kernel ≥ 5.3 for `nconnect`, ≥ 6.3 for `trunkdiscovery`
 |===
 
 [appendix]
