@@ -134,10 +134,13 @@ Volume creation automation scripts are available at:
 link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volumes[Benchmarking/ONTAP/volumes]
 
 To create a FlexGroup volume in System Manager:
-* Navigate to Storage -> Volumes
+
+* Navigate to Storage → Volumes
 * Click +Add
 * Select "High throughput" to create a FlexGroup
+
 To leverage REST API, see:
+link:https://docs.netapp.com/us-en/ontap-afx/rest/api-reference.html[REST API Reference]
 
 [[s3-specific-features]]
 === S3 specific features
@@ -208,7 +211,7 @@ Remediation/prevention +
 Avoid creating millions of files in a single directory when possible. +
 Monitor for maxdirsize usage via the EMS message wafl.dir.size.warning and wafl.dir.size.max.warning +
 Increase the `-maxdirsize` value to no more than 4GB if testing includes creating >2 million files in a single directory
-| TCP connections | 100,000 per node | If a TCP connection maximum is exceeded on a node, then new mounts will be disallowed until connections are freed up. This scenario is an uncommon occurrence due to the high number of connections allowed, but in Kubernetes/container environments where NFS is used, this can happen on occasion – particularly when initial mounts are occurring across many clients, TCP is not specified in the mount options, and nconnect is in use. This mainly impacts NFSv3. +
+| TCP connections | 100,000 per node | If a TCP connection maximum is exceeded on a node, then new mounts will be disallowed until connections are freed up. This scenario is an uncommon occurrence due to the high number of connections allowed, but in Kubernetes/container environments where NFS is used, this can happen on occasion â€“ particularly when initial mounts are occurring across many clients, TCP is not specified in the mount options, and nconnect is in use. This mainly impacts NFSv3. +
  +
 Remediation/prevention +
 Use the `tcp` mount option value to avoid UDP mount requests for NFSv3 +
