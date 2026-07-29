@@ -1,0 +1,947 @@
+= VDBench Test Plan: NFS Storage Performance Testing
+:author: NetAIChat
+:revdate: 2026-07-27
+:revnumber: 1.0
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+:description: NFSv4.1 with pNFS and Session Trunking - Performance Test Plan targeting 12+ GB/s throughput with 5:1 deduplication datasets
+
+== Executive Summary
+
+This test plan validates NFS storage performance using NFSv4.1 with parallel NFS (pNFS) and session trunking, targeting *12+ GB/s aggregate throughput* with *5:1 deduplication-friendly datasets*. The plan assumes modern all-flash or hybrid storage arrays with NFS capabilities.
+
+== Client Sizing & Requirements
+
+=== Throughput Budget per Client
+
+[cols="2,3",options="header"]
+|===
+| Parameter | Value
+
+| Target aggregate throughput
+| 12 GB/s (96 Gb/s)
+
+| Per-client realistic NFS throughput
+| ~1.5–2 GB/s (with 25GbE dual-port or 100GbE)
+
+| *Minimum clients required*
+| *8 clients*
+
+| *Recommended clients*
+| *10–12 clients* (headroom + consistency)
+|===
+
+=== Client Hardware Specifications
+
+[cols="2,4",options="header"]
+|===
+| Component | Specification
+
+| CPU
+| 2× Intel Xeon (16+ cores each) or AMD EPYC equivalent
+
+| RAM
+| 128 GB minimum (for VDBench cache + OS)
+
+| Network
+| 2× 25GbE (bonded/trunked) or 1× 100GbE per client
+
+| Local disk
+| NVMe SSD for OS + VDBench binary (not used for I/O)
+
+| OS
+| RHEL 8.x/9.x or Ubuntu 22.04+ with latest NFS utils
+
+| VDBench version
+| 5.04.07+ (latest stable)
+|===
+
+=== Network Infrastructure
+
+[cols="2,4",options="header"]
+|===
+| Component | Specification
+
+| Switch fabric
+| 100GbE spine/leaf with RDMA-capable NICs (optional)
+
+| MTU
+| 9000 (jumbo frames enabled end-to-end)
+
+| Session trunking
+| Multiple NFS connections per client across multiple NICs/IPs
+
+| Storage NICs
+| Minimum 4× 100GbE ports on storage (aggregate 400 Gb/s capacity)
+|===
+
+== NFS Mount Configuration
+
+=== Mount Options for NFSv4.1 + pNFS + Session Trunking
+
+.Primary mount with pNFS file layout
+[source,bash]
+----
+mount -t nfs4 -o \
+  vers=4.1,\
+  proto=tcp,\
+  rsize=1048576,\
+  wsize=1048576,\
+  hard,\
+  intr,\
+  nconnect=16,\
+  max_connect=16,\
+  sec=sys,\
+  actimeo=0,\
+  noac,\
+  nordirplus \
+  <storage_ip>:/export/vdbench_test /mnt/vdbench
+----
+
+NOTE: `nconnect=16` creates multiple TCP connections (session trunking) to the same server. `max_connect=16` (Linux 6.3+) enables connections to multiple server IPs for the same mount (clientid trunking).
+
+.Multi-path trunking (Linux kernel 6.3+ with max_connect)
+[source,bash]
+----
+mount -t nfs4 -o vers=4.1,nconnect=8,max_connect=16,proto=tcp,rsize=1048576,wsize=1048576 \
+  storage-ip1:/export/vdbench_test /mnt/vdbench
+
+# Then add trunkable connections to additional server IPs:
+# (handled automatically by the kernel if max_connect > nconnect)
+# Or mount additional paths explicitly if kernel doesn't support auto-trunking:
+mount -t nfs4 -o vers=4.1,nconnect=8,proto=tcp,rsize=1048576,wsize=1048576 \
+  storage-ip2:/export/vdbench_test /mnt/vdbench2
+----
+
+=== pNFS Verification
+
+[source,bash]
+----
+# Verify pNFS is active
+cat /proc/mounts | grep nfs4
+cat /sys/module/nfs/parameters/nfs4_pnfs_ds_timeout
+
+# Check pNFS layout type
+nfsstat -m | grep -i pnfs
+
+# Kernel module parameter to enable pNFS file layouts
+modprobe nfs_layout_nfsv41_files
+----
+
+=== Client Kernel Tuning
+
+./etc/sysctl.d/99-nfs-performance.conf
+[source,ini]
+----
+# Network tuning
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.core.rmem_default = 1048576
+net.core.wmem_default = 1048576
+net.ipv4.tcp_rmem = 4096 1048576 16777216
+net.ipv4.tcp_wmem = 4096 1048576 16777216
+net.core.netdev_max_backlog = 300000
+net.core.somaxconn = 65535
+net.ipv4.tcp_max_syn_backlog = 65535
+net.ipv4.tcp_timestamps = 1
+net.ipv4.tcp_sack = 1
+net.ipv4.tcp_window_scaling = 1
+net.core.optmem_max = 2048000
+
+# NFS-specific
+sunrpc.tcp_slot_table_entries = 256
+sunrpc.tcp_max_slot_table_entries = 256
+
+# VM tuning for large I/O
+vm.dirty_ratio = 30
+vm.dirty_background_ratio = 5
+----
+
+== Deduplication-Friendly Dataset Design (5:1 Ratio)
+
+=== Strategy
+
+To achieve a *5:1 dedupe ratio*, 80% of the data blocks must be duplicates and 20% unique. VDBench achieves this through the `dedupratio` and `dedupunit` parameters.
+
+=== Dedupe Parameters
+
+[cols="2,1,4",options="header"]
+|===
+| Parameter | Value | Purpose
+
+| `dedupratio=5`
+| 5:1
+| 80% duplicate blocks, 20% unique
+
+| `dedupunit=4k`
+| 4 KB
+| Dedup granularity matching storage inline dedupe block size
+
+| `dedupflipflop=yes`
+| Enabled
+| Ensures re-writes maintain dedupe pattern
+
+| `dedupsets=5`
+| 5 sets
+| Distributes dedupe patterns across multiple sets
+
+| `compressratio=2`
+| 2:1
+| Additional compression on unique blocks
+|===
+
+=== Effective Storage Efficiency
+
+[source,text]
+----
+Logical data written:  100 TB (across all clients)
+After 5:1 dedupe:       20 TB
+After 2:1 compression:  10 TB  (physical)
+Overall efficiency:     10:1
+----
+
+== VDBench Configuration Files
+
+=== Master Configuration — `master.vdb`
+
+.master.vdb
+[source,ini]
+----
+# ============================================================
+# VDBench Master Configuration
+# NFS v4.1 + pNFS + Session Trunking Performance Test
+# Target: 12+ GB/s with 5:1 Dedupe Ratio
+# ============================================================
+
+# --- Host Definitions (12 clients) ---
+hd=default,vdbench=/opt/vdbench,user=root,shell=ssh
+hd=hd1,system=nfs-client-01
+hd=hd2,system=nfs-client-02
+hd=hd3,system=nfs-client-03
+hd=hd4,system=nfs-client-04
+hd=hd5,system=nfs-client-05
+hd=hd6,system=nfs-client-06
+hd=hd7,system=nfs-client-07
+hd=hd8,system=nfs-client-08
+hd=hd9,system=nfs-client-09
+hd=hd10,system=nfs-client-10
+hd=hd11,system=nfs-client-11
+hd=hd12,system=nfs-client-12
+----
+
+=== Test Phase 1 — Dataset Pre-fill
+
+.phase1_prefill.vdb
+[source,ini]
+----
+# ============================================================
+# PHASE 1: Dataset Pre-fill with Dedup-Friendly Data
+# Creates ~100TB logical dataset across 12 clients
+# ============================================================
+
+include=master.vdb
+
+# --- Storage Definitions ---
+# Each client gets ~8.3 TB of logical data
+# Using multiple sub-directories per client for parallelism
+
+sd=default,openflags=o_direct,threads=32,dedupratio=5,dedupunit=4096,dedupsets=5,compressratio=2
+
+# Client 1 storage definitions
+sd=sd1a,hd=hd1,lun=/mnt/vdbench/client01/file_a,size=2100g
+sd=sd1b,hd=hd1,lun=/mnt/vdbench/client01/file_b,size=2100g
+sd=sd1c,hd=hd1,lun=/mnt/vdbench/client01/file_c,size=2100g
+sd=sd1d,hd=hd1,lun=/mnt/vdbench/client01/file_d,size=2100g
+
+# Client 2 storage definitions
+sd=sd2a,hd=hd2,lun=/mnt/vdbench/client02/file_a,size=2100g
+sd=sd2b,hd=hd2,lun=/mnt/vdbench/client02/file_b,size=2100g
+sd=sd2c,hd=hd2,lun=/mnt/vdbench/client02/file_c,size=2100g
+sd=sd2d,hd=hd2,lun=/mnt/vdbench/client02/file_d,size=2100g
+
+# Client 3
+sd=sd3a,hd=hd3,lun=/mnt/vdbench/client03/file_a,size=2100g
+sd=sd3b,hd=hd3,lun=/mnt/vdbench/client03/file_b,size=2100g
+sd=sd3c,hd=hd3,lun=/mnt/vdbench/client03/file_c,size=2100g
+sd=sd3d,hd=hd3,lun=/mnt/vdbench/client03/file_d,size=2100g
+
+# Client 4
+sd=sd4a,hd=hd4,lun=/mnt/vdbench/client04/file_a,size=2100g
+sd=sd4b,hd=hd4,lun=/mnt/vdbench/client04/file_b,size=2100g
+sd=sd4c,hd=hd4,lun=/mnt/vdbench/client04/file_c,size=2100g
+sd=sd4d,hd=hd4,lun=/mnt/vdbench/client04/file_d,size=2100g
+
+# Client 5
+sd=sd5a,hd=hd5,lun=/mnt/vdbench/client05/file_a,size=2100g
+sd=sd5b,hd=hd5,lun=/mnt/vdbench/client05/file_b,size=2100g
+sd=sd5c,hd=hd5,lun=/mnt/vdbench/client05/file_c,size=2100g
+sd=sd5d,hd=hd5,lun=/mnt/vdbench/client05/file_d,size=2100g
+
+# Client 6
+sd=sd6a,hd=hd6,lun=/mnt/vdbench/client06/file_a,size=2100g
+sd=sd6b,hd=hd6,lun=/mnt/vdbench/client06/file_b,size=2100g
+sd=sd6c,hd=hd6,lun=/mnt/vdbench/client06/file_c,size=2100g
+sd=sd6d,hd=hd6,lun=/mnt/vdbench/client06/file_d,size=2100g
+
+# Client 7
+sd=sd7a,hd=hd7,lun=/mnt/vdbench/client07/file_a,size=2100g
+sd=sd7b,hd=hd7,lun=/mnt/vdbench/client07/file_b,size=2100g
+sd=sd7c,hd=hd7,lun=/mnt/vdbench/client07/file_c,size=2100g
+sd=sd7d,hd=hd7,lun=/mnt/vdbench/client07/file_d,size=2100g
+
+# Client 8
+sd=sd8a,hd=hd8,lun=/mnt/vdbench/client08/file_a,size=2100g
+sd=sd8b,hd=hd8,lun=/mnt/vdbench/client08/file_b,size=2100g
+sd=sd8c,hd=hd8,lun=/mnt/vdbench/client08/file_c,size=2100g
+sd=sd8d,hd=hd8,lun=/mnt/vdbench/client08/file_d,size=2100g
+
+# Client 9
+sd=sd9a,hd=hd9,lun=/mnt/vdbench/client09/file_a,size=2100g
+sd=sd9b,hd=hd9,lun=/mnt/vdbench/client09/file_b,size=2100g
+sd=sd9c,hd=hd9,lun=/mnt/vdbench/client09/file_c,size=2100g
+sd=sd9d,hd=hd9,lun=/mnt/vdbench/client09/file_d,size=2100g
+
+# Client 10
+sd=sd10a,hd=hd10,lun=/mnt/vdbench/client10/file_a,size=2100g
+sd=sd10b,hd=hd10,lun=/mnt/vdbench/client10/file_b,size=2100g
+sd=sd10c,hd=hd10,lun=/mnt/vdbench/client10/file_c,size=2100g
+sd=sd10d,hd=hd10,lun=/mnt/vdbench/client10/file_d,size=2100g
+
+# Client 11
+sd=sd11a,hd=hd11,lun=/mnt/vdbench/client11/file_a,size=2100g
+sd=sd11b,hd=hd11,lun=/mnt/vdbench/client11/file_b,size=2100g
+sd=sd11c,hd=hd11,lun=/mnt/vdbench/client11/file_c,size=2100g
+sd=sd11d,hd=hd11,lun=/mnt/vdbench/client11/file_d,size=2100g
+
+# Client 12
+sd=sd12a,hd=hd12,lun=/mnt/vdbench/client12/file_a,size=2100g
+sd=sd12b,hd=hd12,lun=/mnt/vdbench/client12/file_b,size=2100g
+sd=sd12c,hd=hd12,lun=/mnt/vdbench/client12/file_c,size=2100g
+sd=sd12d,hd=hd12,lun=/mnt/vdbench/client12/file_d,size=2100g
+
+# --- Workload Definition: Sequential Write Prefill ---
+wd=wd_prefill,sd=sd*,rdpct=0,xfersize=1m,seekpct=eof
+
+# --- Run Definition ---
+rd=rd_prefill,wd=wd_prefill,iorate=max,elapsed=999h,interval=30,warmup=0,\
+   forthreshold=(throughput:12g:90)
+----
+
+=== Test Phase 2 — Sequential Read Throughput
+
+.phase2_seq_read.vdb
+[source,ini]
+----
+# ============================================================
+# PHASE 2: Sequential Read Throughput Test
+# Target: 12+ GB/s aggregate sequential read
+# ============================================================
+
+include=master.vdb
+
+# --- Storage Definitions (same as Phase 1) ---
+sd=default,openflags=o_direct,threads=32,dedupratio=5,dedupunit=4096,dedupsets=5,compressratio=2
+
+sd=sd1a,hd=hd1,lun=/mnt/vdbench/client01/file_a,size=2100g
+sd=sd1b,hd=hd1,lun=/mnt/vdbench/client01/file_b,size=2100g
+sd=sd1c,hd=hd1,lun=/mnt/vdbench/client01/file_c,size=2100g
+sd=sd1d,hd=hd1,lun=/mnt/vdbench/client01/file_d,size=2100g
+# ... (repeat for all 12 clients as in Phase 1) ...
+
+# --- Workload: 100% Sequential Read, 1MB blocks ---
+wd=wd_seqread,sd=sd*,rdpct=100,xfersize=1m,seekpct=sequential
+
+# --- Run Definition ---
+rd=rd_seqread,wd=wd_seqread,iorate=max,elapsed=600,interval=10,warmup=60
+----
+
+=== Test Phase 3 — Sequential Write Throughput
+
+.phase3_seq_write.vdb
+[source,ini]
+----
+# ============================================================
+# PHASE 3: Sequential Write Throughput Test
+# Target: 12+ GB/s aggregate sequential write
+# ============================================================
+
+include=master.vdb
+
+sd=default,openflags=o_direct,threads=32,dedupratio=5,dedupunit=4096,dedupsets=5,compressratio=2
+
+sd=sd1a,hd=hd1,lun=/mnt/vdbench/client01/file_a,size=2100g
+sd=sd1b,hd=hd1,lun=/mnt/vdbench/client01/file_b,size=2100g
+sd=sd1c,hd=hd1,lun=/mnt/vdbench/client01/file_c,size=2100g
+sd=sd1d,hd=hd1,lun=/mnt/vdbench/client01/file_d,size=2100g
+# ... (repeat for all 12 clients) ...
+
+# --- Workload: 100% Sequential Write, 1MB blocks ---
+wd=wd_seqwrite,sd=sd*,rdpct=0,xfersize=1m,seekpct=sequential
+
+# --- Run Definition ---
+rd=rd_seqwrite,wd=wd_seqwrite,iorate=max,elapsed=600,interval=10,warmup=60
+----
+
+=== Test Phase 4 — Mixed Read/Write Throughput
+
+.phase4_mixed.vdb
+[source,ini]
+----
+# ============================================================
+# PHASE 4: Mixed Sequential Read/Write (70/30)
+# Simulates real-world streaming workloads
+# ============================================================
+
+include=master.vdb
+
+sd=default,openflags=o_direct,threads=32,dedupratio=5,dedupunit=4096,dedupsets=5,compressratio=2
+
+sd=sd1a,hd=hd1,lun=/mnt/vdbench/client01/file_a,size=2100g
+sd=sd1b,hd=hd1,lun=/mnt/vdbench/client01/file_b,size=2100g
+sd=sd1c,hd=hd1,lun=/mnt/vdbench/client01/file_c,size=2100g
+sd=sd1d,hd=hd1,lun=/mnt/vdbench/client01/file_d,size=2100g
+# ... (repeat for all 12 clients) ...
+
+# --- Workload: 70% Read / 30% Write ---
+wd=wd_mixed70r,sd=sd*,rdpct=70,xfersize=1m,seekpct=sequential
+
+# --- Run Definition ---
+rd=rd_mixed70r,wd=wd_mixed70r,iorate=max,elapsed=600,interval=10,warmup=60
+----
+
+=== Test Phase 5 — Random I/O (IOPS Focused)
+
+.phase5_random.vdb
+[source,ini]
+----
+# ============================================================
+# PHASE 5: Random I/O - IOPS Test
+# Tests metadata and small-block performance with dedupe
+# ============================================================
+
+include=master.vdb
+
+sd=default,openflags=o_direct,threads=64,dedupratio=5,dedupunit=4096,dedupsets=5,compressratio=2
+
+sd=sd1a,hd=hd1,lun=/mnt/vdbench/client01/file_a,size=2100g
+sd=sd1b,hd=hd1,lun=/mnt/vdbench/client01/file_b,size=2100g
+sd=sd1c,hd=hd1,lun=/mnt/vdbench/client01/file_c,size=2100g
+sd=sd1d,hd=hd1,lun=/mnt/vdbench/client01/file_d,size=2100g
+# ... (repeat for all 12 clients) ...
+
+# --- Workloads ---
+# 5a: 100% Random Read 4K
+wd=wd_randread4k,sd=sd*,rdpct=100,xfersize=4k,seekpct=random
+
+# 5b: 100% Random Write 4K
+wd=wd_randwrite4k,sd=sd*,rdpct=0,xfersize=4k,seekpct=random
+
+# 5c: 70/30 Random Read/Write 8K
+wd=wd_randmixed8k,sd=sd*,rdpct=70,xfersize=8k,seekpct=random
+
+# --- Run Definitions ---
+rd=rd_randread4k,wd=wd_randread4k,iorate=max,elapsed=300,interval=10,warmup=60
+rd=rd_randwrite4k,wd=wd_randwrite4k,iorate=max,elapsed=300,interval=10,warmup=60
+rd=rd_randmixed8k,wd=wd_randmixed8k,iorate=max,elapsed=300,interval=10,warmup=60
+----
+
+=== Test Phase 6 — Scalability Ramp
+
+.phase6_scalability.vdb
+[source,ini]
+----
+# ============================================================
+# PHASE 6: Client Scalability Ramp Test
+# Incrementally adds clients to measure scaling efficiency
+# ============================================================
+
+include=master.vdb
+
+sd=default,openflags=o_direct,threads=32,dedupratio=5,dedupunit=4096,dedupsets=5,compressratio=2
+
+# All SDs defined as before...
+sd=sd1a,hd=hd1,lun=/mnt/vdbench/client01/file_a,size=2100g
+sd=sd1b,hd=hd1,lun=/mnt/vdbench/client01/file_b,size=2100g
+sd=sd1c,hd=hd1,lun=/mnt/vdbench/client01/file_c,size=2100g
+sd=sd1d,hd=hd1,lun=/mnt/vdbench/client01/file_d,size=2100g
+# ... (all 12 clients) ...
+
+# --- Workload ---
+wd=wd_scale,sd=sd*,rdpct=100,xfersize=1m,seekpct=sequential
+
+# --- Ramp: 2 clients, 4, 6, 8, 10, 12 ---
+rd=rd_scale_2c,wd=wd_scale,sd=(sd1*,sd2*),iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_scale_4c,wd=wd_scale,sd=(sd1*,sd2*,sd3*,sd4*),iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_scale_6c,wd=wd_scale,sd=(sd1*,sd2*,sd3*,sd4*,sd5*,sd6*),iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_scale_8c,wd=wd_scale,sd=(sd1*,sd2*,sd3*,sd4*,sd5*,sd6*,sd7*,sd8*),iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_scale_10c,wd=wd_scale,sd=(sd1*,sd2*,sd3*,sd4*,sd5*,sd6*,sd7*,sd8*,sd9*,sd10*),iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_scale_12c,wd=wd_scale,sd=sd*,iorate=max,elapsed=300,interval=10,warmup=30
+----
+
+=== Test Phase 7 — Session Trunking Validation
+
+.phase7_trunking.vdb
+[source,ini]
+----
+# ============================================================
+# PHASE 7: Session Trunking Effectiveness Test
+# Compare performance with/without trunking
+# Run this phase TWICE: once with nconnect=1, once with nconnect=16
+# ============================================================
+
+include=master.vdb
+
+sd=default,openflags=o_direct,threads=64,dedupratio=5,dedupunit=4096,dedupsets=5,compressratio=2
+
+# Use subset of clients (4) for controlled comparison
+sd=sd1a,hd=hd1,lun=/mnt/vdbench/client01/file_a,size=2100g
+sd=sd1b,hd=hd1,lun=/mnt/vdbench/client01/file_b,size=2100g
+sd=sd1c,hd=hd1,lun=/mnt/vdbench/client01/file_c,size=2100g
+sd=sd1d,hd=hd1,lun=/mnt/vdbench/client01/file_d,size=2100g
+
+sd=sd2a,hd=hd2,lun=/mnt/vdbench/client02/file_a,size=2100g
+sd=sd2b,hd=hd2,lun=/mnt/vdbench/client02/file_b,size=2100g
+sd=sd2c,hd=hd2,lun=/mnt/vdbench/client02/file_c,size=2100g
+sd=sd2d,hd=hd2,lun=/mnt/vdbench/client02/file_d,size=2100g
+
+sd=sd3a,hd=hd3,lun=/mnt/vdbench/client03/file_a,size=2100g
+sd=sd3b,hd=hd3,lun=/mnt/vdbench/client03/file_b,size=2100g
+sd=sd3c,hd=hd3,lun=/mnt/vdbench/client03/file_c,size=2100g
+sd=sd3d,hd=hd3,lun=/mnt/vdbench/client03/file_d,size=2100g
+
+sd=sd4a,hd=hd4,lun=/mnt/vdbench/client04/file_a,size=2100g
+sd=sd4b,hd=hd4,lun=/mnt/vdbench/client04/file_b,size=2100g
+sd=sd4c,hd=hd4,lun=/mnt/vdbench/client04/file_c,size=2100g
+sd=sd4d,hd=hd4,lun=/mnt/vdbench/client04/file_d,size=2100g
+
+# --- Sequential Read ---
+wd=wd_trunk_seqr,sd=sd*,rdpct=100,xfersize=1m,seekpct=sequential
+
+# --- Sequential Write ---
+wd=wd_trunk_seqw,sd=sd*,rdpct=0,xfersize=1m,seekpct=sequential
+
+# --- Random Mixed ---
+wd=wd_trunk_rand,sd=sd*,rdpct=70,xfersize=8k,seekpct=random
+
+# --- Runs ---
+rd=rd_trunk_seqr,wd=wd_trunk_seqr,iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_trunk_seqw,wd=wd_trunk_seqw,iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_trunk_rand,wd=wd_trunk_rand,iorate=max,elapsed=300,interval=10,warmup=30
+----
+
+== Test Execution Procedures
+
+=== Pre-Test Checklist
+
+.pre_test_checks.sh — Run on each client
+[source,bash]
+----
+#!/bin/bash
+
+echo "=== NFS Mount Verification ==="
+mount | grep nfs4
+nfsstat -m
+
+echo "=== pNFS Layout Verification ==="
+cat /proc/fs/nfsfs/volumes
+grep -r pnfs /proc/fs/nfsfs/ 2>/dev/null
+
+echo "=== Session Trunking Verification ==="
+# Check number of TCP connections to storage
+ss -tn | grep <storage_ip> | wc -l
+
+echo "=== Network Configuration ==="
+ip link show | grep -E "mtu|state UP"
+ethtool <nic_name> | grep Speed
+
+echo "=== Jumbo Frame Test ==="
+ping -M do -s 8972 <storage_ip> -c 3
+
+echo "=== VDBench Version ==="
+/opt/vdbench/vdbench -t 2>&1 | head -5
+
+echo "=== NFS Kernel Parameters ==="
+cat /proc/sys/sunrpc/tcp_slot_table_entries
+cat /proc/sys/sunrpc/tcp_max_slot_table_entries
+
+echo "=== CPU & Memory ==="
+lscpu | grep -E "^CPU$s$|Model name|Thread"
+free -h
+----
+
+=== Execution Order
+
+[source,bash]
+----
+# Step 1: Pre-fill dataset (run once, takes several hours)
+/opt/vdbench/vdbench -f phase1_prefill.vdb -o /results/phase1_prefill
+
+# Step 2: Sequential Read
+/opt/vdbench/vdbench -f phase2_seq_read.vdb -o /results/phase2_seqread
+
+# Step 3: Sequential Write
+/opt/vdbench/vdbench -f phase3_seq_write.vdb -o /results/phase3_seqwrite
+
+# Step 4: Mixed workload
+/opt/vdbench/vdbench -f phase4_mixed.vdb -o /results/phase4_mixed
+
+# Step 5: Random I/O
+/opt/vdbench/vdbench -f phase5_random.vdb -o /results/phase5_random
+
+# Step 6: Scalability ramp
+/opt/vdbench/vdbench -f phase6_scalability.vdb -o /results/phase6_scalability
+
+# Step 7a: Trunking test WITH nconnect=16 (default mount)
+/opt/vdbench/vdbench -f phase7_trunking.vdb -o /results/phase7_trunk_16conn
+
+# Step 7b: Remount with nconnect=1, re-run
+# (remount all clients with nconnect=1 first)
+/opt/vdbench/vdbench -f phase7_trunking.vdb -o /results/phase7_trunk_1conn
+----
+
+=== Trunking Remount Script
+
+.remount_trunking.sh
+[source,bash]
+----
+#!/bin/bash
+# Usage: ./remount_trunking.sh 16  OR  ./remount_trunking.sh 1
+
+NCONN=${1:-16}
+STORAGE_IP="10.0.1.100"
+EXPORT="/export/vdbench_test"
+MOUNTPOINT="/mnt/vdbench"
+
+umount -f $MOUNTPOINT 2>/dev/null
+sleep 2
+
+mount -t nfs4 -o \
+  vers=4.1,\
+  proto=tcp,\
+  rsize=1048576,\
+  wsize=1048576,\
+  hard,\
+  nconnect=${NCONN},\
+  sec=sys \
+  ${STORAGE_IP}:${EXPORT} ${MOUNTPOINT}
+
+echo "Mounted with nconnect=${NCONN}"
+ss -tn | grep ${STORAGE_IP} | wc -l
+echo "TCP connections established"
+----
+
+== Monitoring & Data Collection
+
+=== Storage-Side Monitoring
+
+[source,bash]
+----
+# Collect during each test phase (vendor-specific examples)
+
+# NetApp ONTAP
+ssh admin@cluster "statistics show -object nfsv4_1 -interval 5"
+ssh admin@cluster "qos statistics performance show"
+ssh admin@cluster "statistics show -object pnfs -interval 5"
+
+# Generic: collect via SNMP/API every 5 seconds
+# - Throughput (MB/s read/write)
+# - IOPS (read/write)
+# - Latency (avg, p95, p99)
+# - CPU utilization
+# - Dedupe savings ratio
+# - Cache hit ratio
+----
+
+=== Client-Side Monitoring Script
+
+.client_monitor.sh — Run in background during tests
+[source,bash]
+----
+#!/bin/bash
+OUTPUT_DIR="/results/client_stats"
+mkdir -p $OUTPUT_DIR
+INTERVAL=5
+
+while true; do
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+    # Network throughput
+    sar -n DEV $INTERVAL 1 >> ${OUTPUT_DIR}/network_${HOSTNAME}.log
+
+    # CPU utilization
+    sar -u $INTERVAL 1 >> ${OUTPUT_DIR}/cpu_${HOSTNAME}.log
+
+    # NFS statistics
+    nfsstat -c >> ${OUTPUT_DIR}/nfsstat_${HOSTNAME}.log
+
+    # NFS I/O stats
+    nfsiostat $INTERVAL 1 >> ${OUTPUT_DIR}/nfsiostat_${HOSTNAME}.log
+
+    # TCP connection count (trunking verification)
+    echo "${TIMESTAMP} $(ss -tn | grep -c ':2049')" >> ${OUTPUT_DIR}/tcp_conns_${HOSTNAME}.log
+done
+----
+
+== Success Criteria & KPIs
+
+=== Performance Targets
+
+[cols="2,2,2,3",options="header"]
+|===
+| Test Phase | Metric | Target | Pass Criteria
+
+| Phase 2: Seq Read
+| Throughput
+| ≥ 12 GB/s
+| Sustained for ≥ 8 min
+
+| Phase 3: Seq Write
+| Throughput
+| ≥ 10 GB/s
+| Sustained for ≥ 8 min
+
+| Phase 4: Mixed 70/30
+| Throughput
+| ≥ 10 GB/s
+| Sustained for ≥ 8 min
+
+| Phase 5a: Rand Read 4K
+| IOPS
+| ≥ 500K
+| Avg latency < 2ms
+
+| Phase 5b: Rand Write 4K
+| IOPS
+| ≥ 200K
+| Avg latency < 5ms
+
+| Phase 6: Scalability
+| Linear scaling
+| ≥ 80% efficiency
+| At 12 clients vs 2
+
+| Phase 7: Trunking
+| Improvement
+| ≥ 3× with nconnect=16
+| vs nconnect=1
+|===
+
+=== Data Efficiency Targets
+
+[cols="2,3",options="header"]
+|===
+| Metric | Target
+
+| Dedupe ratio (storage-reported)
+| 4.5:1 – 5.5:1
+
+| Compression ratio
+| 1.8:1 – 2.2:1
+
+| Overall storage efficiency
+| 8:1 – 11:1
+|===
+
+=== Stability Criteria
+
+[cols="2,4",options="header"]
+|===
+| Metric | Criteria
+
+| Throughput variance
+| < 10% CoV during steady state
+
+| No NFS errors
+| `nfsstat -c` shows 0 timeouts/retransmits
+
+| No TCP retransmits
+| `netstat -s` shows minimal retransmits
+
+| pNFS layouts
+| Active throughout test (no fallback to MDS)
+|===
+
+== Test Schedule
+
+[cols="1,3,2,2",options="header"]
+|===
+| Phase | Description | Duration | Cumulative
+
+| Setup
+| Client config, mount, tuning
+| 4 hours
+| 4h
+
+| Pre-checks
+| Validation scripts
+| 1 hour
+| 5h
+
+| Phase 1
+| Dataset pre-fill (100TB)
+| 8–12 hours
+| 17h
+
+| Phase 2
+| Sequential read
+| 1 hour
+| 18h
+
+| Phase 3
+| Sequential write
+| 1 hour
+| 19h
+
+| Phase 4
+| Mixed workload
+| 1 hour
+| 20h
+
+| Phase 5
+| Random I/O (3 sub-tests)
+| 2 hours
+| 22h
+
+| Phase 6
+| Scalability ramp (6 runs)
+| 4 hours
+| 26h
+
+| Phase 7
+| Trunking comparison (2 runs)
+| 3 hours
+| 29h
+
+| Analysis
+| Results compilation
+| 4 hours
+| 33h
+
+| *Total*
+|
+|
+| *~33 hours*
+|===
+
+== Results Analysis Template
+
+=== VDBench Output Parsing
+
+.parse_results.sh
+[source,bash]
+----
+#!/bin/bash
+OUTDIR=$1
+
+echo "=== Aggregate Throughput Summary ==="
+grep "avg_2" ${OUTDIR}/totals.html | awk '{print "Read MB/s:", $X, "Write MB/s:", $Y}'
+
+# Extract key metrics from flatfile.html
+echo "=== Per-Interval Throughput ==="
+grep -v "^$\|Starting\|Vdbench" ${OUTDIR}/flatfile.html | \
+  awk -F',' '{printf "Time: %s | Read MB/s: %s | Write MB/s: %s | IOPS: %s | Lat: %s ms\n", $1, $NF-3, $NF-2, $NF-1, $NF}'
+----
+
+=== Comparison Report Structure
+
+[source,text]
+----
+1. Executive Summary
+   - Pass/Fail against each KPI
+   - Peak throughput achieved
+
+2. Sequential Performance
+   - Read throughput (GB/s) with graph over time
+   - Write throughput (GB/s) with graph over time
+   - Latency distribution
+
+3. Random I/O Performance
+   - IOPS at 4K, 8K block sizes
+   - Latency percentiles (avg, p50, p95, p99)
+
+4. Scalability Analysis
+   - Throughput vs. client count graph
+   - Scaling efficiency percentage
+
+5. Session Trunking Analysis
+   - nconnect=1 vs nconnect=16 comparison table
+   - Per-connection throughput analysis
+   - TCP connection distribution across NICs
+
+6. pNFS Effectiveness
+   - Data server vs metadata server traffic ratio
+   - Layout recall frequency
+
+7. Storage Efficiency
+   - Dedupe ratio achieved vs target
+   - Compression ratio achieved vs target
+   - Physical capacity consumed
+
+8. Recommendations
+----
+
+== Troubleshooting Guide
+
+[cols="2,3,4",options="header"]
+|===
+| Issue | Diagnosis | Resolution
+
+| Throughput < 1 GB/s per client
+| Check `nconnect` value, NIC speed
+| Verify mount options, check `ss -tn` for connection count
+
+| pNFS not active
+| `nfsstat -m` shows no pNFS
+| Verify storage supports pNFS file layouts, check `/proc/fs/nfsfs/volumes`
+
+| High latency spikes
+| Storage dedupe overhead
+| Check storage CPU, consider async dedupe
+
+| Dedupe ratio < 4:1
+| VDBench dedupe params incorrect
+| Verify `dedupratio=5,dedupunit=4096` in all SD definitions
+
+| TCP retransmits
+| Network congestion/drops
+| Check switch buffer utilization, verify flow control (PFC/ECN)
+
+| Uneven client throughput
+| pNFS layout imbalance
+| Check data server distribution, rebalance volumes
+
+| `nconnect` ignored
+| Kernel too old
+| Requires Linux kernel ≥ 5.3 for `nconnect`, ≥ 6.3 for `max_connect`
+|===
+
+[appendix]
+== Quick-Start Single-File Config
+
+For a simplified single-file test (useful for initial validation):
+
+.quick_test.vdb
+[source,ini]
+----
+# quick_test.vdb — Single client quick validation
+# Run: /opt/vdbench/vdbench -f quick_test.vdb -o /results/quick
+
+hd=default,vdbench=/opt/vdbench,user=root,shell=ssh
+hd=hd1,system=localhost
+
+sd=sd1,hd=hd1,lun=/mnt/vdbench/quicktest/file1,size=500g,threads=32,\
+   dedupratio=5,dedupunit=4096,dedupsets=5,compressratio=2,openflags=o_direct
+
+wd=wd_seqr,sd=sd*,rdpct=100,xfersize=1m,seekpct=sequential
+wd=wd_seqw,sd=sd*,rdpct=0,xfersize=1m,seekpct=sequential
+wd=wd_randr,sd=sd*,rdpct=100,xfersize=4k,seekpct=random
+
+rd=rd_prefill,wd=wd_seqw,iorate=max,elapsed=3600,interval=10,warmup=0
+rd=rd_seqread,wd=wd_seqr,iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_seqwrite,wd=wd_seqw,iorate=max,elapsed=300,interval=10,warmup=30
+rd=rd_randread,wd=wd_randr,iorate=max,elapsed=300,interval=10,warmup=30
+----
