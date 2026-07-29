@@ -81,6 +81,33 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 == NFS Mount Configuration
 
+=== ONTAP NFS Server Configuration Verification
+
+Verify the ONTAP NFS server is configured with the following settings before running tests:
+
+[cols="2,2",options="header"]
+|===
+| Setting | Required Value
+
+| Protocol
+| NFSv4.1
+
+| RDMA
+| Enabled (RoCE)
+
+| pNFS
+| Enabled
+
+| Session Trunking
+| Enabled
+
+| v4.x Session Slots
+| 64
+
+| TCP Max Transfer Size
+| 262144
+|===
+
 === Mount Options for NFSv4.1 + pNFS + Session Trunking
 
 .Primary mount with pNFS file layout
@@ -89,8 +116,8 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 mount -t nfs4 -o \
   vers=4.1,\
   proto=tcp,\
-  rsize=1048576,\
-  wsize=1048576,\
+  rsize=262144,\
+  wsize=262144,\
   hard,\
   intr,\
   nconnect=16,\
@@ -107,13 +134,13 @@ NOTE: `nconnect=16` creates multiple TCP connections (session trunking) to the s
 .Multi-path trunking (Linux kernel 6.3+ with max_connect)
 [source,bash]
 ----
-mount -t nfs4 -o vers=4.1,nconnect=8,max_connect=16,proto=tcp,rsize=1048576,wsize=1048576 \
+mount -t nfs4 -o vers=4.1,nconnect=8,max_connect=16,proto=tcp,rsize=262144,wsize=262144 \
   storage-ip1:/export/vdbench_test /mnt/vdbench
 
 # Then add trunkable connections to additional server IPs:
 # (handled automatically by the kernel if max_connect > nconnect)
 # Or mount additional paths explicitly if kernel doesn't support auto-trunking:
-mount -t nfs4 -o vers=4.1,nconnect=8,proto=tcp,rsize=1048576,wsize=1048576 \
+mount -t nfs4 -o vers=4.1,nconnect=8,proto=tcp,rsize=262144,wsize=262144 \
   storage-ip2:/export/vdbench_test /mnt/vdbench2
 ----
 
@@ -622,8 +649,8 @@ sleep 2
 mount -t nfs4 -o \
   vers=4.1,\
   proto=tcp,\
-  rsize=1048576,\
-  wsize=1048576,\
+  rsize=262144,\
+  wsize=262144,\
   hard,\
   nconnect=${NCONN},\
   sec=sys \
