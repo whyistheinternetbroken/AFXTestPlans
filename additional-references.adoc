@@ -1,0 +1,22 @@
+= Additional References
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+
+[[additional-references]]
+== Additional references
+
+v
+SPEC SFS 2020 user guide
+NFS Best practice guide for ONTAP
+TR-4616 NFS Kerberos with Active Directory
+TR-4835 How to Configure LDAP in ONTAP
+EDA Best practice guide for ONTAP
+FlexGroup volume best practices
+ONTAP S3 best practice guide
+NetApp AFF A90 Storage System Reference Design Guide - NVIDIA HGX
+MLcommons

@@ -1,0 +1,47 @@
+= Appendix
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:index.adoc[<- Back to Index]
+
+The following sections provide supplemental reference information for this test plan.
+
+== Appendix Contents
+
+The following appendices provide supplemental reference information for this test plan.
+
+[cols="1,3",options="header"]
+|===
+| Section | Description
+
+| xref:appendix-eda-terminology.adoc[EDA Terminology]
+| Definitions of EDA frontend, backend, and blended workload terminology used throughout this document
+
+| xref:appendix-nfs-considerations.adoc[NFS Considerations]
+| Recommended NFS mount options (NFSv3, NFSv4.1), fstab, automounter, 64-bit file IDs, pNFS and session trunking validation
+
+| xref:appendix-client-tuning.adoc[Client Tuning]
+| rsize/wsize tuning, close-to-open consistency (CTO/NOCTO), nconnect, and NFS readahead settings
+
+| xref:appendix-rest-api.adoc[REST API Examples]
+| ONTAP REST API examples: authentication, FlexGroup creation, deletion, network interfaces, NFS server config
+
+| xref:appendix-storage-benchmark.adoc[Storage Benchmark Testing]
+| SPEC SFS 2020 and DLIO/MLcommons benchmark guides
+
+| xref:appendix-statistics-counters.adoc[Statistics Counters]
+| NFS, pNFS, and session trunking statistics counters with command examples
+
+| xref:scripts.adoc[Scripts]
+| Volume, LIF, reinitialization, and NAS benchmark scripts
+
+| xref:blank-test-template.adoc[Blank Test Template]
+| Blank test template for custom test cases
+
+| xref:additional-references.adoc[Additional References]
+| Links to NetApp technical reports and external documentation
+|===

@@ -1,0 +1,54 @@
+= Optional Feature: Aggressive Readahead
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:test-plans.adoc[← Back to Test Plans]
+
+Aggressive readahead optimizes sequential file read performance for media streaming, HPC, and other read-intensive workloads.
+
+
+[[aggressive-readahead]]
+== Aggressive readahead
+
+n media streaming workloads, a 4K movie is often split into tens of thousands of files, each typically 50 MB to 250 MB in size. Each file represents a frame, and the application reads an entire frame in a single request. To maintain a smooth, uninterrupted stream with no visible buffering, these frame reads must complete without drops.
+ONTAP provides a volume-level option (-aggressive-readahead-mode) to optimize these workloads. Starting in ONTAP 9.19.1, a new cross_file_sequential_read mode for aggressive readahead has been introduced on AFX to accelerate workloads with predictable I/O patterns across similar file types (for example, media rendering and streaming).
+cross_file_sequential_read predicts the next file to be read based on its name and begins readahead on those files before the client issues the read call. The prediction logic assumes that all files in a directory follow a naming pattern with a monotonically increasing numeric suffix (eg. file1, file2, file3). All files in the directory must follow this pattern, using either decimal or hexadecimal numbering. Filenames can be up to 255 characters long. The logic is extension agnostic and generates the next set of filenames in the current directory based solely on the current filename. If a filename previously generated using base10 numbering does not exist in the directory, the names are regenerated using hexadecimal numbering. If none of the generated filenames exist, no prefetch is issued for that set. Prefetching resumes when the next client read is issued.
+*To enable on a per-volume basis:*
+
+[source,console]
+----
+AFX::> set adv; vol modify -volume [name] -aggressive-readahead-mode cross_file_sequential_read
+----
+
+With this option enabled,  performance benchmarks were able to read 30,000 4K frames at 30 frames per second with 30 clients (NFSv3 and SMB3) and 34 clients (NFSv4.1), without a single dropped frame.
+While cross-file sequential read is primarily designed for media workloads, other read-heavy workloads with predictable access patterns and file names - such as AI training and inference - can also benefit.
+
+[[considerations-and-caveats]]
+=== Considerations and caveats
+
+Shared buffer cache -- Aggressive read ahead uses the same buffer cache as other volumes on the node. Enabling it may affect read performance for other volumes on that node.
+Underlying storage performance -- If files cannot be read quickly enough (for example, on HDD-based FAS systems), cached data may be evicted before the client read occurs, negating the benefits of read ahead.
+Access pattern requirements -- If the workload's read pattern is not sequential, or if files in a directory are not named in an increasing sequential order, the cross_file_sequential_read aggressive read ahead mode will not provide meaningful benefits.
+
+NOTE: The following section covers statistics monitoring for aggressive readahead. Some introductory content repeats the configuration section above for context. Both sections were present in the original source document and are preserved here.
+
+
+[[aggressive-readahead-statistics-and-monitoring]]
+== Aggressive Readahead: Statistics and Monitoring
+
+In media streaming workloads, a 4K movie is often split into tens of thousands of files, each typically 50 MB to 250 MB in size. Each file represents a frame, and the application reads an entire frame in a single request. To maintain a smooth, uninterrupted stream with no visible buffering, these frame reads must complete without drops.
+ONTAP provides a volume-level option (-aggressive-readahead-mode) to optimize these workloads. Starting in ONTAP 9.19.1, a new cross_file_sequential_read mode for aggressive readahead has been introduced on AFX to accelerate workloads with predictable I/O patterns across similar file types (for example, media rendering and streaming).
+cross_file_sequential_read predicts the next file to be read based on its name and begins readahead on those files before the client issues the read call. The prediction logic assumes that all files in a directory follow a naming pattern with a monotonically increasing numeric suffix (eg. file1, file2, file3). All files in the directory must follow this pattern, using either decimal or hexadecimal numbering. Filenames can be up to 255 characters long. The logic is extension-agnostic and generates the next set of filenames in the current directory based solely on the current filename. If a filename previously generated using base10 numbering does not exist in the directory, the names are regenerated using hexadecimal numbering. If none of the generated filenames exist, no prefetch is issued for that set. Prefetching resumes when the next client read is issued.
+While cross-file sequential read is primarily designed for media workloads, other read-heavy workloads with predictable access patterns and file names - such as AI training and inference - can also benefit.
+To see statistics for this feature, use the following advanced privilege command:
+
+[source,console]
+----
+AFX::> set advanced
+AFX::*> run local wafl stats file_prefetch
+----
+

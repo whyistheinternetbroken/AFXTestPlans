@@ -1,0 +1,155 @@
+= Recommended Setup and Prerequisites
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+This section covers hardware requirements, client configurations, networking, and NFS server configuration. See also xref:appendix-client-tuning.adoc[Client Tuning] for detailed NFS performance tuning.
+
+
+[[recommended-setup-and-prerequisites]]
+== Recommended setup and prerequisites
+
+
+[[setup-required]]
+=== Setup required
+
+Hardware installation and initial configuration documentation links can be found in the "Documentation requirements" section. This test plan assumes that the initial setup and configuration has already been performed.
+
+NOTE: It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and FabricPool. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at:  
+
+
+[[initial-state-of-the-test-environment]]
+==== Initial state of the test environment
+
+The initial environment will depend on the number of nodes acquired for the test plan. The number of nodes available may also impact the number of tests available to the system (ie, node scaling, failover, etc).
+NetApp AFX officially supports a minimum configuration of:
+Four storage nodes 
+Initial setup can be a two node HA-pair to provide scale/balancing testing
+2 more nodes added later as part of test plan steps (optional)
+Two Cisco switches (for cluster, HA & disk network)
+RCF file to be provided 
+Shelf minimums:
+Fully populated shelves (24 drives each shelf)
+1 shelf of 15.3 TB SSDs
+2 shelves of 7.6 TB, 30.1 TB, or 60.1 TB SSDs
+No drive mixing support yet
+Recommended ONTAP version of 9.19.1 or later
+Pre-configured cluster, SVM, NFS server, protocol licenses
+Node and cluster management interfaces for access to the CLI and GUI
+
+[[clients]]
+==== Clients
+
+For the best results, provide at least four modern NFS clients to run storage benchmarks. Client OS is not important, provided it adheres to RFC standards and are within a few minor releases of the newest versions available. All clients should have high performance specs including CPU, memory & networking, ideally 100GB+. All clients should be routable to all data interfaces in the NetApp AFX cluster -- especially if features such as pNFS and NFSv4.1 session trunking are used.
+
+NOTE: This test plan mainly focuses on NFS, but many of the concepts can also be applied to SMB operations. Future versions of this test plan may include SMB, multiprotocol NAS, etc.
+
+Our internal benchmark results were generated with the following client configurations:
+
+[source,console]
+----
+Ubuntu 24.04.1 LTS
+6.8.0-51-generic
+Doca-all 3.4.0 3.4.0-085000 with rpcrdma module
+----
+
+
+[[client-network-and-nic-tuning]]
+===== Client network & NIC tuning
+
+
+[source,console]
+----
+Dual NICs bonded for RoCE (LACP)
+RX/TX ring buffers set to 8192
+PFC and DSCP configured per NIC
+RoCE traffic class set using cma_roce_tos
+----
+
+
+[[client-os-tuning]]
+===== Client OS tuning
+
+
+[source,console]
+----
+sunrpc.rdma_slot_table_entries set to 200
+vm.dirty_background_bytes = 2147483648 (2GB)
+vm.dirty_bytes = 5368709120 (5GB)
+vm.dirty_background_ratio = 0
+vm.dirty_ratio = 0
+vm.dirty_expire_centisecs = 300
+vm.dirty_writeback_centisecs = 100
+----
+
+
+[[networking-requirements]]
+==== Networking requirements
+
+All data network interfaces in and ONTAP SVM should be routable to all clients for best results in this test plan. The IP address count needed are as follows:
+* Four (4) _intercluster_ interface IP addresses
+** one per node required; to be used for SnapMirror® and FlexCache operations (unless not testing these features)
+* At least eight (8) data interface IP addresses (two per node)
+** pNFS supports up to sixteen (16) data IP interfaces per node
+** Can be TCP or RDMA capable
+* One (1) cluster management interface IP address for administrative interaction
+* Four (4) node management interface IP address (one per node)
+* Four (4) service processor/BMC IP address (one per node)
+* Client IP addresses
+** NICs can be bonded, trunked, etc. No set requirements there unless using RDMA, which may have support limitations for NICs.
+
+[[nfs-server-configuration]]
+==== NFS server configuration
+
+The following shows the NFS server options that should be configured for this test plan. Other NFS server options can be enabled as well (for instance, NFSv4 ACL support), but they are outside of the scope of this NetApp AFX-focused test plan.
+
+[cols="1,1",options="header"]
+|===
+| v4.1 | Enabled
+| v4-id-domain | [domain name]*
+| v4.1-pnfs | Enabled
+| v4.1-trunking | Enabled
+| tcp-max-transfer-size | 262144
+| v3-64bit-identifiers | Enabled
+| v4-64bit-identifiers | Enabled
+| v3 | Enabled
+| v4.1-read-delegation | Disabled
+| v4.1-write-delegation | Disabled
+| rdma | Enabled (optional)
+| v4.0 | Disabled
+| v3-hide-snapshot | Enabled
+| mount-rootonly | Disabled
+| nfs-rootonly | Disabled
+|===
+
+_*__The NFSv4__ ID domain can be any value, provided it matches what is set on the NFS clients. _
+To verify the NFSv4 ID domain on the client:
+
+[source,console]
+----
+# nfsidmap -d
+user-domain.company.com
+# cat /etc/idmapd.conf | grep Domain
+Domain = user-domain.company.com
+----
+
+
+NOTE: If those commands do not work, you likely have not installed the proper NFS packages to leverage NFSv4.x. Ie, nfs-common for RedHat-based kernels.
+
+
+[[benchmark-cli-configuration]]
+===== Benchmark CLI configuration
+
+The following shows the NFS CLI command used for internal performance benchmark runs (consolidated from the performance test plan). For full test context, see xref:performance-test-plan.adoc[Performance Test Plan].
+
+NOTE: RDMA reduces latency and increases throughput for most workloads -- roughly 10-30%.
+
+
+[source,console]
+----
+set advanced; nfs modify -vserver [SVM] -v3 enabled -v4.1 enabled -v4.0 disabled -v4-id-domain [yourdomain.com] -v4.1-pnfs enabled -v4.1-trunking enabled -v4-64bit-identifiers enabled -v3-64bit-identifiers enabled -chown-mode unrestricted -tcp-max-xfer-size 262144 -mount-rootonly disabled -nfs-rootonly disabled -v3-hide-snapshot enabled -rdma [enabled optional]
+----
+

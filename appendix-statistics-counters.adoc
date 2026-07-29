@@ -1,0 +1,344 @@
+= Appendix: Statistics Counters
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:appendix.adoc[← Back to Appendix]
+
+NFS, pNFS, and session trunking statistics counters with command examples and output samples.
+
+
+[[statistics-counters]]
+== Statistics counters
+
+This section lists relevant statistics counters for some of the sections listed above.
+
+[[glossary-of-nfs-operation-types-found-in-ontap-statistics]]
+=== Glossary of NFS operation types found in ONTAP statistics
+
+The following table defines the NFS operation types seen in ONTAP performance statistics and classifies them by metadata or IO.
+
+.Table ) NFS operation glossary
+
+
+[cols="1,1,1",options="header"]
+|===
+| Operation | Use case | Category
+| ACCESS | Permission checks/verifcation of files/directory. | Metadata
+| CLOSE | Call to close an open file. Buffered data written, locks are released. | Metadata
+| COMPOUND | Multiple calls combine into a single call. Can include any of the other operation calls mentioned here. | Metadata
+| CREATE | Create a new file. | Metadata
+| GETATTR | Get file attributes, including permissions, atime, size, etc. (find, ls) | Metadata
+| GETDEVICEINFO | pNFS call to get device information from the NFS server.  +
+(interface to volume relationship) | Metadata
+| GETFH | Retrieves the file handle for the file or directory. | Metadata
+| LAYOUTGET | pNFS call to get layout information from NFS server. | Metadata
+| LOOKUP | Resolve a file or directory name to its file handle. | Metadata
+| OPEN | Opens the file using the filehandle gathered in LOOKUP | Metadata
+| PUTFH | Sets filehandle during mount of an NFS export. | Metadata
+| READ | Reads a file. Can be random or sequential. | IO
+| READDIR | Reads contents of a directory; lists files and directory names with attributes. | Metadata
+| READDIRPLUS | Enhanced version of READDIR; used to reduce GETATTR and LOOKUP | Metadata
+| SEQUENCE | NFSv4.1 and later; manages state of client->server session for proper request ordering and session recovery. | Metadata
+| SETATTR | Modifies attributes for a file or directory. | Metadata
+| WRITE | Writes a file. Can be random or sequential. | IO
+|===
+
+
+[[network-interface-counters]]
+=== Network interface counters
+
+
+[source,console]
+----
+AFX::> set advanced -c off
+AFX::*> statistics lif show -vserver [SVM1]
+----
+
+
+[[pnfs-counters----nfsv4_1_diag-diag-priv]]
+=== pNFS counters -- nfsv4_1_diag (diag priv)
+
+
+[source,console]
+----
+Object: nfsv4_1_diag
+Counter                     Description
+--------------------------- ----------------------------------------------
+cachedio_delete_byttl_pnfs_ds
+Number of times the Nfsv41CachedIO pNFS DS
+object is deleted due to ttl.
+cachedio_fh_pnfs            Number of times the Nfsv41CachedIO operation
+was invoked on a clustered Data ONTAP
+filehandle containing pNFS Device information
+but no Qtree export information.
+cachedio_fh_pnfs_qtree      Number of times the Nfsv41CachedIO operation
+was invoked on a clustered Data ONTAP
+filehandle containing pNFS Device and Qtree
+export information.
+cb_layoutrecall_rcv_error   The number of NFSv4.1 CB_LAYOUTRECALL
+received with error. The CB_LAYOUTRECALL
+operation is used by the server to recall
+layouts from the client.
+cb_layoutrecall_rcv_success The number of NFSv4.1 CB_LAYOUTRECALL
+received successfully. The CB_LAYOUTRECALL
+operation is used by the server to recall
+layouts from the client.
+cb_layoutrecall_send_error  The number of NFSv4.1 CB_LAYOUTRECALL sent
+with error. The CB_LAYOUTRECALL operation is
+used by the server to recall layouts from the
+client.
+cb_layoutrecall_send_success
+The number of NFSv4.1 CB_LAYOUTRECALL sent
+successfully. The CB_LAYOUTRECALL operation
+is used by the server to recall layouts from
+the client.
+cb_notifydeviceid_rcv_error The number of NFSv4.1 CB_NOTIFY_DEVICEID
+received with error. The CB_NOTIFY_DEVICEID
+operation is used by the server to send
+notifications to clients about changes to
+pNFS device IDs.
+cb_notifydeviceid_rcv_success
+The number of NFSv4.1 CB_NOTIFY_DEVICEID
+received successfully. The CB_NOTIFY_DEVICEID
+operation is used by the server to send
+notifications to clients about changes to
+pNFS device IDs.
+cb_notifydeviceid_send_error
+The number of NFSv4.1 CB_NOTIFY_DEVICEID sent
+with error. The CB_NOTIFY_DEVICEID operation
+is used by the server to send notifications
+to clients about changes to pNFS device IDs.
+cb_notifydeviceid_send_success
+The number of NFSv4.1 CB_NOTIFY_DEVICEID sent
+successfully. The CB_NOTIFY_DEVICEID
+operation is used by the server to send
+notifications to clients about changes to
+pNFS device IDs.
+pnfs_accurate_layout        Number of accurate layout returned for
+layoutget.
+pnfs_changed_to_multipart   Number of times single part file converted to
+multipart.
+pnfs_devicecache_flushed    Total count of flush done for deviceId.
+pnfs_devicecache_lrupurged  Number of devices which were purged by LRU
+mechanism.
+pnfs_devicelist_empty_rsp   Number of times deviceId response was empty.
+pnfs_ds_local_read          Number of local request on data server
+pnfs_ds_local_write         Number of local request on data server
+pnfs_ds_remote_read         Number of remote request on data server
+pnfs_ds_remote_write        Number of remote request on data server
+pnfs_dvcid_1_created        Number of device id created with version 1.
+pnfs_dvcid_2_created        Number of device id created with version 2.
+pnfs_dvcid_3_created        Number of device id created with version 3.
+pnfs_dvcid_cache_hit        Number of deviceId cache hit.
+pnfs_dvcid_cache_miss       Number of deviceId cache miss.
+pnfs_dvcid_created          Number of device id created.
+pnfs_dvcid_invalid          Number of devices whose state is invalid.
+pnfs_dvcid_invalidate_dbladelif_mappings
+Number of invalidations of dblade-lif
+mappings in deviceid.
+pnfs_dvcid_invalidation     Number of times deviceId invalidation
+occurred.
+pnfs_dvcid_negative         Number of devices whose state is negative.
+pnfs_dvcid_queryagain       Number of devices for which query was sent
+again to VLDB.
+pnfs_dvcid_removed          Number of device id removed.
+pnfs_dvcid_rpc_error        Number of times RPC error was received for
+deviceId.
+pnfs_dvcid_rpc_request      Number of times RPC request was sent for
+deviceId information.
+pnfs_dvcid_rpc_response     Number of times deviceId rpc response was
+received.
+pnfs_file_layout_not_multipart
+Number of times file layout response was
+received with not multipart error.
+pnfs_file_layout_req_failure
+Number of times file layout request was sent.
+pnfs_file_layout_req_success
+Number of times file layout request was sent.
+pnfs_file_layout_rsp_error  Number of times file layout response was
+received with any other error.
+pnfs_file_layout_rsp_success
+Number of times file layout response was
+received and was success.
+pnfs_inaccurate_layout      Number of inaccurate layout returned for
+layoutget.
+pnfs_layout_conversions     Number of times the Nfsv41pNFS open states
+converted to layout state ids
+pnfs_layout_in_hash         Number of times deviceId was added in hash.
+pnfs_layout_out_hash        Number of times deviceId was removed from
+hash.
+pnfs_layout_recalled        Number of times pnfs layout was recalled.
+pnfs_lif_mapping_cache_hit  Number of times lif mapping cache hit.
+pnfs_lif_mapping_cache_miss Number of times lif mapping cache missed.
+pnfs_lif_mapping_invalidation
+Number of times lif mapping invalidation
+occurred.
+pnfs_lif_mapping_negative_entry
+Number of times lif mapping cache state was
+negative.
+pnfs_lif_mapping_rpc_error  Number of times lif mapping RPC error was
+received.
+pnfs_lif_mapping_rpc_received
+Number of times lif mapping RPC response was
+received.
+pnfs_lif_mapping_rpc_sent   Number of times lif mapping RPC was sent.
+pnfs_lifmapping_created     Number of lif mapping created.
+pnfs_masked_stale_error     Number of masked stale error in pNFS IO.
+pnfs_mds_local_read         Number of local request on meta data server
+pnfs_mds_local_write        Number of local request on meta data server
+pnfs_mds_remote_read        Number of remote request on meta data server
+pnfs_mds_remote_write       Number of remote request on meta data server
+pnfs_read_route_to_catalog  Number of read requests routed to catalog
+inode.
+pnfs_real_stale_error       Number of stale error in pNFS IO.
+pnfs_rpc_noparallel         Number of times when parallel request RPC
+count reached limit.
+pnfs_rpc_nosend_alloc       Number of times RPC was not sent due to
+allocation failure.
+pnfs_stale_error            Number of stale error in pNFS IO.
+pnfs_write_route_to_catalog Number of write requests routed to catalog
+inode.
+----
+
+
+[[pnfs-counters----nfsv4_1-advanced-priv]]
+=== pNFS counters -- nfsv4_1 (advanced priv)
+
+
+[source,console]
+----
+Object: nfsv4_1
+Counter                     Description
+--------------------------- ----------------------------------------------
+getdeviceinfo_avg_latency   Average latency of NFSv4.1 GETDEVICEINFO
+operations.
+getdeviceinfo_error         The number of failed NFSv4.1 GETDEVICEINFO
+operations.
+getdeviceinfo_percent       Percentage of NFSv4.1 GETDEVICEINFO
+operations.
+getdeviceinfo_success       The number of successful NFSv4.1
+GETDEVICEINFO operations.
+getdeviceinfo_total         Total number of NFSv4.1 GETDEVICEINFO
+operations.
+getdevicelist_avg_latency   Average latency of NFSv4.1 GETDEVICELIST
+operations.
+getdevicelist_error         The number of failed NFSv4.1 GETDEVICELIST
+operations.
+getdevicelist_percent       Percentage of NFSv4.1 GETDEVICELIST
+operations.
+getdevicelist_success       The number of successful NFSv4.1
+GETDEVICELIST operations.
+getdevicelist_total         Total number of NFSv4.1 GETDEVICELIST
+operations.
+layoutcommit_avg_latency    Average latency of NFSv4.1 LAYOUTCOMMIT
+operations.
+layoutcommit_error          The number of failed NFSv4.1 LAYOUTCOMMIT
+operations.
+layoutcommit_percent        Percentage of NFSv4.1 LAYOUTCOMMIT operations.
+layoutcommit_success        The number of successful NFSv4.1 LAYOUTCOMMIT
+operations.
+layoutcommit_total          Total number of NFSv4.1 LAYOUTCOMMIT
+operations.
+layoutget_avg_latency       Average latency of NFSv4.1 LAYOUTGET
+operations.
+layoutget_error             The number of failed NFSv4.1 LAYOUTGET
+operations.
+layoutget_percent           Percentage of NFSv4.1 LAYOUTGET operations.
+layoutget_success           The number of successful NFSv4.1 LAYOUTGET
+operations.
+layoutget_total             Total number of NFSv4.1 LAYOUTGET operations.
+layoutreturn_avg_latency    Average latency of NFSv4.1 LAYOUTRETURN
+operations.
+layoutreturn_error          The number of failed NFSv4.1 LAYOUTRETURN
+operations.
+layoutreturn_percent        Percentage of NFSv4.1 LAYOUTRETURN operations.
+layoutreturn_success        The number of successful NFSv4.1 LAYOUTRETURN
+operations.
+layoutreturn_total          Total number of NFSv4.1 LAYOUTRETURN
+operations.
+----
+
+
+[[pnfs-statistics-example]]
+==== pNFS statistics example
+
+When you see "layoutget_total" incrementing, that means pNFS is sending and receiving device layouts to connected clients.
+
+[source,console]
+----
+rtp-a70-c01::*> set advanced -confirmations off; statistics show -object nfsv4_1 -counter *layout* -sample-id sample_1393185
+
+Object: nfsv4_1
+Instance: AIML
+Start-time: 5/15/2025 16:11:23
+End-time: 5/15/2025 18:03:06
+Elapsed-time: 6702s
+Scope: rtp-a70-c01
+Number of Constituents: 2 (complete_aggregation)
+Counter                                                     Value
+-------------------------------- --------------------------------
+layoutget_avg_latency                                         8us
+layoutget_success                                             216
+layoutget_total                                               216
+----
+
+
+[[nfsv41-session-trunking-counters----nfsv4_1_diag-diag-priv]]
+=== NFSv4.1 session trunking counters -- nfsv4_1_diag (diag priv)
+
+
+[source,console]
+----
+Object: nfsv4_1_diag
+Counter                     Description
+--------------------------- ----------------------------------------------
+nfsv4_1_clients_using_clientid_trunking
+Number of Nfsv4.1 clients using client ID trunking
+nfsv4_1_clients_using_session_trunking
+Number of Nfsv4.1 clients using session trunking
+----
+
+
+[[nfsv41-session-trunking-statistics-example]]
+==== NFSv4.1 session trunking statistics example
+
+When you see "nfsv4_1_clients_using_session_trunking" values, that tells you how many clients are leveraging session trunks.
+
+[source,console]
+----
+AFX::*> set advanced -confirmations off; statistics show -object nfsv4_1_diag -counter *session*
+
+Object: nfsv4_1_diag
+Instance: nfs4_1_diag
+Start-time: 5/15/2025 16:11:23
+End-time: 5/15/2025 16:12:15
+Elapsed-time: 52s
+Scope: AFX-01
+
+Counter                                                     Value
+-------------------------------- --------------------------------
+destroy_session_deletion                                        1
+nfsv4_1_clients_using_session_                                 12
+trunking
+sessions_created                                                1
+sessions_deleted                                                1
+
+Object: nfsv4_1_diag
+Instance: nfs4_1_diag
+Start-time: 5/15/2025 16:11:23
+End-time: 5/15/2025 16:12:15
+Elapsed-time: 52s
+Scope: AFX-02
+
+Counter                                                     Value
+-------------------------------- --------------------------------
+destroy_session_deletion                                        1
+nfsv4_1_clients_using_session_                                  8
+trunking
+    sessions_deleted
+----
+

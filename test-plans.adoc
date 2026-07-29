@@ -1,0 +1,129 @@
+= Test Plans
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:index.adoc[<- Back to Index]
+
+The following sections outline the testing NetApp encourages customers to complete as part of this test plan.
+
+
+[[test-plans]]
+== Test plans
+
+The following sections outline the testing NetApp encourages customers complete as part of this test plan. A notes section is included for your own use, but it would be invaluable to NetApp if following these tests, those notes were passed on as feedback about NetApp AFX or the test plan itself. To submit feedback, email .
+Test scenarios that are executed outside of these guidelines are fine and it is still of high value to provide the results of such tests. As such, in the document we have provided a blank test plan template in Appendix B which should be filled in for such tests containing all steps that were executed, results that were expected and that were achieved as well as collected data.
+All tests have a 'Comments' section. It is appreciated if any comments -- even those not directly related to the executed tests -- are provided as either part of the tests or separately.
+
+NOTE: Images in these test plans may differ from your actual lab environment. For questions, please reach out to your account team.
+
+
+== Core Tests
+
+[cols="1,3,1",options="header"]
+|===
+| Test | Description | File
+
+| Test 1: Validate cluster setup
+| Validate cluster health, node configuration, disk and network state
+| xref:performance-test-plan.adoc#validate-the-cluster-setup[Performance Test Plan]
+
+| Test 2: Enable AutoSupport
+| Configure AutoSupport for log collection and automatic case creation
+| xref:performance-test-plan.adoc#enable-autosupport-optional[Performance Test Plan]
+
+| Test 3: Create network interfaces
+| Create and validate data, management, and intercluster LIFs
+| xref:performance-test-plan.adoc#create-network-interfaces[Performance Test Plan]
+
+| Test 4: Data migration
+| Migrate existing ONTAP data to AFX using SnapMirror or NAS copy tools
+| xref:performance-test-plan.adoc#data-migration-optional[Performance Test Plan]
+
+| Test 5: Volume management
+| Create and manage FlexGroup volumes on AFX
+| xref:performance-test-plan.adoc#volume-management[Performance Test Plan]
+
+| Test 6: API testing
+| Validate ONTAP REST API for customer automation workflows
+| xref:performance-test-plan.adoc#api-testingseamless-support-for-customer-automation[Performance Test Plan]
+
+| Test 7: Customer workload -- real data
+| Run production workloads against AFX using SnapMirror or NAS copy
+| xref:performance-test-plan.adoc#customer-workload-testing-real-data[Performance Test Plan]
+
+| Test 8: Customer workload -- benchmarks
+| Run SPEC SFS 2020 or MLcommons benchmarks against AFX
+| xref:performance-test-plan.adoc#customer-workload-testing-performance-benchmarks[Performance Test Plan]
+
+| Test 9: Performance monitoring
+| Validate performance monitoring with System Manager and NetApp Harvest
+| xref:performance-test-plan.adoc#performance-monitoring[Performance Test Plan]
+
+| Test 10: Capacity management
+| View and manage storage capacity
+| xref:performance-test-plan.adoc#capacity-management[Performance Test Plan]
+
+| Test 11: Node additions
+| Add compute nodes during live workloads (optional)
+| xref:performance-test-plan.adoc#compute-scaling-optional[Performance Test Plan]
+
+| Test 12: Node failure behavior
+| Validate storage failover and giveback during live workloads
+| xref:performance-test-plan.adoc#node-failure-behavior[Performance Test Plan]
+|===
+
+== Optional Functional Tests
+
+[cols="1,3,1",options="header"]
+|===
+| Test | Description | File
+
+| Test 13: FlexCache
+| Use FlexCache between unified ONTAP and NetApp AFX for read localization
+| xref:test-flexcache.adoc[FlexCache Test Plan]
+
+| Test 14: S3 in ONTAP
+| Configure and test S3 protocol on AFX
+| xref:test-s3.adoc[S3 Test Plan]
+
+| Test 15: Snapshots and SnapMirror
+| Test Snapshots and SnapMirror impact on live workload performance
+| xref:test-snapshots-snapmirror.adoc[Snapshots / SnapMirror Test Plan]
+
+| Test 16: Non-Disruptive Upgrade
+| Validate non-disruptive ONTAP upgrade procedure for AFX
+| xref:test-ndu.adoc[NDU Test Plan]
+|===
+
+== New Feature Tests (ONTAP 9.19.1)
+
+[cols="1,3,1",options="header"]
+|===
+| Feature | Description | File
+
+| Global Deduplication
+| Cross-node deduplication across the shared capacity pool (new in 9.19.1)
+| xref:feature-global-deduplication.adoc[Global Deduplication Feature Test]
+
+| Dynamic Storage Efficiency
+| Adaptive compression and compaction for space savings
+| xref:feature-dynamic-storage-efficiency.adoc[Dynamic SE Feature Test]
+
+| Aggressive Readahead
+| Cross-file sequential read optimization for media and HPC workloads
+| xref:feature-aggressive-readahead.adoc[Aggressive Readahead Feature Test]
+
+| FabricPool Tiering
+| Cold data tiering to S3-compatible object storage (9.19.1P2+)
+| xref:feature-fabricpool.adoc[FabricPool Feature Test]
+|===
+
+== Performance Test Configuration
+
+For NFS export policy, volume configuration, mount options, client and network configuration, and ONTAP feature settings used during performance testing, see xref:performance-test-plan.adoc[Performance Test Plan: Configuration Sections].
+
+For NFS server configuration reference, see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration].

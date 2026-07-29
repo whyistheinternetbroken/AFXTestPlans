@@ -1,0 +1,30 @@
+= Appendix B: Blank Test Template
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+Use this template for any performance tests outside of the scenarios described in this test plan.
+
+
+[[appendix-b-blank-test-template]]
+== Appendix B: Blank test template
+
+Use this template for any performance tests outside of the scenarios described above.
+
+.Test ) Blank test template
+
+
+[cols="1,1,1,1,1",options="header"]
+|===
+| Section | Details |  |  | 
+| <Insert cross reference> | Tester: |  | Date: | 
+| Test requirements: |  |  |  | 
+| Test procedure: |  |  |  | 
+| Expected outcome(s): |  |  |  | 
+| Test results: |  |  |  | 
+| Test summary: |  |  |  | 
+| Comments: |  |  |  | 
+|===

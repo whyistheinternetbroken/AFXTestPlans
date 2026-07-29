@@ -1,0 +1,72 @@
+= NetApp AFX Test Plan: Overview and Introduction
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+This section covers document overview, support contacts, new ONTAP 9.19.1 features, documentation requirements, and licensing information.
+
+
+[[providing-feedback]]
+== Providing feedback
+
+We rely on our customers to provide detailed feedback throughout testing if at all possible. Product Management, Technical Marketing, and Engineering teams at NetApp will be actively involved in collecting and analyzing this feedback. Customers can leverage multiple communication channels to share your feedback and insights, including email or by scheduling meetings directly with the Product team. This feedback is incredibly important to us as it plays a critical role in refining and improving our products to meet and exceed customer expectations.
+
+[[support]]
+=== Support
+
+Using the general NetApp support avenues is the preferred method of reporting and diagnosing issues. For general questions about the product, including implementation, best practices, or roadmap, reach out to your account team to get a meeting scheduled with the Product Management team.
+
+[[document-version-information]]
+=== Document version information
+
+
+[cols="1,1,1",options="header"]
+|===
+| Version | Date | Summary
+| 1.0 | July 2026 | Initial release
+|===
+
+
+[[overview]]
+== Overview
+
+
+[cols="1,1",options="header"]
+|===
+|  | NetApp AFX® is a new NAS and object-only platform that takes standard ONTAP software and replaces the multi-aggregate architecture for a single shared capacity pool, where all nodes in a cluster can utilize the same shelves. +
+This disaggregated architecture offers a way to present an asymmetric number of compute nodes or storage shelves for cost-effective performance and capacity while offering the same ONTAP experience found with unified ONTAP.
+|===
+
+
+[[new-ontap-features-to-focus-on]]
+== New ONTAP features to focus on
+
+Each ONTAP release delivers new features to improve overall performance, stability, usability, etc. This test plan is intended to be ever-evolving and include new features to test and try out. You can find version-specific feature tests in the " OPTIONAL: New feature tests" test plan.
+New features in this release of ONTAP:
+
+[cols="1,1",options="header"]
+|===
+| ONTAP 9.19.1GA feature | Full or limited support
+| FabricPool tiering | limited/dark content until 9.19.1P2
+| Larger Storage Availability Zone | Full
+| Aggressive readahead | Full
+| Global deduplication | Full
+| 32 node support | limited
+| Dynamic storage efficiency | Full
+|===
+
+
+[[documentation-requirements]]
+== Documentation requirements
+
+NetApp documentation for NetApp AFX can be found here:
+* NetApp AFX general documentation
+* NetApp AFX technical reports
+
+[[licensing-requirements]]
+== Licensing requirements
+
+No special licenses are needed for NetApp AFX. It uses the same ONTAP licensing as unified ONTAP.

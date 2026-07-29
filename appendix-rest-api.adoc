@@ -1,0 +1,145 @@
+= Appendix: REST API Examples
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:appendix.adoc[← Back to Appendix]
+
+ONTAP REST API examples for authentication, FlexGroup volume creation, deletion, network interfaces, and NFS server configuration.
+
+
+[[rest-api-examples-for-testing]]
+== REST API examples for testing.
+
+The following section shows example REST API calls for cluster operations. These can be used alongside or in lieu of current automation suites being used with unified ONTAP. These APIs cover the following standard administration scenarios. A Linux machine is required to use these scripts. Bash, and curl are required to use the scripts.
+The examples include:
+* Creating and deleting FlexGroup volumes.
+* Creating and deleting a network interface.
+* Create and initialize a SnapMirror relationship.
+* Show NFS server configuration.
+* Create an export policy rule.
+REST API documentation is available by accessing the System Manager link for the system below:
+https://*[clus_mgmt_ip]*/docs/api
+If you prefer to use Ansible playbooks, you can generate sample YAML files in System Manager via the "Save to Ansible playbook" button, found on some System Manager functions (see below).
+
+[[generate-an-auth_token]]
+=== Generate an AUTH_TOKEN
+
+Auth_tokens authenticate a user to the ONTAP cluster when using the REST API. This token is required to run the scripts below.
+One way to create the AUTH_TOK value is to use the command below substituting the password string for the password provided by the account team. 
+
+[source,console]
+----
+echo -n admin:<password> | base64
+----
+
+Another way if you do not have a Linux system is to retrieve the cluster's AUTH_TOKEN for the desired user is to use the REST API documentation located at _https://[clus_mgmt]/docs/api_.
+Once on the page, scroll down to find the "Login" button.
+Click the button and login with the desired username and password and click "Authorize."
+Scroll down to GET cluster. Expand and click "Try it out" and "Execute."
+The curl output will contain the AUTH_TOKEN.
+
+[[create-flexgroup-volume]]
+=== Create FlexGroup volume
+
+
+[source,console]
+----
+curl -k -X POST
+"https://[CLUS_MGMT_IP]/api/storage/volumes?return_timeout=0&return_records=false" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT AUTH_TOKEN]" \
+-H  "Content-Type: application/json" \
+-d "{  \"constituent_count\": 64,  \"guarantee\": {    \"type\": \"none\"  },  \"name\": \"vol1\",  \"nas\": {    \"export_policy\": {      \"name\": \"default\"    },    \"junction_parent\": {      \"name\": \"vs1_root\"    },    \"path\": \"/vol1\",    \"security_style\": \"unix\",    \"unix_permissions\": 777  },  \"size\": 500000000000000,  \"snapshot_policy\": {    \"name\": \"none\"  },  \"space\": {    \"large_size_enabled\": true    },  \"style\": \"flexgroup\",  \"svm\": {    \"name\": \"svm1\"  },  \"type\": \"rw\"}"
+----
+
+
+NOTE: For a script to perform this task, see the "Scripts" section of this doc.
+
+
+[[delete-volumes]]
+=== Delete volumes
+
+First, retrieve the volume UUID that you want to delete:
+
+[source,console]
+----
+curl -k -X GET
+"https://[CLUS_MGMT_IP]/api/storage/volumes?is_constituent=false&fields=uuid,&return_records=true&return_timeout=15" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT_AUTH_TOKEN]"
+----
+
+Then, delete the volume (force=true means bypass the recovery queue):
+
+[source,console]
+----
+curl -k -X DELETE "https://[CLUS_MGMT_IP]/api/storage/volumes/[UUID here]?force=true&return_timeout=0" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT_AUTH_TOKEN]"
+----
+
+
+[[display-the-storage-availability-zone-information]]
+=== Display the storage availability zone information
+
+
+[source,console]
+----
+curl -k -X GET "https://[CLUS_MGMT_IP]/api/storage/availability-zones? \fields=*&max_records=100&return_records=true&return_timeout=15" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT AUTH_TOKEN]"
+----
+
+
+[[data-interfaces]]
+=== Data interfaces
+
+To list all data interfaces:
+
+[source,console]
+----
+curl -k -X GET "https://[CLUS_MGMT_IP]/api/network/ip/interfaces?fields=ip.address,location.node.name,location.port.name&service_policy=default-data-files&return_records=true&return_timeout=15" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT_AUTH_TOKEN]"
+----
+
+To create a data interface:
+
+[source,console]
+----
+curl -k -X POST
+"https://[CLUS_MGMT_IP]/api/network/ip/interfaces?return_timeout=0&return_records=false" \
+-H "accept: application/json" \
+-H "authorization: Basic [INSERT_AUTH_TOKEN]" \
+-H "Content-Type: application/json" \
+-d { \"name\": \"{LIF_NAME}\", \"scope\": \"svm\", \"svm\": \"{SVM_NAME}\", \"ip\": {  \"address\": \"{IP}\",  \"netmask\": \"{NETMASK}\" }, \"location\": {  \"home_node\": \"{NODE}\",   \"home_port\": \"{PORT}\" }
+----
+
+
+NOTE: For a script to create interfaces, see the "Scripts" section of this document.
+
+To delete a data interface (UUID from list required):
+
+[source,console]
+----
+curl -k -X DELETE "https://[CLUS_MGMT_IP]/api/network/ip/interfaces/[UUID]" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT_AUTH_TOKEN"
+----
+
+
+[[show-nfs-server-configuration]]
+=== Show NFS server configuration
+
+
+[source,console]
+----
+curl -k -X GET "https://[CLUS_MGMT_IP]/api/protocols/nfs/services?fields=*&max_records=100&return_records=true&return_timeout=15" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT AUTH_TOKEN]"
+----
+

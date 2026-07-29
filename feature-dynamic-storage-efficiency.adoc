@@ -1,0 +1,91 @@
+= Optional Feature: Dynamic Storage Efficiency
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:test-plans.adoc[← Back to Test Plans]
+
+Dynamic storage efficiency provides adaptive compression and compaction to maximize storage space savings without impacting foreground I/O performance.
+
+
+[[dynamic-storage-efficiency]]
+== Dynamic storage efficiency
+
+Dynamic storage efficiency is a new ONTAP feature available in NetApp AFX. Dynamic storage efficiency is a feature designed to optimize storage efficiency operations for large-scale, high-performance workloads. By intelligently managing when storage efficiency processes are active, this feature helps maintain high throughput during bursty write operations.
+A high-level overview of the feature details:
+* Dynamic SE is always on and does not have a cluster command to manually disable it.
+* In ONTAP 9.19.1, *client write throughput* is the primary metric used to determine when to dynamically enable or disable throttling of inline Storage Efficiency (SE).
+** Dynamic SE is enabled when a workload throughput exceeds 12GB/s.
+** Dynamic SE is disabled when a workload throughput drops below 10GB/s
+* Dynamic SE will disable inline storage efficiencies when ONTAP decides to enable it. Post-process efficiencies will take place later on a schedule.
+
+[[checking-if-dynamic-se-is-in-use]]
+=== Checking if Dynamic SE is in use
+
+You can collect statistics specific to dynamic SE by running the following command:
+
+[source,console]
+----
+AFX::> statistics start -object tsse -counter dse_num_write_ops_ise_throttle | dse_num_write_blks_ise_throttle | dse_num_dynamic_se_throttle_enabled |dse_num_dynamic_se_throttle_disabled | dse_num_tput_already_updated | dse_last_throttle_enable_time_msec | dse_last_throttle_disable_time_msec  | dse_num_write_bytes_wrap | dse_num_prev_time_wrap | dse_num_bkg_throttle_enabled | dse_num_bkg_throttle_disabled | dse_num_dynamic_se_ads_throttle -sample-id dynamicSE
+----
+
+Statistics collection is being started for sample-id: dynamics
+To show them:
+
+[source,console]
+----
+AFX::> rtp-afx1k-c01::*> statistics show -object tsse -counter dse_num_write_ops_ise_throttle | dse_num_write_blks_ise_throttle | dse_num_dynamic_se_throttle_enabled |dse_num_dynamic_se_throttle_disabled | dse_num_tput_already_updated | dse_last_throttle_enable_time_msec | dse_last_throttle_disable_time_msec  | dse_num_write_bytes_wrap | dse_num_prev_time_wrap | dse_num_bkg_throttle_enabled | dse_num_bkg_throttle_disabled | dse_num_dynamic_se_ads_throttle -sample-id dynamicSE
+
+Object: tsse
+Instance: tsse
+Start-time: 7/27/2026 16:16:27
+End-time: 7/27/2026 16:16:50
+Elapsed-time: 23s
+Scope: AFX-01
+
+Counter                                                     Value
+-------------------------------- --------------------------------
+dse_last_throttle_disable_time_                             Never
+msec
+dse_last_throttle_enable_time_                              Never
+msec
+dse_last_throttle_disable_time_                             Never
+msec
+dse_last_throttle_enable_time_                              Never
+msec
+dse_num_tput_already_updated                                   59
+----
+
+You can also gather additional insights (such as config details, last run, etc.) about dynamic SE with the following advanced privilege command:
+
+[source,console]
+----
+AFX::> set advanced
+AFX::*> run local wafl stats dynamic_se
+Dynamic SE Stats:
+Dynamic SE enabled:                                =        Yes
+Dynamic SE throttle enable throughput              =      12288 MBps
+Dynamic SE throttle disable throughput             =      10240 MBps
+dynamic_se.wdse_num_write_ops_ise_throttle         =          0
+dynamic_se.wdse_num_write_blks_ise_throttle        =          0
+dynamic_se.wdse_num_dynamic_se_throttle_enabled    =          0
+dynamic_se.wdse_num_dynamic_se_throttle_disabled   =          0
+dynamic_se.wdse_num_tput_already_updated           =          0
+Time since dynamic SE throttling was last enabled  =      Never
+Time since dynamic SE throttling was last disabled =      Never
+dynamic_se.wdse_num_write_bytes_wrap               =          0
+dynamic_se.wdse_num_prev_time_wrap                 =          0
+dynamic_se.wdse_num_bkg_throttle_enabled           =          0
+dynamic_se.wdse_num_bkg_throttle_disabled          =          0
+dynamic_se.wdse_num_dynamic_se_ads_throttle        =          0
+Current sample index =                             =          0
+Delta write throughput 10 samples (in MBps):
+0 |         0 |         0 |         0 |         0 |         0 |         0 |         0 |         0 |         0 |
+----
+
+
+[[test-plan----dynamic-storage-efficiency]]
+=== Test plan -- Dynamic storage efficiency

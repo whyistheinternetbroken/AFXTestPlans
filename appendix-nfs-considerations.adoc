@@ -1,0 +1,174 @@
+= Appendix: NFS Considerations
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:appendix.adoc[← Back to Appendix]
+
+Recommended NFS mount options, fstab configuration, automounter setup, 64-bit file IDs, and pNFS/session trunking validation.
+
+
+NOTE: For benchmark-specific mount options used during performance testing, see xref:performance-test-plan.adoc#mount-options[Performance Test Plan: Mount Options].
+
+
+[[nfs-considerations]]
+== NFS considerations
+
+For NFS workloads, NFSv3 can be used and generally will perform better with high metadata workloads (such as high file count workloads that create many files).
+Most EDA workloads make use of NFSv3 -- especially EDA frontend workloads, which tend to be more metadata heavy.
+
+[[recommended-mount-options-with-nfsv3]]
+=== Recommended mount options with NFSv3
+
+
+[source,console]
+----
+-o vers=3,tcp,hard,intr,nconnect=8
+----
+
+
+[[recommended-mount-options-for-nfsv41]]
+=== Recommended mount options for NFSv4.1
+
+For high read/write workloads -- such as those found with AI/ML training and inference, NFSv4.1 with parallel NFS and session trunking offer performance benefits that NFSv3 does not, with the following considerations:
+* pNFS will require at least one routable network interface per node to function properly.
+* With pNFS, avoid including non-routable network interfaces in the SVM configuration.
+* NFS session trunking works best when there are routable network interfaces on multiple ports per node to provide added throughput possibilities.
+* Session trunking and pNFS are supported only with NFSv4.1 and later.
+* Session trunking is provided via a mount option. The method of enabling trunking for an NFS mount will depend on the Linux version in use.
+* pNFS requires no special mount options.
+
+[[ubuntu-22-and-later]]
+==== Ubuntu 22 and later
+
+AI/ML training and inference workloads with NFSv4.1
+
+[source,console]
+----
+-o vers=4.1,tcp,hard,intr,nocto,actimeo=3600,max_connect=8
+----
+
+
+NOTE: A mount command will need to be issued for each individual network interface to ensure session trunking is in use with Ubuntu.
+
+Rather than relying on individual mount commands, use the /etc/fstab file to configure the mount commands and then run them all at once with mount -a. See "using fstab" below.
+
+[[rhel-9x-and-later]]
+==== RHEL 9.x and later
+
+AI/ML training and inference workloads with NFSv4.1
+
+[source,console]
+----
+-o vers=4.1,tcp,hard,intr,nocto,actimeo=3600,trunkdiscovery
+----
+
+
+NOTE: Trunkdiscovery mount option will automatically find the network paths that are a part of the trunking group.
+
+
+[[using-fstab]]
+=== Using fstab
+
+The /etc/fstab file on Linux clients can be used to set NFS mount points in a single file to simplify mount operations. Below is an example of an entry in /etc/fstab for an NFS mount:
+
+[source,console]
+----
+SVM:/NFS_export     /mnt/NFS_export nfs     intr,nfsvers=4.1,max_connect=8,tcp   0 0
+----
+
+When an NFS mount is needed and fstab is populated, the command can be:
+
+[source,console]
+----
+# mount -a
+----
+
+
+[[using-automounter]]
+=== Using automounter
+
+The automounter is a service that can be used to configure NFS mount points and have the autofs process manage mounts when a directory is accessed without needing interaction from end users to issue mount commands.
+Automounter requires:
+* Autofs installed
+* /etc/auto.master configured
+* /etc/auto.[map] configured (ie, auto.misc)
+Below are some examples of auto.master and auto.misc file configurations.
+*/etc/auto.*master
+
+[source,console]
+----
+/- /etc/auto.misc
+----
+
+*/etc/auto.misc*
+
+[source,console]
+----
+/mnt/NFS_export -rw,nosuid,hard,tcp,max_connect=8 10.192.160.180:/NFS_export
+/mnt/NFS_export -rw,nosuid,hard,tcp,max_connect=8 10.192.160.181:/NFS_export
+/mnt/NFS_export -rw,nosuid,hard,tcp,max_connect=8 10.192.160.182:/NFS_export
+/mnt/NFS_export -rw,nosuid,hard,tcp,max_connect=8 10.192.160.183:/NFS_export
+----
+
+
+[[nfs-64-bit-file-ids]]
+=== NFS 64-bit file IDs
+
+FlexGroup volumes allow up to 400 billion files, provided 64-bit file IDs are enabled. While these should be enabled as part of the initial setup and configuration, ensure they are enabled in the environment in the first test plan.
+To enable them:
+
+[source,console]
+----
+AFX::> set advanced; nfs modify -v3-64bit-identifiers enabled -v4-64bit-identifiers enabled
+----
+
+
+[[pnfs-and-session-trunking-validation]]
+=== pNFS and session trunking validation
+
+When using pNFS and/or session trunking, it can be difficult to determine if the protocol features are actively being used. ONTAP provides commands to check these features for activity.
+*To show pNFS devices*
+
+[source,console]
+----
+AFX::> set advanced -confirmations off
+AFX::*> pnfs devices show -vserver svm1
+AFX::*> pnfs devices mappings show -vserver svm1
+----
+
+*To show connected NFS clients*
+
+[source,console]
+----
+AFX::> nfs connected-clients show -vserver svm1
+AFX::> network connections active show -service nfs
+----
+
+*To verify if pNFS and NFSv4.1 session trunking calls are being issued*
+To validate if pNFS and/or session trunking are active, use the below to look for incrementing values for pNFS/trunking counters.
+
+NOTE: For a list of pNFS and session trunking specific counters (and examples) see the Appendix.
+
+
+[source,console]
+----
+AFX::> set diag
+AFX::*> nfs show -fields v4.1,v4.1-pnfs,v4.1-trunking
+AFX::*> statistics start -object nfsv4_1|nfsv4_1_diag -sample-id AFX
+AFX::*> statistics show -object nfsv4_1|nfsv4_1_diag -counter [name1]|[name2]|[name3] -sample-id AFX
+----
+
+To clear pNFS devices (when adding or removing interfaces):
+
+[source,console]
+----
+AFX::> set diag -c off
+AFX::*> pnfs lif-mapping-cache flush -node *
+AFX::*> pnfs devices cache flush -node * -vserver [SVM1]
+AFX::*> pnfs devices invalidate -global-device-table-id *
+----
+

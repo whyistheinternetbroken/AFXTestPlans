@@ -1,0 +1,110 @@
+= Optional Test 15: Snapshots and SnapMirror
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:test-plans.adoc[← Back to Test Plans]
+
+This optional test covers Snapshots and SnapMirror impact on live workload performance.
+
+
+[[optional-snapshots-and-snapmirror-impact-on-performance]]
+== OPTIONAL: Snapshots and SnapMirror impact on performance
+
+Snapshots and SnapMirror are integral to a complete data protection story for ONTAP. Part of their success is tied to their minimal impact on production workloads. The goal of this test is to confirm that snapshots and SnapMirror in operation during performance tests have little to no impact on the system performance.
+
+.Test ) OPTIONAL: Snapshots and SnapMirror during live workloads.
+
+
+[cols="1,1,1,1,1",options="header"]
+|===
+| Section | Details |  |  | 
+| Test 15 | Tester: |  | Date: | 
+| Test requirements: | No specific requirements. +
+Performance testing being run during mirroring and snapshots. |  |  | 
+| Test procedure: +
+Snapshot steps +
+Verify benchmarks or performance workloads are running during these tests. +
+In most cases, you won’t be able to see any sort of impact show up on the performance graphs in System Manager, so you would be best served to view the impact from the command line.  +
+ +
+From the NetApp AFX cluster CLI, kick off the performance statistics +
+cluster::> set advanced +
+cluster::*> statistics show-periodic -counter nfs-ops\|data-sent\|data-recv -interval 1 +
+ +
+From the client, start a long running job. +
+Once the workload begins, you should start to see performance stats every 1 second +
+cluster::*> statistics show-periodic -counter nfs-ops\|data-sent\|data-recv -interval 1 +
+cluster: cluster.cluster: 5/12/2025 12:14:46 +
+              data     data +
+  nfs-ops     recv     sent +
+ -------- -------- -------- +
+     1985   1.86MB    423MB +
+     2310   1.52MB    352MB +
+     2068   1.69MB    381MB +
+     2116   1.75MB    400MB +
+     2512   1.72MB    398MB +
+     2108   1.76MB    397MB +
+     2739   1.71MB    387MB +
+     2074   1.66MB    373MB +
+ +
+From the NetApp AFX GUI, take a snapshot while the job is running +
+Navigate to the volume screen and use themenu to select Snapshot +
+ +
+Specify a name and click “Add” +
+ +
+Verify that little to no performance impact occurred: +
+Example: +
+              data     data +
+  nfs-ops     recv     sent +
+ -------- -------- -------- +
+     2507   1.85MB    423MB +
+     2091   1.75MB    391MB +
+     2575   1.50MB    347MB +
+     1911   1.56MB    396MB  << snapshot occurred somewhere in this range +
+     2437   2.13MB    364MB   +
+     1887   1.80MB    413MB +
+     2495   1.48MB    349MB +
+     1695   1.59MB    356MB  << snapshot occurred somewhere in this range +
+     2221   1.56MB    355MB +
+     2156   1.49MB    344MB +
+     1658   1.55MB    358MB +
+     2062   1.34MB    312MB +
+     2184   1.65MB    387MB +
+ +
+SnapMirror steps +
+In the “Data Migration” section, you established a SnapMirror from NetApp AFX to unified ONTAP (or, alternately, to the same NetApp AFX cluster) in step 8. This SnapMirror can be used to issue an update to observe the performance impact of the transfer on a production workload. +
+ +
+Verify benchmarks or performance workloads are running during these tests. +
+In most cases, you won’t be able to see any sort of impact show up on the performance graphs in System Manager, so you would be best served to view the impact from the command line.  +
+ +
+From the NetApp AFX cluster CLI, kick off the performance statistics +
+cluster::> set advanced +
+cluster::*> statistics show-periodic -counter nfs-ops\|data-sent\|data-recv -interval 1 +
+ +
+From the client, start a long-running job. +
+Once the workload begins, you should start to see performance stats every 1 second +
+cluster::*> statistics show-periodic -counter nfs-ops\|data-sent\|data-recv -interval 1 +
+cluster: cluster.cluster: 5/12/2025 12:14:46 +
+              data     data +
+  nfs-ops     recv     sent +
+ -------- -------- -------- +
+     1985   1.86MB    423MB +
+     2310   1.52MB    352MB +
+     2068   1.69MB    381MB +
+     2116   1.75MB    400MB +
+     2512   1.72MB    398MB +
+     2108   1.76MB    397MB +
+     2739   1.71MB    387MB +
+     2074   1.66MB    373MB +
+ +
+From the NetApp AFX GUI, update the SnapMirror relationship you created in the Data Migration section while the job is running +
+Navigate to Protection -> Replication on the NetApp AFX GUI |  |  |  | 
+| Expected outcome(s): +
+Snapshots and SnapMirror should not impact production workload performance in any meaningful way. |  |  |  | 
+| Test results: |  |  |  | 
+| Test summary: |  |  |  | 
+| Comments: |  |  |  | 
+|===

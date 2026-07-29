@@ -1,0 +1,46 @@
+= Optional Feature: FabricPool Tiering
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:test-plans.adoc[← Back to Test Plans]
+
+FabricPool automatically tiers cold data blocks to an S3-compatible object store. NetApp AFX support begins in ONTAP 9.19.1P2.
+
+
+[[fabricpool-tiering]]
+== FabricPool tiering
+
+NetApp ONTAP provides a way to automatically tier cold data blocks from an active file system to an S3-capable target (such as ONTAP S3, StorageGRID, cloud, etc.) as a way to offer cost-benefits by reducing the amount of capacity being used for inactive data on performance flash tiers.
+Starting in ONTAP 9.19.1P2, NetApp AFX adds support for FabricPool tiering. In the initial releases of NetApp AFX, FabricPool was not available as it is based on physical aggregate configurations, while NetApp AFX uses virtualized aggregate concepts. As a result, FabricPool tiering is configured and managed at the volume level.
+ONTAP 9.19.1 GA does not officially support FabricPool tiering (and commands are hidden), but the commands to manage it are available to use in a testing scenario such as this one.
+The new AFX-specific FabricPool command options are below:
+
+[source,console]
+----
+AFX::> cluster object-store config create ?
+[-object-store-name] <text>               Object Store Configuration Name
+[-provider-type] <providerType>           Type of the Object Store Provider
+[ -auth-type <object_store_auth_type> ]    Authentication Used to Access the Object Store
+[-server] <Remote InetAddress>            Fully Qualified Domain Name of the Object Store Server
+[ -is-ssl-enabled {true|false} ]           Is SSL/TLS Enabled (default: true)
+[ -port <integer> ]                        Port Number of the Object Store (default: 443)
+[-container-name] <text>                  Data Bucket/Container Name
+{ [ -access-key <text> ]                   Access Key ID for S3 Compatible Provider Types
+[ -secret-password <text> ]              Secret Access Key for S3 Compatible Provider Types
+| [ -azure-account <text> ]                Azure Account
+[ -ask-azure-private-key {true|false} ]  Ask to Enter the Azure Access Key without Echoing
+[ -azure-private-key <text> ]            Azure Access Key
+[ -ipspace <IPspace> ]                     IPspace to Use in Order to Reach the Object Store (default: Default)
+[ -use-http-proxy {true|false} ]           Use HTTP Proxy (default: false)
+[ -azure-msi-token <text> ]                Azure MSI Token for Authentication
+----
+
+
+[[test-plan----netapp-afx-fabricpool]]
+=== Test plan -- NetApp AFX FabricPool
+
+An official test plan will be created once FabricPool is officially supported for NetApp AFX in ONTAP 9.19.1P2.
