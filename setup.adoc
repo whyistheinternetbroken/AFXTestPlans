@@ -18,27 +18,30 @@ This section covers hardware requirements, client configurations, networking, an
 
 Hardware installation and initial configuration documentation links can be found in the "Documentation requirements" section. This test plan assumes that the initial setup and configuration has already been performed.
 
-NOTE: It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and FabricPool. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at:  
+NOTE: It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and FabricPool. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at: link:https://github.com/whyistheinternetbroken/AFX[https://github.com/whyistheinternetbroken/AFX]
 
 
 [[initial-state-of-the-test-environment]]
 ==== Initial state of the test environment
 
 The initial environment will depend on the number of nodes acquired for the test plan. The number of nodes available may also impact the number of tests available to the system (ie, node scaling, failover, etc).
+
 NetApp AFX officially supports a minimum configuration of:
-Four storage nodes 
-Initial setup can be a two node HA-pair to provide scale/balancing testing
-2 more nodes added later as part of test plan steps (optional)
-Two Cisco switches (for cluster, HA & disk network)
-RCF file to be provided 
-Shelf minimums:
-Fully populated shelves (24 drives each shelf)
-1 shelf of 15.3 TB SSDs
-2 shelves of 7.6 TB, 30.1 TB, or 60.1 TB SSDs
-No drive mixing support yet
-Recommended ONTAP version of 9.19.1 or later
-Pre-configured cluster, SVM, NFS server, protocol licenses
-Node and cluster management interfaces for access to the CLI and GUI
+
+* Four storage nodes
+** Initial setup can be a two node HA-pair to provide scale/balancing testing
+** 2 more nodes added later as part of test plan steps (optional)
+* Two Cisco switches (for cluster, HA & disk network)
+** RCF file to be provided
+* Shelf minimums:
+** Fully populated shelves (24 drives each shelf)
+** 1 shelf of 15.3 TB SSDs
+** 2 shelves of 7.6 TB, 30.1 TB, or 60.1 TB SSDs
+** No drive mixing support yet
+* Recommended ONTAP version of 9.19.1 or later
+* Pre-configured cluster, SVM, NFS server, protocol licenses
+* Node and cluster management interfaces for access to the CLI and GUI
+
 
 [[clients]]
 ==== Clients
@@ -56,50 +59,113 @@ Ubuntu 24.04.1 LTS
 Doca-all 3.4.0 3.4.0-085000 with rpcrdma module
 ----
 
+A combined client tuning script is available at:
+link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/Clients[https://github.com/whyistheinternetbroken/Benchmarking/tree/main/Clients]
+
 
 [[client-network-and-nic-tuning]]
 ===== Client network & NIC tuning
 
+The following NIC settings were used in our internal benchmark configurations. Apply them on each client. A script that automates these steps is available at: link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/Clients/tune-client-nic.sh[Clients/tune-client-nic.sh].
+
+*Set RX/TX ring buffers to 8192:*
 
 [source,console]
 ----
-Dual NICs bonded for RoCE (LACP)
-RX/TX ring buffers set to 8192
-PFC and DSCP configured per NIC
-RoCE traffic class set using cma_roce_tos
+# Replace ens1f0np0 with your interface name
+sudo ethtool -G ens1f0np0 rx 8192 tx 8192
 ----
+
+*Verify ring buffer settings:*
+
+[source,console]
+----
+sudo ethtool -g ens1f0np0
+----
+
+*Enable PFC (Priority Flow Control) on priority 3 -- Mellanox/NVIDIA NICs (mlnx_qos):*
+
+[source,console]
+----
+sudo mlnx_qos -i ens1f0np0 --pfc 0,0,0,1,0,0,0,0
+sudo mlnx_qos -i ens1f0np0 --trust dscp
+----
+
+*Enable PFC using iproute2-dcb (alternative):*
+
+[source,console]
+----
+sudo dcb pfc set dev ens1f0np0 prio-pfc 3:on
+----
+
+*Set RoCE traffic class using cma_roce_tos (TOS=106, corresponding to DSCP AF31):*
+
+[source,console]
+----
+# List available RDMA devices
+ls /sys/class/infiniband/
+
+# Set TOS for each device (replace mlx5_0 with your device name)
+sudo sh -c 'echo 106 > /sys/class/infiniband/mlx5_0/cma_roce_tos'
+----
+
+NOTE: These settings are not persistent across reboots. Use the provided script with the `--persistent` flag or configure via systemd/udev rules for production use.
 
 
 [[client-os-tuning]]
 ===== Client OS tuning
 
+The following kernel parameters improve dirty page writeback behavior and RDMA slot allocation for high-throughput NFS workloads. A script that automates these steps is available at: link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/Clients/tune-client-os.sh[Clients/tune-client-os.sh].
+
+*Apply settings dynamically (non-persistent):*
 
 [source,console]
 ----
-sunrpc.rdma_slot_table_entries set to 200
-vm.dirty_background_bytes = 2147483648 (2GB)
-vm.dirty_bytes = 5368709120 (5GB)
+sudo sysctl -w sunrpc.rdma_slot_table_entries=200
+sudo sysctl -w vm.dirty_background_bytes=2147483648
+sudo sysctl -w vm.dirty_bytes=5368709120
+sudo sysctl -w vm.dirty_background_ratio=0
+sudo sysctl -w vm.dirty_ratio=0
+sudo sysctl -w vm.dirty_expire_centisecs=300
+sudo sysctl -w vm.dirty_writeback_centisecs=100
+----
+
+*Apply settings persistently (survives reboots):*
+
+[source,console]
+----
+cat <<'EOF' | sudo tee /etc/sysctl.d/90-netapp-afx-benchmark.conf
+# NetApp AFX Benchmark Client OS Tuning
+sunrpc.rdma_slot_table_entries = 200
+vm.dirty_background_bytes = 2147483648
+vm.dirty_bytes = 5368709120
 vm.dirty_background_ratio = 0
 vm.dirty_ratio = 0
 vm.dirty_expire_centisecs = 300
 vm.dirty_writeback_centisecs = 100
+EOF
+
+# Apply immediately without reboot
+sudo sysctl -p /etc/sysctl.d/90-netapp-afx-benchmark.conf
 ----
 
 
 [[networking-requirements]]
 ==== Networking requirements
 
-All data network interfaces in and ONTAP SVM should be routable to all clients for best results in this test plan. The IP address count needed are as follows:
+All data network interfaces in an ONTAP SVM should be routable to all clients for best results in this test plan. The IP address count needed are as follows:
+
 * Four (4) _intercluster_ interface IP addresses
-** one per node required; to be used for SnapMirror® and FlexCache operations (unless not testing these features)
+** One per node required; to be used for SnapMirror(R) and FlexCache operations (unless not testing these features)
 * At least eight (8) data interface IP addresses (two per node)
 ** pNFS supports up to sixteen (16) data IP interfaces per node
 ** Can be TCP or RDMA capable
 * One (1) cluster management interface IP address for administrative interaction
-* Four (4) node management interface IP address (one per node)
-* Four (4) service processor/BMC IP address (one per node)
+* Four (4) node management interface IP addresses (one per node)
+* Four (4) service processor/BMC IP addresses (one per node)
 * Client IP addresses
-** NICs can be bonded, trunked, etc. No set requirements there unless using RDMA, which may have support limitations for NICs.
+** NICs can be bonded, trunked, etc. No set requirements unless using RDMA, which may have support limitations for certain NIC models
+
 
 [[nfs-server-configuration]]
 ==== NFS server configuration
@@ -108,6 +174,7 @@ The following shows the NFS server options that should be configured for this te
 
 [cols="1,1",options="header"]
 |===
+| Option | Value
 | v4.1 | Enabled
 | v4-id-domain | [domain name]*
 | v4.1-pnfs | Enabled
@@ -125,7 +192,8 @@ The following shows the NFS server options that should be configured for this te
 | nfs-rootonly | Disabled
 |===
 
-_*__The NFSv4__ ID domain can be any value, provided it matches what is set on the NFS clients. _
+_*The NFSv4 ID domain can be any value, provided it matches what is set on the NFS clients._
+
 To verify the NFSv4 ID domain on the client:
 
 [source,console]
@@ -137,7 +205,7 @@ Domain = user-domain.company.com
 ----
 
 
-NOTE: If those commands do not work, you likely have not installed the proper NFS packages to leverage NFSv4.x. Ie, nfs-common for RedHat-based kernels.
+NOTE: If those commands do not work, you likely have not installed the proper NFS packages to leverage NFSv4.x. For example, nfs-common for Debian/Ubuntu-based systems.
 
 
 [[benchmark-cli-configuration]]
@@ -145,11 +213,12 @@ NOTE: If those commands do not work, you likely have not installed the proper NF
 
 The following shows the NFS CLI command used for internal performance benchmark runs (consolidated from the performance test plan). For full test context, see xref:performance-test-plan.adoc[Performance Test Plan].
 
-NOTE: RDMA reduces latency and increases throughput for most workloads -- roughly 10-30%.
+A script that connects to the cluster via SSH and applies this configuration is available at:
+link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/ONTAP/NAS/configure-nfs-server.sh[ONTAP/NAS/configure-nfs-server.sh]
 
+NOTE: RDMA reduces latency and increases throughput for most workloads -- roughly 10-30%.
 
 [source,console]
 ----
 set advanced; nfs modify -vserver [SVM] -v3 enabled -v4.1 enabled -v4.0 disabled -v4-id-domain [yourdomain.com] -v4.1-pnfs enabled -v4.1-trunking enabled -v4-64bit-identifiers enabled -v3-64bit-identifiers enabled -chown-mode unrestricted -tcp-max-xfer-size 262144 -mount-rootonly disabled -nfs-rootonly disabled -v3-hide-snapshot enabled -rdma [enabled optional]
 ----
-
