@@ -14,6 +14,8 @@ This section covers document overview, support contacts, new ONTAP 9.19.1 featur
 
 We rely on our customers to provide detailed feedback throughout testing if at all possible. Product Management, Technical Marketing, and Engineering teams at NetApp will be actively involved in collecting and analyzing this feedback. Customers can leverage multiple communication channels to share your feedback and insights, including email or by scheduling meetings directly with the Product team. This feedback is incredibly important to us as it plays a critical role in refining and improving our products to meet and exceed customer expectations.
 
+Contact us at mailto:ng-afx-testplans@netapp.com[ng-afx-testplans@netapp.com].
+
 [[support]]
 === Support
 
@@ -33,18 +35,14 @@ Using the general NetApp support avenues is the preferred method of reporting an
 [[overview]]
 == Overview
 
-
-[cols="1,1",options="header"]
-|===
-|  | NetApp AFX® is a new NAS and object-only platform that takes standard ONTAP software and replaces the multi-aggregate architecture for a single shared capacity pool, where all nodes in a cluster can utilize the same shelves. +
+NetApp AFX is a new NAS and object-only platform that takes standard ONTAP software and replaces the multi-aggregate architecture for a single shared capacity pool, where all nodes in a cluster can utilize the same shelves.
 This disaggregated architecture offers a way to present an asymmetric number of compute nodes or storage shelves for cost-effective performance and capacity while offering the same ONTAP experience found with unified ONTAP.
-|===
 
 
 [[new-ontap-features-to-focus-on]]
 == New ONTAP features to focus on
 
-Each ONTAP release delivers new features to improve overall performance, stability, usability, etc. This test plan is intended to be ever-evolving and include new features to test and try out. You can find version-specific feature tests in the " OPTIONAL: New feature tests" test plan.
+Each ONTAP release delivers new features to improve overall performance, stability, usability, etc. This test plan is intended to be ever-evolving and include new features to test and try out. You can find version-specific feature tests in the "OPTIONAL: New feature tests" test plan.
 New features in this release of ONTAP:
 
 [cols="1,1",options="header"]
@@ -63,8 +61,9 @@ New features in this release of ONTAP:
 == Documentation requirements
 
 NetApp documentation for NetApp AFX can be found here:
-* NetApp AFX general documentation
-* NetApp AFX technical reports
+
+* link:https://docs.netapp.com/us-en/ontap-afx/[NetApp AFX general documentation]
+* link:https://docs.netapp.com/us-en/ontap-technical-reports/afx/afx-learn-about.html[NetApp AFX technical reports]
 
 [[licensing-requirements]]
 == Licensing requirements
