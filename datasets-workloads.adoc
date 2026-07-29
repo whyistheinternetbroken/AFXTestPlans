@@ -27,6 +27,7 @@ NetApp AFX is intended for high performance NAS and object workloads. Key attrib
 * Flexible workload support on shared datasets with minimal tuning changes
 
 Because it runs ONTAP, NetApp AFX can support multiple workload classes at the same time. Common industries include:
+
 * Media and entertainment (movies, television, streaming, music, gaming)
 * Electronic Design Automation/EDA (semiconductor and chip development)
 * Oil, gas & seismic
@@ -55,8 +56,8 @@ From an application/solution perspective, relevant workloads include:
 * Virtualization
 * Media and entertainment
 
-[[are-you-currently-using-ontap?]]
-==== Are you currently using ONTAP?
+[[if-you-are-currently-using-ontap]]
+==== If you are currently using ONTAP
 
 If ONTAP is currently running your production workloads, this test plan will use SnapMirror to efficiently and quickly replicate volumes to NetApp AFX. 
 Some considerations:
@@ -73,19 +74,23 @@ An alternative method of leveraging industry standard benchmarks for the workloa
 [[supported-data-protocols]]
 === Supported data protocols
 
-NetApp AFX is compatible with the following data protocols: 
+NetApp AFX is compatible with the following data protocols:
 
-* NFS
-** NFSv3
-** NFSv4.0
-** NFSv4.1 / NFSv4.2 (with pNFS)
-* SMB
-** SMB2.x
-** SMB3.x
-* Dual protocol NAS (SMB and NFS)
-* S3
-* NFS over RDMA
-* File / object multiprotocol (Present an existing NAS volume as an S3 bucket)
+[.light-gray-header,cols="1,1,1",options="header"]
+|===
+| NFS | SMB | Object
+
+| NFSv3
+NFSv4.0
+NFSv4.1 / NFSv4.2 (with pNFS)
+NFS over RDMA
+| SMB2.x
+SMB3.x
+Dual protocol NAS (SMB and NFS)
+| S3
+S3 + NFS dual access
+File / object multiprotocol (present an existing NAS volume as an S3 bucket)
+|===
 
 NOTE: As mentioned previously, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
 
@@ -203,7 +208,7 @@ Remediation/prevention +
 Avoid creating millions of files in a single directory when possible. +
 Monitor for maxdirsize usage via the EMS message wafl.dir.size.warning and wafl.dir.size.max.warning +
 Increase the `-maxdirsize` value to no more than 4GB if testing includes creating >2 million files in a single directory
-| TCP connections | 100,000 per node | If a TCP connection maximum is exceeded on a node, then new mounts will be disallowed until connections are freed up. This scenario is an uncommon occurrence due to the high number of connections allowed, but in Kubernetes/container environments where NFS is used, this can happen on occasion â€“ particularly when initial mounts are occurring across many clients, TCP is not specified in the mount options, and nconnect is in use. This mainly impacts NFSv3. +
+| TCP connections | 100,000 per node | If a TCP connection maximum is exceeded on a node, then new mounts will be disallowed until connections are freed up. This scenario is an uncommon occurrence due to the high number of connections allowed, but in Kubernetes/container environments where NFS is used, this can happen on occasion – particularly when initial mounts are occurring across many clients, TCP is not specified in the mount options, and nconnect is in use. This mainly impacts NFSv3. +
  +
 Remediation/prevention +
 Use the `tcp` mount option value to avoid UDP mount requests for NFSv3 +
@@ -216,9 +221,9 @@ Session slots are the number of supported in-flight requests in a single NFSv4.x
  +
 Remediation/prevention +
 Limit the session slots (`-v4.x-session-num-slots`) to 64 when using NFSv4.x
-| RPC slot tables | 128 per TCP connection | NFS slot tables help control the concurrency of operations for NFS mounts. If they are exceeded in ONTAP, then the NFS server will create a wait queue for incoming operations, which will then impact performance. One of the main signs of this is the EMS message nblade.execsOverLimit. This event is triggered when a delta of incoming requests exceeds the monitored value in ONTAP. In some cases, this event may fire as a false positive where performance isnâ€™t being negatively impacted, but if you are seeing these messages, you are generally exceeding the 128 limit. +
+| RPC slot tables | 128 per TCP connection | NFS slot tables help control the concurrency of operations for NFS mounts. If they are exceeded in ONTAP, then the NFS server will create a wait queue for incoming operations, which will then impact performance. One of the main signs of this is the EMS message nblade.execsOverLimit. This event is triggered when a delta of incoming requests exceeds the monitored value in ONTAP. In some cases, this event may fire as a false positive where performance isn't being negatively impacted, but if you are seeing these messages, you are generally exceeding the 128 limit. +
  +
-By default, modern NFS clients allow dynamic control of NFS slot tables by way of communication between the client and NFS server. ONTAPâ€™s NFS server has no configurable or advertised value for this, so the NFS client has no way of knowing how many slot tables the server supports. As a result, the client will send up to the maximum of 65536 slot table entries to the NFS mountâ€™s IP address, which greatly exceeds ONTAPâ€™s 128 maximum.  +
+By default, modern NFS clients allow dynamic control of NFS slot tables by way of communication between the client and NFS server. ONTAP's NFS server has no configurable or advertised value for this, so the NFS client has no way of knowing how many slot tables the server supports. As a result, the client will send up to the maximum of 65536 slot table entries to the NFS mount's IP address, which greatly exceeds ONTAP's 128 maximum.  +
  +
 This can impact both NFSv3 and NFSv4.x. +
  +
