@@ -17,7 +17,7 @@ NetApp FlexCache volumes provide a way to localize reads on remote datasets by p
 
 .Test ) OPTIONAL: Use FlexCache between unified and NetApp AFX
 
-[cols="1,4",%autowidth]
+[cols="1,4",width="100%"]
 |===
 | Section | Details
 | Test 13 | Tester: ________________  Date: ________________

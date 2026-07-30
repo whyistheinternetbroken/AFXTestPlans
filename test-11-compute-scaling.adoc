@@ -13,9 +13,9 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 One of the main benefits of NetApp AFX is the ability to scale compute and capacity independently. In this test, we will add 2 additional storage nodes to a 2-node NetApp AFX cluster during live workloads to verify that node additions are not only nondisruptive, but also increase performance scale linearly as volumes are rebalanced across nodes. This can also be done with other node count options (ie, starting with 4 nodes and adding 4 more nodes for an 8 node cluster).
 
-[cols="1",%autowidth]
+[cols="1",width="100%"]
 |===
-| *Test plan 11 - Compute scaling (optional)*
+<| *Test plan 11 - Compute scaling (optional)*
 
 a| *Test procedure:*
 

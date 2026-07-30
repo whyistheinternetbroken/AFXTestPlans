@@ -17,7 +17,7 @@ The upgrade process for NetApp AFX is identical to that of unified ONTAP. This t
 
 .Test ) OPTIONAL: Non-Disruptive ONTAP Upgrade
 
-[cols="1,4",%autowidth]
+[cols="1,4",width="100%"]
 |===
 | Section | Details
 | Test 16 | Tester: ________________  Date: ________________

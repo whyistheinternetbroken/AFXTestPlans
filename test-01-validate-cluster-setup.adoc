@@ -13,9 +13,9 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 The first test plan here is to validate the cluster heath, configuration, etc.
 
-[cols="1",%autowidth]
+[cols="1",width="100%"]
 |===
-| *Test plan 1 - Validate the cluster setup*
+<| *Test plan 1 - Validate the cluster setup*
 
 a| *Test procedure – GUI:*
 
@@ -178,12 +178,6 @@ a| *Expected outcome(s):*
 * Storage availability zone concepts are reviewed.
 * Cabling diagrams are viewed.
 * Error states are not present. If errors are present, resolve with support before moving on to the next sections.
-| *Test results:*
-
-| *Test summary:*
-
-| *Comments:*
-
 |===
 
 // navigation-links:start

@@ -18,7 +18,7 @@ This optional test plan covers configuration of S3 for use with the datasets cre
 
 .Test ) OPTIONAL: S3 in ONTAP
 
-[cols="1,4",%autowidth]
+[cols="1,4",width="100%"]
 |===
 | Section | Details
 | Test 14 | Tester: ________________  Date: ________________

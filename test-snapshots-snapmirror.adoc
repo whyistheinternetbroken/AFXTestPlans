@@ -17,7 +17,7 @@ Snapshots and SnapMirror are integral to a complete data protection story for ON
 
 .Test ) OPTIONAL: Snapshots and SnapMirror during live workloads.
 
-[cols="1,4",%autowidth]
+[cols="1,4",width="100%"]
 |===
 | Section | Details
 | Test 15 | Tester: ________________  Date: ________________

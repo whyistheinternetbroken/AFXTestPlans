@@ -13,9 +13,9 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 NetApp AFX makes some changes to how volumes are created and managed. This test aims to display some of those changes, show scale, and how volumes move automatically.
 
-[cols="1",%autowidth]
+[cols="1",width="100%"]
 |===
-| *Test plan 5 - Volume management*
+<| *Test plan 5 - Volume management*
 
 a| *Test procedure:*
 
