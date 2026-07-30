@@ -29,51 +29,51 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 
 | Test 1: Validate cluster setup
 | Validate cluster health, node configuration, disk and network state
-| xref:test-01-validate-cluster-setup.adoc[Test 1 Plan]
+| xref:test-01-validate-cluster-setup.adoc[Test 1]
 
 | Test 2: Enable AutoSupport
 | Configure AutoSupport for log collection and automatic case creation
-| xref:test-02-enable-autosupport.adoc[Test 2 Plan]
+| xref:test-02-enable-autosupport.adoc[Test 2]
 
 | Test 3: Create network interfaces
 | Create and validate data, management, and intercluster LIFs
-| xref:test-03-create-network-interfaces.adoc[Test 3 Plan]
+| xref:test-03-create-network-interfaces.adoc[Test 3]
 
 | Test 4: Data migration
 | Migrate existing ONTAP data to AFX using SnapMirror or NAS copy tools
-| xref:test-04-data-migration.adoc[Test 4 Plan]
+| xref:test-04-data-migration.adoc[Test 4]
 
 | Test 5: Volume management
 | Create and manage FlexGroup volumes on AFX
-| xref:test-05-volume-management.adoc[Test 5 Plan]
+| xref:test-05-volume-management.adoc[Test 5]
 
 | Test 6: API testing
 | Validate ONTAP REST API for customer automation workflows
-| xref:test-06-api-testing.adoc[Test 6 Plan]
+| xref:test-06-api-testing.adoc[Test 6]
 
 | Test 7: Customer workload -- real data
 | Run production workloads against AFX using SnapMirror or NAS copy
-| xref:test-07-customer-workload-real-data.adoc[Test 7 Plan]
+| xref:test-07-customer-workload-real-data.adoc[Test 7]
 
 | Test 8: Customer workload -- benchmarks
 | Run SPEC SFS 2020 or MLcommons benchmarks against AFX
-| xref:test-08-customer-workload-benchmarks.adoc[Test 8 Plan]
+| xref:test-08-customer-workload-benchmarks.adoc[Test 8]
 
 | Test 9: Performance monitoring
 | Validate performance monitoring with System Manager and NetApp Harvest
-| xref:test-09-performance-monitoring.adoc[Test 9 Plan]
+| xref:test-09-performance-monitoring.adoc[Test 9]
 
 | Test 10: Capacity management
 | View and manage storage capacity
-| xref:test-10-capacity-management.adoc[Test 10 Plan]
+| xref:test-10-capacity-management.adoc[Test 10]
 
 | Test 11: Node additions
 | Add compute nodes during live workloads (optional)
-| xref:test-11-compute-scaling.adoc[Test 11 Plan]
+| xref:test-11-compute-scaling.adoc[Test 11]
 
 | Test 12: Node failure behavior
 | Validate storage failover and giveback during live workloads
-| xref:test-12-node-failure-behavior.adoc[Test 12 Plan]
+| xref:test-12-node-failure-behavior.adoc[Test 12]
 |===
 
 == Optional Functional Tests
@@ -134,4 +134,3 @@ For NFS server configuration reference, see xref:setup.adoc#nfs-server-configura
 >| xref:test-01-validate-cluster-setup.adoc[Next >]
 |===
 // navigation-links:end
-
