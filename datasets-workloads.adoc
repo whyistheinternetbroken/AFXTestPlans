@@ -85,7 +85,6 @@ a|
 * Dual protocol NAS (SMB and NFS)
 a|
 * S3
-* S3 + NFS dual access
 * File / object multiprotocol (present an existing NAS volume as an S3 bucket)
 |===
 
