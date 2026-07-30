@@ -22,11 +22,11 @@ This test plan is split into focused AsciiDoc files linked from this index. Use 
 
 === Test Plans
 
-* xref:test-plans.adoc[Test Plans Overview] -- Full test listing with links to all individual tests
+* xref:test-plans.adoc[Test Plans Overview] -- Full test listing with links to Tests 1-16
 
 ==== Core Performance Tests
 
-* xref:performance-test-plan.adoc[Performance Test Plan] -- Tests 1-12 plus configuration (NFS export policy, volume setup, mount options, networking, ONTAP features)
+* xref:performance-test-plan.adoc[Performance Test Plan] -- Configuration reference (NFS export policy, volume setup, mount options, networking, ONTAP features)
 
 ==== Optional Functional Tests
 
@@ -74,3 +74,4 @@ This test plan is split into focused AsciiDoc files linked from this index. Use 
 >| xref:overview.adoc[Next >]
 |===
 // navigation-links:end
+

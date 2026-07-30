@@ -1,0 +1,204 @@
+﻿= Test 4: Data migration (optional)
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:test-plans.adoc[← Back to Test Plans]
+
+[[data-migration-optional]]
+== Data migration (optional)
+
+The goal for this test is to provide a mechanism to display the ease and speed of migration of data from unified ONTAP to NetApp AFX using NetApp SnapMirror technology. This test is optional if you plan on generating your own datasets on the cluster.
+Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP system to provide a cost-effective way to provide disaster recovery, provided the SnapMirror version requirements are met.
+
+.Test ) Data migration
+
+
+[cols="1,1,1,1,1"]
+|===
+| Section | Details
+| Test 4 | Tester: |  | Date: |
+| Test requirements: | Intercluster LIFs on each node +
+ONTAP versions within 2 releases (ie 9.16.1 -> 9.18.1) +
+A secondary cluster running ONTAP (or replicate to the same cluster to a different volume) +
+ +
+*Unified ONTAP cluster must be at 9.16.1 if replicating FlexGroup volumes from NetApp AFX source to unified ONTAP destination |  |  |
+| Test procedure: +
+Ensure intercluster interfaces exist.  +
+Click Network -> Overview. +
+ +
+Click the magnifying glass to search for interfaces with the type of Ã¢â‚¬Å“intercluster.Ã¢â‚¬Â +
+ +
+Type Ã¢â‚¬Å“interclusterÃ¢â‚¬Â in the search field to find any intercluster interfaces. +
+If there are none, move on to the next step to create intercluster interfaces. If they do exist, move to the following step to set up the cluster peer. +
+ +
+Create intercluster interfaces (if they do not already exist) +
+Each node in both clusters should have at least one intercluster interface. +
+ +
+Navigate to Protection -> Overview and click Ã¢â‚¬Å“Add network interfacesÃ¢â‚¬Â.  +
+ +
+ +
+Configure the interfaces for each node, as shown below  +
+ +
+ +
+Click save and confirm the interfaces. +
+ +
+  +
+Verify the interfaces have been created from the Ã¢â‚¬Å“Network interfaces overview.Ã¢â‚¬Â +
+ +
+*Note:* If necessary, make any edits to interfaces here. +
+ +
+Add a cluster peer via System Manager on the source ONTAP cluster. +
+Navigate to (Protection -> Overview) +
+ +
+Click the  next to Ã¢â‚¬Å“Cluster peersÃ¢â‚¬Â and click Ã¢â‚¬Å“Add cluster peersÃ¢â‚¬Â or click  the Ã¢â‚¬Å“Add a cluster peerÃ¢â‚¬Â button +
+ +
+To peer to a remote cluster, a passphrase will be needed.  +
+Click Ã¢â‚¬Å“Launch remote cluster.Ã¢â‚¬Â +
+ +
+Add the remote cluster management IP address and click Ã¢â‚¬Å“Launch.Ã¢â‚¬Â +
+ +
+Generate passphrase +
+This will open a new window to the NetApp AFX cluster to generate a new passphrase for cluster peer authentication. From here, copy the passphrase and add it to the unified ONTAP system. +
+ +
+Add the passphrase +
+Verify if the intercluster IP addresses for the NetApp AFX cluster are populated. If everything looks good, click Ã¢â‚¬Å“Initiate cluster peering.Ã¢â‚¬Â +
+ +
+Verify the cluster peer status +
+If successful, you will see cluster peers listed under Protection -> Overview. Initially, the peer may show as Ã¢â‚¬Å“partialÃ¢â‚¬Â with a red X next to the name. This can happen when the peer job is finishing. Eventually, the status should show a green check: +
+ +
+You can also check the cluster peer health from the command line. +
+AFX::*> cluster peer health show +
+Node       Cluster-Name                 Node-Name +
+             Ping-Status               RDB-Health Cluster-Health Availability +
+---------- --------------------------- --------- --------------- ------------ +
+AFX-01 +
+           unified                     unified-01 +
+             Data: interface_reachable +
+             ICMP: -                   true      true            true +
+                                       unified-02 +
+             Data: interface_reachable +
+             ICMP: -                   true      true            true +
+AFX-02 +
+           unified                     unified-01 +
+             Data: interface_reachable +
+             ICMP: -                   true      true            true +
+                                       unified-02 +
+             Data: interface_reachable +
+             ICMP: -                   true      true            true +
+4 entries were displayed. +
+ +
+Establish SnapMirror from unified ONTAP to AFX. +
+Use source volume with production datasets on unified ONTAP cluster to the NetApp AFX cluster.  +
+Navigate to the volume using the left menu. (Storage -> Volumes). +
+ +
+Hover over the volume name and click the to expand the menu.  +
+Select Ã¢â‚¬Å“ProtectÃ¢â‚¬Â. +
+ +
+Configure the SnapMirror settings and click Ã¢â‚¬Å“ProtectÃ¢â‚¬Â +
+ +
+If the above steps fail, you can attempt to create the relationship via the CLI. +
+ +
+CLI Steps +
+Check the constituent count on the source volumeÃ¢â‚¬â„¢s FlexGroup volume. +
+SnapMirror of FlexGroup volumes will require identical constituent counts on source and destination. +
+AFX::> set advanced; volume show -vserver vs0 -volume dataset -fields constituent-count +
+ +
+Create a FlexGroup on the AFX cluster +
+The volume will need the same number of constituent volumes + equal/greater size with a type of Ã¢â‚¬Å“DP.Ã¢â‚¬Â +
+AFX::> set advanced; vol create -volume dataset_dst -state online -size 2T -type DP -number-of-constituents [number from previous step] +
+ +
+Create the SnapMirror relationship +
+AFX::> snapmirror create -source-path vs0:dataset -destination-path svm1:dataset_dst -vserver svm1 -throttle unlimited +
+ +
+Initialize the SnapMirror +
+AFX::> snapmirror initialize -destination-path svm1:dataset_dst +
+ +
+Verify replication is progressing and eventually completed. Optional: Leverage EMS to send email notification when SnapMirror job is completed. +
+ +
+GUI steps +
+Navigate to Protection -> Replication +
+ +
+Click on the SnapMirror relationship +
+ +
+Verify the status +
+Is it healthy? What state is it in? What was the last transfer status? +
+ +
+CLI Steps +
+AFX::*> snapmirror show +
+                                                                       Progress +
+Source            Destination Mirror  Relationship   Total             Last +
+Path        Type  Path        State   Status         Progress  Healthy Updated +
+----------- ---- ------------ ------- -------------- --------- ------- -------- +
+vs0:dataset XDP  svm1:dataset_dst +
+                              Snapmirrored +
+                                      Idle           -         true    - +
+ +
+Compare source and destination datasets. +
+Source and destination datasets can be compared via the CLI to see if the file counts are identical. This is an inexact science, but is useful for a start. +
+ +
+unified::*> vol show -vserver vs0 -volume dataset -fields files-used +
+vserver volume  files-used +
+------- ------- ---------- +
+vs0     dataset 78001 +
+AFX::*> vol show -vserver svm1 -volume dataset_dst -fields files-used +
+vserver volume      files-used +
+------- ----------- ---------- +
+svm1    dataset_dst 78001 +
+ +
+Compare contents/checksums +
+For a more accurate comparison, you will need to compare the actual contents of the volumes. For NFS, you can do that by mounting both volumes and running a diff command on the NFS client. +
+For the source volume, the last common snapshot should be used as the path. +
+ +
+# mount /unifiedONTAPvol +
+# mount /AFXONTAPvol +
+# diff -r unifiedONTAPvol/.snapshot/lastcommonsnap/ AFXONTAPvol/ +
+The command can take considerable time (depending on file count and size), as it will read the entirety of the files. But if both volumes are identical, you should see no differences in the listings. If you wish to avoid this potentially lengthy step, use the files used count comparisons from the vol show command. +
+ +
+Break the SnapMirror relationship and test ability to access and write to destination volume on NetApp AFX. +
+From the NetApp AFX System Manager GUI, navigate to Protection -> Replication. +
+ +
+Hover over the relationship and use the  to expand the menu. Select Ã¢â‚¬Å“Break.Ã¢â‚¬Â +
+ +
+Confirm the details and click Ã¢â‚¬Å“Break.Ã¢â‚¬Â +
+ +
+Establish a SnapMirror from NetApp AFX to unified ONTAP with DR/backup as a goal. +
+There are two ways to achieve this goal. One way is to create a separate, brand new SnapMirror to a new destination volume. The other way is to initiate a Ã¢â‚¬Å“reverse resync,Ã¢â‚¬Â which will re-use the original source volume. The below covers both steps. You can perform both or you can choose one. +
+ +
+Destination ONTAP cluster will need to be on 9.16.1 or later to allow Advanced Capacity Balancing to be enabled. If itÃ¢â‚¬â„¢s not possible to use a destination unified ONTAP cluster, use the NetApp AFX cluster as the destination instead. +
+New SnapMirror steps +
+Navigate to Storage -> Volumes +
+ +
+Hover over the volume name and click the to expand the menu. +
+Select Ã¢â‚¬Å“ProtectÃ¢â‚¬Â. +
+ +
+Review the options and click Ã¢â‚¬Å“Protect.Ã¢â‚¬Â +
+ +
+Reverse Resync steps: +
+Navigate to Protection -> Replication. +
+ +
+Hover over the relationship and use the  to expand the menu. Select Ã¢â‚¬Å“Reverse Resync.Ã¢â‚¬Â +
+ +
+Verify in the unified ONTAP destination cluster that the relationship appears when navigating to Protection -> Relationships. |  |  |  |
+| Expected outcome(s): +
+A data protection relationship from unified ONTAP to NetApp AFX is established, and data migration is completed. +
+Source and destination volume datasets are compared to verify successful migration. +
+SnapMirror relationship is broken; destination volume is verified as writeable and ready for workload testing. +
+OPTIONAL: Replicate from NetApp AFX to unified ONTAP |  |  |  |
+| Test results: |  |  |  |
+| Test summary: |  |  |  |
+| Comments: |  |  |  |
+|===
+
+
+
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:test-03-create-network-interfaces.adoc[< Previous]
+>| xref:test-05-volume-management.adoc[Next >]
+|===
+// navigation-links:end

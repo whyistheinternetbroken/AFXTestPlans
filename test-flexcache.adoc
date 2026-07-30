@@ -105,7 +105,8 @@ FlexCache should improve read performance for local reads over remote reads. |  
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:performance-test-plan.adoc[< Previous]
+| xref:test-12-node-failure-behavior.adoc[< Previous]
 >| xref:test-s3.adoc[Next >]
 |===
 // navigation-links:end
+

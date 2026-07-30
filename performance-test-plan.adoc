@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-This section covers core performance tests (Tests 1-12), NFS export policy, volume configuration, mount options, client and network configuration, and ONTAP feature settings. For NFS server configuration reference, see xref:setup.adoc[Setup].
+This section is the consolidated source for core performance tests and configuration guidance. Core Tests 1-12 are also available as dedicated pages linked from xref:test-plans.adoc[Test Plans]. For NFS server configuration reference, see xref:setup.adoc[Setup].
 
 
 [[basic-functionality-tests]]
@@ -1284,3 +1284,4 @@ This section covers configuration details and how to test some of the functional
 >| xref:test-flexcache.adoc[Next >]
 |===
 // navigation-links:end
+

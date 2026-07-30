@@ -29,51 +29,51 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 
 | Test 1: Validate cluster setup
 | Validate cluster health, node configuration, disk and network state
-| xref:performance-test-plan.adoc#validate-the-cluster-setup[Performance Test Plan]
+| xref:test-01-validate-cluster-setup.adoc[Test 1 Plan]
 
 | Test 2: Enable AutoSupport
 | Configure AutoSupport for log collection and automatic case creation
-| xref:performance-test-plan.adoc#enable-autosupport-optional[Performance Test Plan]
+| xref:test-02-enable-autosupport.adoc[Test 2 Plan]
 
 | Test 3: Create network interfaces
 | Create and validate data, management, and intercluster LIFs
-| xref:performance-test-plan.adoc#create-network-interfaces[Performance Test Plan]
+| xref:test-03-create-network-interfaces.adoc[Test 3 Plan]
 
 | Test 4: Data migration
 | Migrate existing ONTAP data to AFX using SnapMirror or NAS copy tools
-| xref:performance-test-plan.adoc#data-migration-optional[Performance Test Plan]
+| xref:test-04-data-migration.adoc[Test 4 Plan]
 
 | Test 5: Volume management
 | Create and manage FlexGroup volumes on AFX
-| xref:performance-test-plan.adoc#volume-management[Performance Test Plan]
+| xref:test-05-volume-management.adoc[Test 5 Plan]
 
 | Test 6: API testing
 | Validate ONTAP REST API for customer automation workflows
-| xref:performance-test-plan.adoc#api-testingseamless-support-for-customer-automation[Performance Test Plan]
+| xref:test-06-api-testing.adoc[Test 6 Plan]
 
 | Test 7: Customer workload -- real data
 | Run production workloads against AFX using SnapMirror or NAS copy
-| xref:performance-test-plan.adoc#customer-workload-testing-real-data[Performance Test Plan]
+| xref:test-07-customer-workload-real-data.adoc[Test 7 Plan]
 
 | Test 8: Customer workload -- benchmarks
 | Run SPEC SFS 2020 or MLcommons benchmarks against AFX
-| xref:performance-test-plan.adoc#customer-workload-testing-performance-benchmarks[Performance Test Plan]
+| xref:test-08-customer-workload-benchmarks.adoc[Test 8 Plan]
 
 | Test 9: Performance monitoring
 | Validate performance monitoring with System Manager and NetApp Harvest
-| xref:performance-test-plan.adoc#performance-monitoring[Performance Test Plan]
+| xref:test-09-performance-monitoring.adoc[Test 9 Plan]
 
 | Test 10: Capacity management
 | View and manage storage capacity
-| xref:performance-test-plan.adoc#capacity-management[Performance Test Plan]
+| xref:test-10-capacity-management.adoc[Test 10 Plan]
 
 | Test 11: Node additions
 | Add compute nodes during live workloads (optional)
-| xref:performance-test-plan.adoc#compute-scaling-optional[Performance Test Plan]
+| xref:test-11-compute-scaling.adoc[Test 11 Plan]
 
 | Test 12: Node failure behavior
 | Validate storage failover and giveback during live workloads
-| xref:performance-test-plan.adoc#node-failure-behavior[Performance Test Plan]
+| xref:test-12-node-failure-behavior.adoc[Test 12 Plan]
 |===
 
 == Optional Functional Tests
@@ -131,6 +131,7 @@ For NFS server configuration reference, see xref:setup.adoc#nfs-server-configura
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:datasets-workloads.adoc[< Previous]
->| xref:performance-test-plan.adoc[Next >]
+>| xref:test-01-validate-cluster-setup.adoc[Next >]
 |===
 // navigation-links:end
+
