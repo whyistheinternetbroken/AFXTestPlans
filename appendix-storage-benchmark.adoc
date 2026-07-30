@@ -29,9 +29,6 @@ We will be using the SPEC SFS 2020 benchmark to simulate EDA frontend, backend a
 
 The following table shows the NFS operations involved in the SPECSFS 2020 benchmark.
 
-.Frontend EDA NFS operations -- SPECSFS 2020
-
-
 [.light-gray-header,cols="1,1,1,1",options="header"]
 |===
 | NFS operation distribution |  |  |
@@ -60,9 +57,6 @@ NOTE: Due to the metadata-heavy nature of frontend EDA workloads, it is recommen
 
 The following table shows the NFS operations involved in the SPECSFS 2020 benchmark.
 
-.Backend EDA NFS operations -- SPECSFS 2020
-
-
 [.light-gray-header,cols="1,1,1,1",options="header"]
 |===
 | NFS operation distribution |  |  |
@@ -90,9 +84,6 @@ NOTE: Since backend EDA workloads are read/write heavy with very little metadata
 ==== Definition of relevant operations in SPEC SFS 2020
 
 The following section attempts to define the operations mentioned in the frontend and backend workload sections above.
-
-.NFS operation types in SPEC SFS 2020
-
 
 [.light-gray-header,cols="1,1",options="header"]
 |===
@@ -249,9 +240,6 @@ Cosmoflow is a deep learning model that attempts to model the universe and predi
 The following table shows a breakdown of the NFS operations seen during a training run of each model. The point of this table is to help make decisions about how to best configure storage and clients for these benchmark runs.
 These were generated using default NFS mount options and a 1MB rsize.
 
-.NFS operations percent per model during runs
-
-
 [.light-gray-header,cols="1,1,1,1",options="header"]
 |===
 |  | U-Net3D | Resnet50 | Cosmoflow
@@ -273,9 +261,6 @@ These were generated using default NFS mount options and a 1MB rsize.
 ===== READ size histogram
 
 The following table shows the incoming block sizes observed for each training workload test on a 1MB mount using default mount options.
-
-.Block size for READ operations
-
 
 [.light-gray-header,cols="1,1,1,1",options="header"]
 |===

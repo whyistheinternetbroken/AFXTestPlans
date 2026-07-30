@@ -1,11 +1,12 @@
 /* Table styling for AsciiDoc test plans */
 
-/* Light gray header row styling */
-table.light-gray-header thead th {
+/* Light gray header row styling - AsciiDoc renders headers in first tbody row with th elements */
+table.light-gray-header tbody tr:first-child th {
   background-color: #f2f2f2;
 }
 
-table.light-gray-header tbody td,
-table.light-gray-header tbody th {
+/* Ensure all data rows have white background */
+table.light-gray-header tbody tr:not(:first-child) td,
+table.light-gray-header tbody tr:not(:first-child) th {
   background-color: #ffffff;
 }

@@ -24,9 +24,6 @@ This section lists relevant statistics counters for some of the sections listed 
 
 The following table defines the NFS operation types seen in ONTAP performance statistics and classifies them by metadata or IO.
 
-.NFS operation glossary
-
-
 [.light-gray-header,cols="1,1,1",options="header"]
 |===
 | Operation | Use case | Category
