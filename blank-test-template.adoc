@@ -1,4 +1,4 @@
-= Appendix B: Blank Test Template
+﻿= Appendix B: Blank Test Template
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -21,7 +21,7 @@ Use this template for any performance tests outside of the scenarios described a
 
 [.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
 |===
-h| Section | Details |  |  |
+h| Section h| Details
 | <Insert cross reference> | Tester: |  | Date: |
 | Test requirements: |  |  |  |
 | Test procedure: |  |  |  |

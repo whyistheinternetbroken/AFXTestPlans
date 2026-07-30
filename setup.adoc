@@ -1,4 +1,4 @@
-= Recommended Setup and Prerequisites
+﻿= Recommended Setup and Prerequisites
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -20,7 +20,7 @@ This section covers hardware requirements, client configurations, networking, an
 
 Hardware installation and initial configuration documentation links can be found in the "Documentation requirements" section. This test plan assumes that the initial setup and configuration has already been performed.
 
-NOTE: It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and FabricPool. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at: link:https://github.com/whyistheinternetbroken/AFX[https://github.com/whyistheinternetbroken/AFX]
+<b>Note:</b> It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and FabricPool. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at: link:https://github.com/whyistheinternetbroken/AFX[https://github.com/whyistheinternetbroken/AFX]
 
 
 [[initial-state-of-the-test-environment]]
@@ -50,7 +50,7 @@ NetApp AFX officially supports a minimum configuration of:
 
 For the best results, provide at least four modern NFS clients to run storage benchmarks. Client OS is not important, provided it adheres to RFC standards and are within a few minor releases of the newest versions available. All clients should have high performance specs including CPU, memory & networking, ideally 100GB+. All clients should be routable to all data interfaces in the NetApp AFX cluster -- especially if features such as pNFS and NFSv4.1 session trunking are used.
 
-NOTE: This test plan mainly focuses on NFS, but many of the concepts can also be applied to SMB operations. Future versions of this test plan may include SMB, multiprotocol NAS, etc.
+<b>Note:</b> This test plan mainly focuses on NFS, but many of the concepts can also be applied to SMB operations. Future versions of this test plan may include SMB, multiprotocol NAS, etc.
 
 Our internal benchmark results were generated with the following client configurations:
 
@@ -111,7 +111,7 @@ ls /sys/class/infiniband/
 sudo sh -c 'echo 106 > /sys/class/infiniband/mlx5_0/cma_roce_tos'
 ----
 
-NOTE: These settings are not persistent across reboots. Use the provided script with the `--persistent` flag or configure via systemd/udev rules for production use.
+<b>Note:</b> These settings are not persistent across reboots. Use the provided script with the `--persistent` flag or configure via systemd/udev rules for production use.
 
 
 [[client-os-tuning]]
@@ -176,7 +176,7 @@ The following shows the NFS server options that should be configured for this te
 
 [.light-gray-header,cols="1,1",options="header",stripes=none]
 |===
-h| Option | Value
+h| Option h| Value
 | v4.1 | Enabled
 | v4-id-domain | [domain name]*
 | v4.1-pnfs | Enabled
@@ -207,7 +207,7 @@ Domain = user-domain.company.com
 ----
 
 
-NOTE: If those commands do not work, you likely have not installed the proper NFS packages to leverage NFSv4.x. For example, nfs-common for Debian/Ubuntu-based systems.
+<b>Note:</b> If those commands do not work, you likely have not installed the proper NFS packages to leverage NFSv4.x. For example, nfs-common for Debian/Ubuntu-based systems.
 
 
 [[benchmark-cli-configuration]]
@@ -218,7 +218,7 @@ The following shows the NFS CLI command used for internal performance benchmark 
 A script that connects to the cluster via SSH and applies this configuration is available at:
 link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/ONTAP/NAS/configure-nfs-server.sh[ONTAP/NAS/configure-nfs-server.sh]
 
-NOTE: RDMA reduces latency and increases throughput for most workloads -- roughly 10-30%.
+<b>Note:</b> RDMA reduces latency and increases throughput for most workloads -- roughly 10-30%.
 
 [source,console]
 ----

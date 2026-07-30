@@ -1,4 +1,4 @@
-= Appendix: NFS Considerations
+﻿= Appendix: NFS Considerations
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -6,12 +6,12 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[â† Back to Appendix]
+xref:appendix.adoc[Ã¢â€ Â Back to Appendix]
 
 Recommended NFS mount options, fstab configuration, automounter setup, 64-bit file IDs, and pNFS/session trunking validation.
 
 
-NOTE: For benchmark-specific mount options used during performance testing, see xref:performance-test-plan.adoc#mount-options[Performance Test Plan: Mount Options].
+<b>Note:</b> For benchmark-specific mount options used during performance testing, see xref:performance-test-plan.adoc#mount-options[Performance Test Plan: Mount Options].
 
 
 [[nfs-considerations]]
@@ -52,7 +52,7 @@ AI/ML training and inference workloads with NFSv4.1
 ----
 
 
-NOTE: A mount command will need to be issued for each individual network interface to ensure session trunking is in use with Ubuntu.
+<b>Note:</b> A mount command will need to be issued for each individual network interface to ensure session trunking is in use with Ubuntu.
 
 Rather than relying on individual mount commands, use the /etc/fstab file to configure the mount commands and then run them all at once with mount -a. See "using fstab" below.
 
@@ -67,7 +67,7 @@ AI/ML training and inference workloads with NFSv4.1
 ----
 
 
-NOTE: Trunkdiscovery mount option will automatically find the network paths that are a part of the trunking group.
+<b>Note:</b> Trunkdiscovery mount option will automatically find the network paths that are a part of the trunking group.
 
 
 [[using-fstab]]
@@ -151,7 +151,7 @@ AFX::> network connections active show -service nfs
 *To verify if pNFS and NFSv4.1 session trunking calls are being issued*
 To validate if pNFS and/or session trunking are active, use the below to look for incrementing values for pNFS/trunking counters.
 
-NOTE: For a list of pNFS and session trunking specific counters (and examples) see the Appendix.
+<b>Note:</b> For a list of pNFS and session trunking specific counters (and examples) see the Appendix.
 
 
 [source,console]

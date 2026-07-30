@@ -1,4 +1,4 @@
-= Datasets, Workloads, and ONTAP Limits
+﻿= Datasets, Workloads, and ONTAP Limits
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -72,7 +72,7 @@ NetApp AFX is compatible with the following data protocols:
 
 [.light-gray-header,cols="1,1,1",options="header",stripes=none]
 |===
-h| NFS | SMB | Object
+h| NFS h| SMB h| Object
 
 a|
 * NFSv3
@@ -88,7 +88,7 @@ a|
 * File / object multiprotocol (present an existing NAS volume as an S3 bucket)
 |===
 
-NOTE: As mentioned previously, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
+<b>Note:</b> As mentioned previously, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
 
 
 [[recommended-nas-protocol-features]]
@@ -96,12 +96,12 @@ NOTE: As mentioned previously, this test plan currently focuses mainly on NFS an
 
 Most modern clients have support for specific NFS features that workloads running on NetApp AFX systems can leverage and benefit from.
 
-NOTE: When using NFSv4.x, use only NFSv4.1 and later.
+<b>Note:</b> When using NFSv4.x, use only NFSv4.1 and later.
 
 
 [.light-gray-header,cols="1,1,1,1",options="header",stripes=none]
 |===
-h| Feature | Purpose | NFSv3 | NFSv4.1+
+h| Feature h| Purpose h| NFSv3 h| NFSv4.1+
 | Nconnect | Multiple TCP connections per single mount point for increased performance and scale. +
   +
 Nconnect + pNFS = OK +
@@ -128,7 +128,7 @@ link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volu
 
 To create a FlexGroup volume in System Manager:
 
-* Navigate to Storage → Volumes
+* Navigate to Storage â†’ Volumes
 * Click +Add
 * Select "High throughput" to create a FlexGroup
 
@@ -150,7 +150,7 @@ The following table spells out specific limits and what their impact may be on t
 
 [.light-gray-header,cols="1,1,1",options="header",stripes=none]
 |===
-h| Limit | Value | Potential impact
+h| Limit h| Value h| Potential impact
 | Maximum volume size | 100TB  +
 (`-is-large-size-enabled false`) +
  +
@@ -201,7 +201,7 @@ Remediation/prevention +
 Avoid creating millions of files in a single directory when possible. +
 Monitor for maxdirsize usage via the EMS message wafl.dir.size.warning and wafl.dir.size.max.warning +
 Increase the `-maxdirsize` value to no more than 4GB if testing includes creating >2 million files in a single directory
-| TCP connections | 100,000 per node | If a TCP connection maximum is exceeded on a node, then new mounts will be disallowed until connections are freed up. This scenario is an uncommon occurrence due to the high number of connections allowed, but in Kubernetes/container environments where NFS is used, this can happen on occasion â€“ particularly when initial mounts are occurring across many clients, TCP is not specified in the mount options, and nconnect is in use. This mainly impacts NFSv3. +
+| TCP connections | 100,000 per node | If a TCP connection maximum is exceeded on a node, then new mounts will be disallowed until connections are freed up. This scenario is an uncommon occurrence due to the high number of connections allowed, but in Kubernetes/container environments where NFS is used, this can happen on occasion Ã¢â‚¬â€œ particularly when initial mounts are occurring across many clients, TCP is not specified in the mount options, and nconnect is in use. This mainly impacts NFSv3. +
  +
 Remediation/prevention +
 Use the `tcp` mount option value to avoid UDP mount requests for NFSv3 +

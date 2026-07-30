@@ -14,7 +14,7 @@ xref:appendix.adoc[â† Back to Appendix]
 Detailed NFS client tuning: rsize/wsize, close-to-open consistency, nconnect, and NFS readahead settings.
 
 
-NOTE: For client hardware specifications and NIC/OS tuning settings used in internal benchmarks, see xref:setup.adoc#clients[Setup: Clients].
+<b>Note:</b> For client hardware specifications and NIC/OS tuning settings used in internal benchmarks, see xref:setup.adoc#clients[Setup: Clients].
 
 
 [[client-tuning-considerations]]
@@ -94,7 +94,7 @@ The recommendation for this test plan is to use the _actimeo=600_ and _nocto_ mo
 
 Using the nconnect mount option allows you to specify the number of connections (network flows) that should be established between the NFS client and NFS endpoint up to a limit of 16. Traditionally, an NFS client uses a single connection between itself and the endpoint. Increasing the number of network flows can increase the upper limits of I/O and throughput significantly.
 
-NOTE: nconnect does not operate well with session trunking and pNFS.
+<b>Note:</b> nconnect does not operate well with session trunking and pNFS.
 
 
 [[recommendation]]
@@ -111,7 +111,7 @@ The following table shows the default read-ahead values for each given rsize mou
 
 [.light-gray-header,cols="1,1",options="header"]
 |===
-h| Rsize value | Blocks read-ahead default
+h| Rsize value h| Blocks read-ahead default
 | 64 KiB | 960 KiB
 | 256 KiB | 3,840 KiB
 | 1,024 KiB | 15,360 KiB
@@ -122,7 +122,7 @@ The following table shows the default read-ahead values for each currently avail
 
 [.light-gray-header,cols="1,1,1",options="header"]
 |===
-h| Distribution | Release | Blocks read-ahead default
+h| Distribution h| Release h| Blocks read-ahead default
 | RHEL | 8.3 | 128 KiB
 | RHEL | 7.X, 8.0, 8.1, 8.2 | 15 X rsize
 | SLES | 12.X â€“ at least 15SP2 | 15 X rsize

@@ -24,7 +24,7 @@ Snapshots and SnapMirror are integral to a complete data protection story for ON
 
 [.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
 |===
-h| Section | Details |  |  |
+h| Section h| Details
 | Test 15 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. +
 Performance testing being run during mirroring and snapshots. |  |  |

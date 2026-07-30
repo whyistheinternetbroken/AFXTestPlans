@@ -1,4 +1,4 @@
-= NetApp AFX Test Plan: Overview and Introduction
+﻿= NetApp AFX Test Plan: Overview and Introduction
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -27,7 +27,7 @@ Using the general NetApp support avenues is the preferred method of reporting an
 
 [.light-gray-header,cols="1,1,1",options="header",stripes=none]
 |===
-h| Version | Date | Summary
+h| Version h| Date h| Summary
 | 1.0 | July 2026 | Initial release
 |===
 
@@ -47,7 +47,7 @@ New features in this release of ONTAP:
 
 [.light-gray-header,cols="1,1",options="header",stripes=none]
 |===
-h| ONTAP 9.19.1GA feature | Full or limited support
+h| ONTAP 9.19.1GA feature h| Full or limited support
 | FabricPool tiering | limited/dark content until 9.19.1P2
 | Larger Storage Availability Zone | Full
 | Aggressive readahead | Full

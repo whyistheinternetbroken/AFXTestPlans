@@ -23,7 +23,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 [.light-gray-header,cols="2,3",options="header",stripes=none]
 |===
-h| Parameter | Value
+h| Parameter h| Value
 
 | Target aggregate throughput
 | 12 GB/s (96 Gb/s)
@@ -42,7 +42,7 @@ h| Parameter | Value
 
 [.light-gray-header,cols="2,4",options="header",stripes=none]
 |===
-h| Component | Specification
+h| Component h| Specification
 
 | CPU
 | 2× Intel Xeon (16+ cores each) or AMD EPYC equivalent
@@ -67,7 +67,7 @@ h| Component | Specification
 
 [.light-gray-header,cols="2,4",options="header",stripes=none]
 |===
-h| Component | Specification
+h| Component h| Specification
 
 | Switch fabric
 | 100GbE spine/leaf with RDMA-capable NICs (optional)
@@ -90,7 +90,7 @@ Verify the ONTAP NFS server is configured with the following settings before run
 
 [.light-gray-header,cols="2,2",options="header",stripes=none]
 |===
-h| Setting | Required Value
+h| Setting h| Required Value
 
 | Protocol
 | NFSv4.1
@@ -131,7 +131,7 @@ mount -t nfs4 -o \
   <storage_ip>:/export/vdbench_test /mnt/vdbench
 ----
 
-NOTE: Use either `nconnect` or session trunking (`trunkdiscovery`) with these options, but not both due to some unpredictable client behavior when combining them with pNFS.
+<b>Note:</b> Use either `nconnect` or session trunking (`trunkdiscovery`) with these options, but not both due to some unpredictable client behavior when combining them with pNFS.
 
 .Multi-path trunking (Linux kernel 6.3+ with trunkdiscovery)
 [source,bash]
@@ -198,7 +198,7 @@ To achieve a *5:1 dedupe ratio*, 80% of the data blocks must be duplicates and 2
 
 [.light-gray-header,cols="2,1,4",options="header",stripes=none]
 |===
-h| Parameter | Value | Purpose
+h| Parameter h| Value h| Purpose
 
 | `dedupratio=5`
 | 5:1
@@ -719,7 +719,7 @@ done
 
 [.light-gray-header,cols="2,2,2,3",options="header",stripes=none]
 |===
-h| Test Phase | Metric | Target | Pass Criteria
+h| Test Phase h| Metric h| Target h| Pass Criteria
 
 | Phase 2: Seq Read
 | Throughput
@@ -761,7 +761,7 @@ h| Test Phase | Metric | Target | Pass Criteria
 
 [.light-gray-header,cols="2,3",options="header",stripes=none]
 |===
-h| Metric | Target
+h| Metric h| Target
 
 | Dedupe ratio (storage-reported)
 | 4.5:1 – 5.5:1
@@ -777,7 +777,7 @@ h| Metric | Target
 
 [.light-gray-header,cols="2,4",options="header",stripes=none]
 |===
-h| Metric | Criteria
+h| Metric h| Criteria
 
 | Throughput variance
 | < 10% CoV during steady state
@@ -796,7 +796,7 @@ h| Metric | Criteria
 
 [.light-gray-header,cols="1,3,2,2",options="header",stripes=none]
 |===
-h| Phase | Description | Duration | Cumulative
+h| Phase h| Description h| Duration h| Cumulative
 
 | Setup
 | Client config, mount, tuning
@@ -915,7 +915,7 @@ grep -v "^$\|Starting\|Vdbench" ${OUTDIR}/flatfile.html | \
 
 [.light-gray-header,cols="2,3,4",options="header",stripes=none]
 |===
-h| Issue | Diagnosis | Resolution
+h| Issue h| Diagnosis h| Resolution
 
 | Throughput < 1 GB/s per client
 | Check `nconnect` value, NIC speed

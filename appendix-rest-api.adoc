@@ -1,4 +1,4 @@
-= Appendix: REST API Examples
+﻿= Appendix: REST API Examples
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[â† Back to Appendix]
+xref:appendix.adoc[Ã¢â€ Â Back to Appendix]
 
 ONTAP REST API examples for authentication, FlexGroup volume creation, deletion, network interfaces, and NFS server configuration.
 
@@ -57,7 +57,7 @@ curl -k -X POST
 ----
 
 
-NOTE: For a script to perform this task, see the "Scripts" section of this doc.
+<b>Note:</b> For a script to perform this task, see the "Scripts" section of this doc.
 
 
 [[delete-volumes]]
@@ -120,7 +120,7 @@ curl -k -X POST
 ----
 
 
-NOTE: For a script to create interfaces, see the "Scripts" section of this document.
+<b>Note:</b> For a script to create interfaces, see the "Scripts" section of this document.
 
 To delete a data interface (UUID from list required):
 
