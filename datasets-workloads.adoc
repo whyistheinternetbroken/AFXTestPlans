@@ -68,18 +68,23 @@ An alternative method of leveraging industry standard benchmarks for the workloa
 
 NetApp AFX is compatible with the following data protocols:
 
-* *NFS*
-** NFSv3
-** NFSv4.0
-** NFSv4.1 / NFSv4.2 (with pNFS)
-** NFS over RDMA
-* *SMB*
-** SMB2.x
-** SMB3.x
-** Dual protocol NAS (SMB and NFS)
-* *Object*
-** S3
-** File / object multiprotocol (present an existing NAS volume as an S3 bucket)
+[cols="1,1,1"]
+|===
+| NFS | SMB | Object
+
+a|
+* NFSv3
+* NFSv4.0
+* NFSv4.1 / NFSv4.2 (with pNFS)
+* NFS over RDMA
+a|
+* SMB2.x
+* SMB3.x
+* Dual protocol NAS (SMB and NFS)
+a|
+* S3
+* File / object multiprotocol (present an existing NAS volume as an S3 bucket)
+|===
 
 *Note:* As mentioned previously, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
 
@@ -92,22 +97,17 @@ Most modern clients have support for specific NFS features that workloads runnin
 *Note:* When using NFSv4.x, use only NFSv4.1 and later.
 
 
-* *Nconnect*
-** *Purpose:* Multiple TCP connections per single mount point for increased performance and scale.
-** *NFSv3:* Yes
-** *NFSv4.1+:* Yes
-** *Compatibility notes:*
-*** Nconnect + pNFS = OK
-*** Nconnect + session trunking = OK
-*** Nconnect + session trunking + pNFS = not recommended
-* *Trunking*
-** *Purpose:* Combines multiple interfaces into one connection to provide increased throughput and resiliency. (Not to be used with nconnect)
-** *NFSv3:* No
-** *NFSv4.1+:* Yes
-* *pNFS*
-** *Purpose:* Data locality for improved latency and parallel access to single file portions of large files for better performance when using FlexGroup volumes.
-** *NFSv3:* No
-** *NFSv4.1+:* Yes
+[cols="1,1,1,1"]
+|===
+| Feature | Purpose | NFSv3 | NFSv4.1+
+| Nconnect | Multiple TCP connections per single mount point for increased performance and scale. +
+  +
+Nconnect + pNFS = OK +
+Nconnect + session trunking =  OK +
+Nconnect + session trunking + pNFS = not recommended | Yes | Yes
+| Trunking | Combines multiple interfaces into one connection to provide increased throughput and resiliency. (Not to be used with nconnect) | No | Yes
+| pNFS | Data locality for improved latency and parallel access to single file portions of large files for better performance when using FlexGroup volumes. | No | Yes
+|===
 
 
 [[volume-type-recommendation]]
@@ -146,77 +146,87 @@ link:https://docs.netapp.com/us-en/ontap/s3-config/index.html[Learn about S3 con
 NetApp AFX runs ONTAP, and because of that, you need to be aware of what file system limits are present in ONTAP, since testing/benchmarking can run into errors if these limits are reached.
 The following table spells out specific limits and what their impact may be on testing. The test plans attempt to build most of these into the tests to avoid unforeseen issues. For more information, see the Performance testing configuration section.
 
-* *Maximum volume size*
-** *Value:*
-*** 100TB (`-is-large-size-enabled false`)
-*** 300TB (`-is-large-size-enabled true`)
-*** ONTAP sets this option to false by default. This option also impacts the maximum FlexGroup size (20PB vs. 60PB).
-** *Potential impact:* If a volume reaches its maximum allowed size and then fills to 100%, there is no way to expand it beyond that. Testing would fail due to lack of space.
-** *Remediation:*
-*** Set `-is-large-size-enabled true` at volume creation.
-*** Configure volume autosize.
-*** Configure monitoring and alerts for volumes approaching 90% capacity used.
-*** Delete snapshots or data if the limit is reached.
-* *Maximum file size*
-** *Value:*
-*** 16TB (`-is-large-size-enabled false`)
-*** 127TB (`-is-large-size-enabled true`)
-*** ONTAP sets this option to false by default.
-** *Potential impact:* Reaching the maximum file size limit will show an "out of space" error and the file will no longer be writeable. In some cases, if the space error occurs during an in-flight write, that write may be corrupted.
-** *Remediation:*
-*** Set `-is-large-size-enabled true` at volume creation.
-*** Avoid creating files larger than the allowed maximum size.
-* *Maximum files/inodes*
-** *Value:*
-*** 2 billion (FlexVol)
-*** 200 billion (FlexGroup)
-*** The maximum files/inodes allowed in a single volume is determined by the `-files` volume option.
-** *Potential impact:* If a test attempts to exceed the maximum files allowed, the test will fail due to an "out of space" error (`callhome.no.inodes` in ONTAP).
-*** This error is a common root cause for test failures, as the max file value is variable based on volume size and the absolute maximums are only reached when the volume size (FlexVol or constituent FlexGroup volume) is ~7.8TB.
-*** By default, the maximum files value is determined by volume size (one inode per 4K of space) and does *not* allow the absolute maximum number of files. For instance, if a volume size is 100GB, then the default value is 3,112,959, but the maximum allowed would be 24,903,679.
-** *Remediation/prevention:*
-*** Create volumes at a large enough size to support the maximum files allowed (>7.8TB for FlexVol, `7.8 * 10 * nodes` for FlexGroup).
-*** Set `-files-set-maximum true` at volume creation.
-*** Monitor inode allocation for the volume.
-*** Consider setting quotas on the volume to alert when an inode allocation value has been reached.
-*** Delete files if the limit is reached.
-* *Maximum files per directory (maxdirsize)*
-** *Value:*
-*** 320MB (default)
-*** The number of files is variable depending on several factors, but is generally in the ~2-4 million range for FlexVol volumes and ~1-2.5 million for FlexGroup volumes.
-** *Potential impact:* If a directory reaches its maximum directory size allowed in ONTAP, clients will see an "out of space" error. ONTAP will show `wafl.dir.size.max` or `wafl.dir.size.max.warning` in EMS (`event log show` in CLI).
-*** It is a best practice to keep the file counts in single directories lower than the maximums allowed by default.
-*** 320MB is the size allocated to memory for a directory index file. Each time a file is added to a directory, the index file increases in size. This size is impacted by file count, file name length, hardlinks, and character types.
-*** It is generally not recommended to increase `maxdirsize`, as it can impact overall system performance for all workloads when approaching the higher end of the limits. However, in benchmark tests, this limit can be modified to verify observed impacts.
-** *Remediation/prevention:*
-*** Avoid creating millions of files in a single directory when possible.
-*** Monitor for maxdirsize usage via EMS messages `wafl.dir.size.warning` and `wafl.dir.size.max.warning`.
-*** Increase `-maxdirsize` to no more than 4GB if testing includes creating >2 million files in a single directory.
-* *TCP connections*
-** *Value:* 100,000 per node
-** *Potential impact:* If a TCP connection maximum is exceeded on a node, new mounts will be disallowed until connections are freed. This is uncommon due to the high connection limit, but in Kubernetes/container environments where NFS is used, this can happen when initial mounts occur across many clients, TCP is not specified in mount options, and nconnect is in use. This mainly impacts NFSv3.
-** *Remediation/prevention:*
-*** Use the `tcp` mount option to avoid UDP mount requests for NFSv3.
-*** If using nconnect, total mount connections allowed become `100,000 / nconnect value`.
-*** Use DNS load balancing or another round-robin mechanism to balance mounts across nodes in the cluster.
-* *NFSv4.x session slots*
-** *Value:* 2000 (180 default)
-** *Potential impact:* Too high or low of a value can negatively impact performance in ways that are hard to track down. Too low can create NFS flow control; too high may impact CPU utilization.
-*** For details, see: https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-concurrency-session-slots
-*** Session slots are the number of supported in-flight requests in a single NFSv4.x session.
-*** By default, ONTAP supports 180 session slots, but in-house performance testing has shown lowering this value to 64 is often optimal.
-** *Remediation/prevention:*
-*** Limit session slots (`-v4.x-session-num-slots`) to 64 when using NFSv4.x.
-* *RPC slot tables*
-** *Value:* 128 per TCP connection
-** *Potential impact:* NFS slot tables control mount operation concurrency. If exceeded in ONTAP, the NFS server creates a wait queue for incoming operations, impacting performance.
-*** One main sign is EMS message `nblade.execsOverLimit`.
-*** By default, modern NFS clients allow dynamic control of slot tables via client/server communication. ONTAP's NFS server has no configurable/advertised slot-table value, so clients can send up to 65536 entries to a mount IP, greatly exceeding ONTAP's 128 maximum.
-*** This can impact both NFSv3 and NFSv4.x.
-** *Remediation/prevention:*
-*** Modify `sunrpc` slot tables on NFS clients to no more than 128 (preferably 64) for NFSv3.
-*** Modify the session slot value for NFSv4.x on the ONTAP NFS server.
-*** Monitor for `nblade.execsOverLimit`.
+[cols="1,1,1"]
+|===
+| Limit | Value | Potential impact
+| Maximum volume size | 100TB  +
+(`-is-large-size-enabled false`) +
+ +
+300TB  +
+(`-is-large-size-enabled true`) +
+ +
+ONTAP sets this option to false by default. This option also impacts the maximum FlexGroup size (20PB vs. 60PB) | If a volume size reaches its maximum allowed size and then fills to 100%, then there is no way to expand it beyond that. Testing would fail due to lack of space. +
+ +
+Remediation +
+Set `-is-large-size-enabled true` at volume creation +
+Configure volume autosize +
+Configure monitoring and alerts for volumes approaching 90% capacity used +
+Delete snapshots or data if the limit is reached
+| Maximum file size | 16TB  +
+(`-is-large-size-enabled false`) +
+ +
+127TB  +
+(`-is-large-size-enabled true`) +
+ +
+ONTAP sets this option to false by default. | Reaching the maximum file size limit will show an "out of space" error and the file will no longer be writeable. In some cases, if the space error occurs during an in-flight write, that write may be corrupted. +
+ +
+Remediation +
+Set `-is-large-size-enabled true` at volume creation +
+Avoid creating files larger than the allowed maximum size.
+| Maximum files/inodes | 2 billion (FlexVol) +
+200 billion (FlexGroup) +
+ +
+The maximum files/inodes allowed in a single volume is determined by the `-files` volume option. | If a test attempts to exceed the maximum files allowed, then the test will fail due to an "out of space" error. (callhome.no.inodes in ONTAP) +
+ +
+This error is a common root cause for test failures, as the max file value is variable based on volume size and the absolute maximums are only reached when the volume size (FlexVol or constituent FlexGroup volume) is ~7.8TB. Because it manifests on the client as an "out of space" error, it can be hard to track down. +
+ +
+By default, the maximum files value is determined by the volume size (one inode per 4K of space) and does *not* allow the absolute maximum number of files. For instance, if a volume size is 100GB, then the default value is 3,112,959, but the maximum allowed would be 24,903,679.  +
+ +
+Remediation/prevention +
+Create volumes at a large enough size to support the maximum files allowed. (>7.8TB for FlexVol, 7.8 * 10 * nodes for FlexGroup) +
+Set `-files-set-maximum true` at volume creation +
+Monitor for inode allocation for the volume  +
+Consider setting quotas on the volume to alert when an inode allocation value has been reached +
+Delete files if the limit is reached
+| Maximum files per directory (maxdirsize) | 320MB (default) +
+The number of files is variable depending on several factors (see right column), but is generally in the ~2-4 million range for FlexVol volumes and ~1-2.5 million for FlexGroup volumes. | If a directory reaches its maximum directory size allowed in ONTAP, clients will see an "out of space" error. ONTAP will show a wafl.dir.size.max or wafl.dir.size.max.warning message in EMS (event log show in CLI). +
+ +
+It is a best practice to keep the file counts in single directories lower than the maximums allowed by default. +
+ +
+320MB is the size allocated to memory for a directory's index file size. Each time a file is added to a directory, the index file increases in size. This size is impacted by file count, file name length, hardlinks, and character types. The exact number of files can be varied depending on those factors. It is generally not recommended to increase the maxdirsize value, as it can impact overall system performance for all workloads when approaching the higher end of the limits. However, in benchmark tests, this limit can be modified to verify the impacts seen.  +
+ +
+Remediation/prevention +
+Avoid creating millions of files in a single directory when possible. +
+Monitor for maxdirsize usage via the EMS message wafl.dir.size.warning and wafl.dir.size.max.warning +
+Increase the `-maxdirsize` value to no more than 4GB if testing includes creating >2 million files in a single directory
+| TCP connections | 100,000 per node | If a TCP connection maximum is exceeded on a node, then new mounts will be disallowed until connections are freed up. This scenario is an uncommon occurrence due to the high number of connections allowed, but in Kubernetes/container environments where NFS is used, this can happen on occasion -- particularly when initial mounts are occurring across many clients, TCP is not specified in the mount options, and nconnect is in use. This mainly impacts NFSv3. +
+ +
+Remediation/prevention +
+Use the `tcp` mount option value to avoid UDP mount requests for NFSv3 +
+If using nconnect, remember your total mount connections allowed will be 100,000/nconnect value +
+Leverage DNS load balancing or some other round robin mechanism to balance mounts across nodes in the cluster
+| NFSv4.x session slots | 2000 (180 default) | Too high or low of a value here can negatively impact performance in ways that are hard to track down. Generally speaking, too low will create a sort of NFS flow control of incoming connections, while too high may impact CPU utilization. For details, see: +
+https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-concurrency-session-slots  +
+ +
+Session slots are the number of supported in-flight requests in a single NFSv4.x session. By default, ONTAP supports 180 session slots, but in-house performance testing has shown that lowering this value to 64 is optimal. +
+ +
+Remediation/prevention +
+Limit the session slots (`-v4.x-session-num-slots`) to 64 when using NFSv4.x
+| RPC slot tables | 128 per TCP connection | NFS slot tables help control the concurrency of operations for NFS mounts. If they are exceeded in ONTAP, then the NFS server will create a wait queue for incoming operations, which will then impact performance. One of the main signs of this is the EMS message nblade.execsOverLimit. This event is triggered when a delta of incoming requests exceeds the monitored value in ONTAP. In some cases, this event may fire as a false positive where performance isn't being negatively impacted, but if you are seeing these messages, you are generally exceeding the 128 limit. +
+ +
+By default, modern NFS clients allow dynamic control of NFS slot tables by way of communication between the client and NFS server. ONTAP's NFS server has no configurable or advertised value for this, so the NFS client has no way of knowing how many slot tables the server supports. As a result, the client will send up to the maximum of 65536 slot table entries to the NFS mount's IP address, which greatly exceeds ONTAP's 128 maximum.  +
+ +
+This can impact both NFSv3 and NFSv4.x. +
+ +
+Remediation/prevention +
+Modify your sunrpc slot tables value on your NFS clients to no more than 128 (preferably 64) for NFSv3 (see NetApp ONTAP NFS Best Practices for more information on page 122) +
+Modify the session slot value for NFSv4.x on the ONTAP NFS server +
+Monitor for nblade.execsOverLimit
+|===
 // navigation-links:start
-xref:setup.adoc[< Previous] | xref:test-plans.adoc[Next >]
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:setup.adoc[< Previous]
+>| xref:test-plans.adoc[Next >]
+|===
 // navigation-links:end
