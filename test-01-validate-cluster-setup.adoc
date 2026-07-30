@@ -17,44 +17,43 @@ The first test plan here is to validate the cluster heath, configuration, etc.
 |===
 | *Test plan 1 - Validate the cluster setup*
 
-a| Test procedure – GUI: +
-Log into the System Manager GUI via https://[clus_mgmt_IP] +
-The system dashboard will show errors, warnings, capacity information, and a high-level overview of the storage hardware.
-
+a| *Test procedure – GUI:* +
+. Log into the System Manager GUI via https://[clus_mgmt_IP] The system dashboard will show errors, warnings, capacity information, and a high-level overview of the storage hardware.
++
 image::images/test-01-image-01.png[width=50%,link=images/test-01-image-01.png,border]
 
-Click on “Errors” to view any issues the cluster may be having. This will take you to Events & Jobs -> Events.
-
+. Click on “Errors” to view any issues the cluster may be having. This will take you to Events & Jobs -> Events.
++
 image::images/test-01-image-02.png[width=50%,link=images/test-01-image-02.png,border]
 
-Click on System Alerts to see specific alerts.
-
+. Click on System Alerts to see specific alerts.
++
 image::images/test-01-image-03.png[width=50%,link=images/test-01-image-03.png,border]
 
-Under Cluster -> Overview, you can see the following via the tabs on the page: +
-Node health and information +
-Shelves +
-Shelf IO modules +
-Disks +
-Switches +
-Cabling +
+. Under Cluster -> Overview, you can see the following via the tabs on the page:
++
+* Node health and information
+* Shelves
+* Shelf IO modules
+* Disks
+* Switches
+* Cabling
++
 Scroll through each of these and take note of the different components in the NetApp AFX architecture.
-
++
 *Note:* You can toggle between list view and graphical view on each tab.
 
-The cabling diagram provides a clean view of the clusters physical layout.
-
+. The cabling diagram provides a clean view of the clusters physical layout.
++
 image::images/test-01-image-04.png[width=50%,link=images/test-01-image-04.png,border]
 
-Use the down arrows  in each of the Nodes, Switches and Disk Shelves to see their associated ports. Some ports will be unused. To see a consolidate cabling diagram with only the used ports, uncheck “Show unused ports.”
-
-image::images/test-01-image-05.png[width=50%,link=images/test-01-image-05.png,border]
+. Use the down arrows  in each of the Nodes, Switches and Disk Shelves to see their associated ports. Some ports will be unused. To see a consolidate cabling diagram with only the used ports, uncheck “Show unused ports.”
++
 image::images/test-01-image-06.png[width=50%,link=images/test-01-image-06.png,border]
 
-Test procedure – CLI: +
-Log in to the NetApp AFX CLI +
-Verify cluster health.
-
+*Test procedure – CLI:*
+. Log in to the NetApp AFX CLI Verify cluster health.
++
 [source,console]
 ----
 AFX::*> set advanced
@@ -64,8 +63,8 @@ AFX::*> system health subsystem show
 AFX::*> health alert show
 ----
 
-Ping cluster interfaces to ensure health and connectivity.
-
+. Ping cluster interfaces to ensure health and connectivity.
++
 [source,console]
 ----
 AFX::*> cluster ping-cluster -node AFX-01
@@ -94,16 +93,16 @@ RPC status:
 2 paths up, 0 paths down (udp check)
 ----
 
-Show that disk shelves are connected and available.
-
+. Show that disk shelves are connected and available.
++
 [source,console]
 ----
 AFX::*> storage shelf show
 AFX::*> storage shelf port show
 ----
 
-Verify the system HA status.
-
+. Verify the system HA status.
++
 [source,console]
 ----
 AFX::*> system ha interconnect status show
@@ -111,58 +110,57 @@ AFX::*> system ha interconnect port show
 AFX::*> storage failover show
 ----
 
-Verify the storage switches are connected and available.
-
+. Verify the storage switches are connected and available.
++
 [source,console]
 ----
 AFX::*> system switch ethernet show
 ----
 
-Show network interfaces.
-
+. Show network interfaces.
++
 [source,console]
 ----
 AFX::*> network interface show
 ----
 
-Show the storage availability zone.
-
+. Show the storage availability zone.
++
 [source,console]
 ----
 AFX::*> storage availability-zone show
 ----
 
-Show system processor interfaces.
-
+. Show system processor interfaces.
++
 [source,console]
 ----
 AFX::*> service-processor show
 ----
 
-Show available cluster space.
-
+. Show available cluster space.
++
 [source,console]
 ----
 AFX::*> cluster space show
 ----
 
-Verify the NFS server is configured properly.
-
+. Verify the NFS server is configured properly.
++
 [source,console]
 ----
 AFX::*> nfs show -fields v4.1,v4-id-domain,v4.1-pnfs,v4.1-trunking,tcp-max-xfer-size,v3,v3-64bit-identifiers,v4-64bit-identifiers,v3,v4.1-read-delegation,v4.1-write-delegation,rdma
 ----
 
-The NFS server output should show:
+. The NFS server output should show:
 
-a| Expected outcome(s): +
-The cluster is healthy and available. +
-The shelves are cabled properly. +
-The network interfaces are present for management Ips. +
-Storage availability zone concepts are reviewed. +
-Cabling diagrams are viewed. +
-Error states are not present. If errors are present, resolve with support before moving on to the next sections.
-
+a| *Expected outcome(s):* +
+* The cluster is healthy and available.
+* The shelves are cabled properly.
+* The network interfaces are present for management Ips.
+* Storage availability zone concepts are reviewed.
+* Cabling diagrams are viewed.
+* Error states are not present. If errors are present, resolve with support before moving on to the next sections.
 | *Test results:*
 
 | *Test summary:*

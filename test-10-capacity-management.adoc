@@ -17,14 +17,13 @@ Viewing and managing capacity in NetApp AFX has been streamlined to improve simp
 |===
 | *Test plan 10 - Capacity management*
 
-a| Test procedure – GUI: +
-View capacity in the dashboard.
-
+a| *Test procedure – GUI:* +
+. View capacity in the dashboard.
++
 image::images/test-10-image-01.png[width=50%,link=images/test-10-image-01.png,border]
 
-From the CLI +
-Display the Storage Availability Zone
-
+. From the CLI Display the Storage Availability Zone
++
 [source,console]
 ----
 AFX::> storage availability-zone show
@@ -32,10 +31,9 @@ Display the cluster space
 AFX::> cluster space show
 ----
 
-a| Expected outcome(s): +
-Capacity views should be easy to understand. +
-Storage availability zones should simplify capacity use.
-
+a| *Expected outcome(s):* +
+* Capacity views should be easy to understand.
+* Storage availability zones should simplify capacity use.
 | *Test results:*
 
 | *Test summary:*

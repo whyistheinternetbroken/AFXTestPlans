@@ -6,11 +6,9 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-
 xref:test-plans.adoc[← Back to Test Plans]
 
 This optional test validates the non-disruptive upgrade process for NetApp AFX.
-
 
 [[optional-non-disruptive-ontap-upgrade]]
 == OPTIONAL: Non-Disruptive ONTAP Upgrade
@@ -19,126 +17,197 @@ The upgrade process for NetApp AFX is identical to that of unified ONTAP. This t
 
 .Test ) OPTIONAL: Non-Disruptive ONTAP Upgrade
 
-
 [cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 16 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. |  |  |
-| Test procedure: +
-Download the latest ONTAP image from the NetApp website. +
-Place the image.tgz file on a webserver. Do not use TinyWeb as it has a 2GB limit. +
-Validate the current version of ONTAP +
-AFX::*> node run -node * -command "version" +
-4 entries were acted on. +
- +
-Node: AFX-01 +
-NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1> +
- +
-Node: AFX-02 +
-NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1> +
- +
-Node: AFX-03 +
-NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1> +
- +
-Node: AFX-03 +
-NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1> +
- +
-Delete existing ONTAP image. +
-AFX::*> cluster image package delete -version [version] +
- +
-Package Delete Operation Completed Successfully +
- +
-Execute the upload and upgrade of ONTAP +
-AFX::> cluster image package get -urlÂ http://<webserver>/image.tgz +
-Package download completed. +
-Package processing completed. +
- +
-AFX::> cluster image package show +
-Package Version  Package Build Time +
----------------- ------------------ +
-Electricjellyfish__9.17.1 +
-                 6/22/2025 05:02:29 +
- +
-AFX::> cluster image update -version [version] -nodes * +
-Starting validation for this update... +
- +
-It can take several minutes to complete validation... +
- +
-WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed successfully. +
-Refer to the Upgrade Advisor Plan or the "What should I verify before I upgrade with or without Upgrade Advisor" section in the "Upgrade ONTAP" documentation for the remaining manual validation checks that need to be performed before update. +
-Upgrade ONTAP documentation available at: https://docs.netapp.com/us-en/ontap/upgrade/index.html +
-The list of checks are available at: https://docs.netapp.com/us-en/ontap/upgrade/task_what_to_check_before_upgrade.html +
-Failing to do so can result in an update failure or an I/O disruption. +
-Please use Interoperability Matrix Tool (IMT  http://mysupport.netapp.com/matrix) to verify host system supportability configuration information. +
- +
-Pre-update Check                    Status   Error-Action +
------------------------------------ -------- -------------------------------- +
-NFS mounts                          Warning  Warning: This cluster is +
-                                             serving NFS clients. If NFS +
-                                             soft mounts are used, there is +
-                                             a possibility of frequent NFS +
-                                             timeouts and race conditions +
-                                             that can lead to data +
-                                             corruption during the upgrade. +
-                                             Action: Use NFS hard mounts, if +
-                                             possible. To list Vservers +
-                                             running NFS, run the following +
-                                             command: vserver nfs show +
-Nodes to update list                Warning  Warning: List of nodes to be +
-                                             upgraded: +
-                                             "AFX-01,AFX-02, +
-                                             AFX-03,AFX-04." +
-                                             Action: To upgrade all selected +
-                                             nodes, regardless of their +
-                                             current version, set the +
-                                             (privilege: advanced) +
-                                             "-skip-nodes-at-target-version" +
-                                             parameter to "false". +
-Overall Status                      Warning +
-2 entries were displayed. +
- +
-Warning: Validation has reported warnings. +
- +
-Do you want to continue? {y\|n}: y +
- +
-Starting update... +
-Info: Run the "cluster image show-update-progress" command to check update status. +
- +
-AFX::> cluster image show-update-progress +
-                                             Estimated         Elapsed +
-Update Phase         Status                   Duration        Duration +
--------------------- ----------------- --------------- --------------- +
-Pre-update checks    completed                00:02:00        00:01:50 +
-ONTAP updates        in-progress              00:47:00        00:00:11 +
- +
-Details: +
- +
-Node name            Status            Status Description +
--------------------- ----------------- -------------------------------------- +
-AFX-01               in-progress       Installing ONTAP software image. +
-AFX-02               in-progress       Installing ONTAP software image. +
-AFX-03               in-progress       Installing ONTAP software image. +
-AFX-04               in-progress       Installing ONTAP software image. +
-8 entries were displayed. +
-All cluster nodes will reboot +
-Validate the new version of ONTAP +
-AFX::*> node run -node * -command "version" +
-4 entries was acted on. +
- +
-Node: AFX-01 +
-NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1> +
- +
-Node: AFX-02 +
-NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1> +
- +
-Node: AFX-03 +
-NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1> +
- +
-Node: AFX-04 +
-NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1> |  |  |  |
-| Expected outcome(s): +
-ONTAP Cluster will be updated with new version of ONTAP. |  |  |  |
+| *Test procedure:* +
+. Download the latest ONTAP image from the NetApp website. Place the image.tgz file on a webserver. Do not use TinyWeb as it has a 2GB limit. Validate the current version of ONTAP
++
+[source,console]
+----
+AFX::*> node run -node * -command "version"
+4 entries were acted on.
+----
++
+[source,console]
+----
+Node: AFX-01
+NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1>
+----
++
+[source,console]
+----
+Node: AFX-02
+NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1>
+----
++
+[source,console]
+----
+Node: AFX-03
+NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1>
+----
++
+[source,console]
+----
+Node: AFX-03
+NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1>
+----
+
+. Delete existing ONTAP image.
++
+[source,console]
+----
+AFX::*> cluster image package delete -version [version]
+----
++
+[source,console]
+----
+Package Delete Operation Completed Successfully
+----
+
+. Execute the upload and upgrade of ONTAP
++
+[source,console]
+----
+AFX::> cluster image package get -urlÂ http://<webserver>/image.tgz
+Package download completed.
+Package processing completed.
+----
++
+[source,console]
+----
+AFX::> cluster image package show
+Package Version  Package Build Time
+---------------- ------------------
+Electricjellyfish__9.17.1
+6/22/2025 05:02:29
+----
++
+[source,console]
+----
+AFX::> cluster image update -version [version] -nodes *
+Starting validation for this update...
+----
++
+[source,console]
+----
+It can take several minutes to complete validation...
+----
++
+[source,console]
+----
+WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed successfully.
+Refer to the Upgrade Advisor Plan or the "What should I verify before I upgrade with or without Upgrade Advisor" section in the "Upgrade ONTAP" documentation for the remaining manual validation checks that need to be performed before update.
+Upgrade ONTAP documentation available at: https://docs.netapp.com/us-en/ontap/upgrade/index.html
+The list of checks are available at: https://docs.netapp.com/us-en/ontap/upgrade/task_what_to_check_before_upgrade.html
+Failing to do so can result in an update failure or an I/O disruption.
+Please use Interoperability Matrix Tool (IMT  http://mysupport.netapp.com/matrix) to verify host system supportability configuration information.
+----
++
+[source,console]
+----
+Pre-update Check                    Status   Error-Action
+----------------------------------- -------- --------------------------------
+NFS mounts                          Warning  Warning: This cluster is
+serving NFS clients. If NFS
+soft mounts are used, there is
+a possibility of frequent NFS
+timeouts and race conditions
+that can lead to data
+corruption during the upgrade.
+Action: Use NFS hard mounts, if
+possible. To list Vservers
+running NFS, run the following
+command: vserver nfs show
+Nodes to update list                Warning  Warning: List of nodes to be
+upgraded:
+"AFX-01,AFX-02,
+AFX-03,AFX-04."
+Action: To upgrade all selected
+nodes, regardless of their
+current version, set the
+(privilege: advanced)
+"-skip-nodes-at-target-version"
+parameter to "false".
+Overall Status                      Warning
+2 entries were displayed.
+----
+
+. Warning: Validation has reported warnings.
++
+[source,console]
+----
+Do you want to continue? {y\|n}: y
+----
++
+[source,console]
+----
+Starting update...
+Info: Run the "cluster image show-update-progress" command to check update status.
+----
++
+[source,console]
+----
+AFX::> cluster image show-update-progress
+Estimated         Elapsed
+Update Phase         Status                   Duration        Duration
+-------------------- ----------------- --------------- ---------------
+Pre-update checks    completed                00:02:00        00:01:50
+ONTAP updates        in-progress              00:47:00        00:00:11
+----
++
+[source,console]
+----
+Details:
+----
++
+[source,console]
+----
+Node name            Status            Status Description
+-------------------- ----------------- --------------------------------------
+AFX-01               in-progress       Installing ONTAP software image.
+AFX-02               in-progress       Installing ONTAP software image.
+AFX-03               in-progress       Installing ONTAP software image.
+AFX-04               in-progress       Installing ONTAP software image.
+8 entries were displayed.
+All cluster nodes will reboot
+Validate the new version of ONTAP
+AFX::*> node run -node * -command "version"
+4 entries was acted on.
+----
++
+[source,console]
+----
+Node: AFX-01
+NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1>
+----
++
+[source,console]
+----
+Node: AFX-02
+NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1>
+----
++
+[source,console]
+----
+Node: AFX-03
+NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1>
+----
++
+[source,console]
+----
+Node: AFX-04
+NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1>
+----
+
+|  |  |  |
+
+| *Expected outcome(s):* +
+* ONTAP Cluster will be updated with new version of ONTAP.
+
+|  |  |  |
 | Test results: |  |  |  |
 | Test summary: |  |  |  |
 | Comments: |  |  |  |

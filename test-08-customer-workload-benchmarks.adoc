@@ -20,45 +20,39 @@ For details on installing, configuring and running SpecSFS or MLcommons, see the
 |===
 | *Test plan 8 - Customer workload testing -- performance benchmarks*
 
-a| Test procedure: +
-Create a FlexGroup volume in the NetApp AFX cluster.
+a| *Test procedure:* +
+. Create a FlexGroup volume in the NetApp AFX cluster.
 
-Navigate to the Storage -> Volumes menu in System Manager
-
+. Navigate to the Storage -> Volumes menu in System Manager
++
 image::images/test-08-image-01.png[width=50%,link=images/test-08-image-01.png,border]
 
-Click + Add
-
+. Click + Add
++
 image::images/test-08-image-02.png[width=50%,link=images/test-08-image-02.png,border]
 
-Enter the volume name, capacity and select “High throughput” to create a FlexGroup
-
+. Enter the volume name, capacity and select “High throughput” to create a FlexGroup
++
 image::images/test-08-image-03.png[width=50%,link=images/test-08-image-03.png,border]
 
-Optionally, click “More options” to disable/enable data protection features and add export policies and rules
-
+. Optionally, click “More options” to disable/enable data protection features and add export policies and rules
++
 image::images/test-08-image-04.png[width=50%,link=images/test-08-image-04.png,border]
 
-Click save. +
-Mount NetApp AFX volume using NAS protocol of your choice. +
-Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single client’s performance.
+. Click save. Mount NetApp AFX volume using NAS protocol of your choice. Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single client’s performance.
 
-Find the export path of your data volume in System Manager.
-
+. Find the export path of your data volume in System Manager.
++
 image::images/test-08-image-05.png[width=50%,link=images/test-08-image-05.png,border]
 
-Mount the volume using NFS. +
-Optionally, include the mount path in /etc/fstab or automounter* +
-*Recommended NFS versions and mount options are found in the NFS considerations in the Appendix of this document..
+. Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter* *Recommended NFS versions and mount options are found in the NFS considerations in the Appendix of this document..
 
-Generate datasets. +
-For detailed steps on how to run the benchmarks, see the appendix of this document.
+. Generate datasets. For detailed steps on how to run the benchmarks, see the appendix of this document.
 
-Run benchmarks on datasets. While benchmarks are running, move on to the Performance Monitoring test plan.
+. Run benchmarks on datasets. While benchmarks are running, move on to the Performance Monitoring test plan.
 
-a| Expected outcome(s): +
-Benchmarks should show the performance capabilities of this system.
-
+a| *Expected outcome(s):* +
+* Benchmarks should show the performance capabilities of this system.
 | *Test results:*
 
 | *Test summary:*

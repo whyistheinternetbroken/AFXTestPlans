@@ -22,23 +22,22 @@ For more information on what AutoSupport is, the information that AutoSupport co
 |===
 | *Test plan 2 - Enable AutoSupport (optional)*
 
-a| Test procedure: +
-Log into the System Manager GUI via https://[clus_mgmt_IP] +
-Navigate to Cluster -> Settings. +
-Under AutoSupport, if not already enabled, click the menu and select enable.
-
+a| *Test procedure:* +
+. Log into the System Manager GUI via https://[clus_mgmt_IP] Navigate to Cluster -> Settings. Under AutoSupport, if not already enabled, click the menu and select enable.
++
 image::images/test-02-image-01.png[width=50%,link=images/test-02-image-01.png,border]
++
 image::images/test-02-image-02.png[width=50%,link=images/test-02-image-02.png,border]
 
-Test AutoSupport connectivity
-
+. Test AutoSupport connectivity
++
 image::images/test-02-image-03.png[width=50%,link=images/test-02-image-03.png,border]
++
 image::images/test-02-image-04.png[width=50%,link=images/test-02-image-04.png,border]
 
-a| Expected outcome(s): +
-AutoSupport is enabled. +
-A test ASUP succeeds.
-
+a| *Expected outcome(s):* +
+* AutoSupport is enabled.
+* A test ASUP succeeds.
 | *Test results:*
 
 | *Test summary:*
