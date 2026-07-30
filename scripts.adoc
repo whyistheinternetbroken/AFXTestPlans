@@ -1,4 +1,4 @@
-= Scripts
+﻿= Scripts
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[â† Back to Appendix]
+xref:appendix.adoc[← Back to Appendix]
 
 Scripts to support volume management, LIF management, cluster reinitialization, and NAS benchmarking.
 

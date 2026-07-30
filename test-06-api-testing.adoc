@@ -1,4 +1,4 @@
-= Test 6: API testing/seamless support for customer automation
+﻿= Test 6: API testing/seamless support for customer automation
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -162,7 +162,7 @@ Some workloads might benefit from special mount options during benchmark tests. 
 | acregmin | Sets the minimum time (seconds) the client caches attributes for a regular file before revalidating. Default is typically 3s. | Workloads with frequently updated small files where you want to fine-tune freshness vs. performance (e.g., log ingestion, config file polling).
 | acregmax | Sets the maximum time (seconds) the client caches attributes for a regular file. Default is typically 60s. | Mostly-static file workloads where extending the max reduces metadata chatter (e.g., large read-only datasets, package repositories).
 | acdirmin | Sets the minimum time (seconds) the client caches attributes for a directory before revalidating. Default is typically 30s. | Workloads with frequent directory listing or creation (e.g., build systems, mail spools with Maildir format) where directory freshness matters.
-| acdirmax | Sets the maximum time (seconds) the client caches attributes for a directory. Default is typically 60s. | Stable directory structures that rarely change Ã¢â‚¬â€ raising this reduces GETATTR calls (e.g., large static directory trees, archival storage).
+| acdirmax | Sets the maximum time (seconds) the client caches attributes for a directory. Default is typically 60s. | Stable directory structures that rarely change — raising this reduces GETATTR calls (e.g., large static directory trees, archival storage).
 | clientaddr | Specifies the client IP address to advertise to the NFS server for callback communication (NFSv4/v4.1+). The server uses this address to send delegation recalls and other callbacks. | Multi-homed clients or environments with complex networking (e.g., clients with multiple NICs, VPN/overlay networks, or NAT) where the auto-detected address may be incorrect.
 | nconnect | Creates multiple TCP connections (up to the specified count) to the NFS server for a single mount, allowing parallel I/O over separate connections. | High-throughput, I/O-intensive workloads that are bottlenecked by a single TCP stream (e.g., large file transfers, HPC/scientific computing, video editing, database backups, big data analytics). Particularly beneficial on high-bandwidth networks (10 GbE+).
 | krb5* | Specifies what Kerberos security flavor to use with the mount. Requires Kerberos configuration to work properly. See TR-4616 NFS Kerberos with Active Directory for details. | Securing NFS mounts; has a negative impact on performance.

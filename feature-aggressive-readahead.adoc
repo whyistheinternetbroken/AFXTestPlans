@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:test-plans.adoc[Ã¢â€ Â Back to Test Plans]
+xref:test-plans.adoc[Ã¢â€ Â Back to Test Plans]
 
 Aggressive readahead optimizes sequential file read performance for media streaming, HPC, and other read-intensive workloads.
 

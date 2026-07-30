@@ -7,7 +7,7 @@
 :doctype: book
 
 
-xref:appendix.adoc[â† Back to Appendix]
+xref:appendix.adoc[← Back to Appendix]
 
 Detailed NFS client tuning: rsize/wsize, close-to-open consistency, nconnect, and NFS readahead settings.
 
@@ -123,8 +123,8 @@ The following table shows the default read-ahead values for each currently avail
 | Distribution | Release | Blocks read-ahead default
 | RHEL | 8.3 | 128 KiB
 | RHEL | 7.X, 8.0, 8.1, 8.2 | 15 X rsize
-| SLES | 12.X â€“ at least 15SP2 | 15 X rsize
-| Ubuntu | 18.04 â€“ at least 20.04 | 128 KiB
+| SLES | 12.X – at least 15SP2 | 15 X rsize
+| Ubuntu | 18.04 – at least 20.04 | 128 KiB
 | Ubuntu | 16.04 | 15 X rsize
 | Debian | Up to at least 10 | 15 x rsize
 |===

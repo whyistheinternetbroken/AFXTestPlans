@@ -1,4 +1,4 @@
-= Optional Feature: Dynamic Storage Efficiency
+﻿= Optional Feature: Dynamic Storage Efficiency
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:test-plans.adoc[â† Back to Test Plans]
+xref:test-plans.adoc[← Back to Test Plans]
 
 Dynamic storage efficiency provides adaptive compression and compaction to maximize storage space savings without impacting foreground I/O performance.
 

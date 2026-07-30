@@ -1,4 +1,4 @@
-= Test 11: Compute scaling (optional)
+﻿= Test 11: Compute scaling (optional)
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -35,7 +35,7 @@ AFX::*> vol show -fields node,size,constituent-count -is-constituent true -node 
 ----
 
 Log into the service processor of the node(s) you wish to add to the cluster. +
-From the prompt, type Ã¢â‚¬Å“system consoleÃ¢â‚¬Â to access the nodeÃ¢â‚¬â„¢s console. If the node is not at the LOADER prompt, you can use ctl+d to exit to the BMC/service processor prompt. Type Ã¢â‚¬Å“system resetÃ¢â‚¬Â, answer y for dirty shutdown, then Ã¢â‚¬Å“system consoleÃ¢â‚¬Â to watch the boot process. Hit ctl+c when you see the Ã¢â‚¬Å“interrupt AutobootÃ¢â‚¬Â message. +
+From the prompt, type “system console” to access the node’s console. If the node is not at the LOADER prompt, you can use ctl+d to exit to the BMC/service processor prompt. Type “system reset”, answer y for dirty shutdown, then “system console” to watch the boot process. Hit ctl+c when you see the “interrupt Autoboot” message. +
 Once at the LOADER prompt, run the following: +
 set-defaults +
 setenv bootarg.init.unjoined true +
@@ -131,21 +131,21 @@ Cluster
 
 Repeat the above setup steps on the other NetApp AFX node(s).
 
-From here, access the System Manager window via the cluster management IP. Navigate to Cluster -> Overview and click on the Ã¢â‚¬Å“NodesÃ¢â‚¬Â tab.
+From here, access the System Manager window via the cluster management IP. Navigate to Cluster -> Overview and click on the “Nodes” tab.
 
-image::images/test-11-image-01.png[]
+image::images/test-11-image-01.png[width=50%,link=images/test-11-image-01.png]
 
-At the bottom of the page, you should see a section called Ã¢â‚¬Å“Not part of this clusterÃ¢â‚¬Â and your new nodes below that. Click Ã¢â‚¬Å“+ AddÃ¢â‚¬Â to add the node to the cluster. +
+At the bottom of the page, you should see a section called “Not part of this cluster” and your new nodes below that. Click “+ Add” to add the node to the cluster. +
 An odd number of nodes cannot be added to a cluster. +
 If the nodes are discovered before the cluster interconnect IP addresses are changed, then you will need to re-discover the nodes by exiting the window and navigating back. +
 If the GUI addition does not work, try the CLI command cluster add-node instead If issues persist, utilize contact NetApp support or reach out to [email].
 
-image::images/test-11-image-02.png[]
+image::images/test-11-image-02.png[width=50%,link=images/test-11-image-02.png]
 
-Use the Ã¢â‚¬Å“Add nodesÃ¢â‚¬Â screen to fill in your information. Management IP addresses can be added manually or by using a subnet.
+Use the “Add nodes” screen to fill in your information. Management IP addresses can be added manually or by using a subnet.
 
-image::images/test-11-image-03.png[]
-image::images/test-11-image-04.png[]
+image::images/test-11-image-03.png[width=50%,link=images/test-11-image-03.png]
+image::images/test-11-image-04.png[width=50%,link=images/test-11-image-04.png]
 
 Log into the cluster CLI. Monitor the node add status.
 
@@ -213,7 +213,7 @@ AFX::*> qos statistics volume performance show -vserver svm1 -volume [volname]
 From System Manager, you can view the performance graph.
 ----
 
-image::images/test-11-image-05.png[]
+image::images/test-11-image-05.png[width=50%,link=images/test-11-image-05.png]
 
 a| Expected outcome(s): +
 Adding new nodes to the cluster should be nondisruptive. +

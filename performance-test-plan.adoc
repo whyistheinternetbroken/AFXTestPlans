@@ -27,11 +27,11 @@ The first test plan here is to validate the cluster heath, configuration, etc.
 | Section | Details
 | Test 1 | Tester: |  | Date: |
 | Test requirements: | No specific requirements |  |  |
-| Test procedure Ã¢â‚¬â€œ GUI: +
+| Test procedure – GUI: +
 Log into the System Manager GUI via https://[clus_mgmt_IP] +
 The system dashboard will show errors, warnings, capacity information, and a high-level overview of the storage hardware. +
  +
-Click on Ã¢â‚¬Å“ErrorsÃ¢â‚¬Â to view any issues the cluster may be having. This will take you to Events & Jobs -> Events. +
+Click on “Errors” to view any issues the cluster may be having. This will take you to Events & Jobs -> Events. +
  +
 Click on System Alerts to see specific alerts.  +
  +
@@ -48,9 +48,9 @@ Scroll through each of these and take note of the different components in the Ne
  +
 The cabling diagram provides a clean view of the clusters physical layout.  +
  +
-Use the down arrows  in each of the Nodes, Switches and Disk Shelves to see their associated ports. Some ports will be unused. To see a consolidate cabling diagram with only the used ports, uncheck Ã¢â‚¬Å“Show unused ports.Ã¢â‚¬Â +
+Use the down arrows  in each of the Nodes, Switches and Disk Shelves to see their associated ports. Some ports will be unused. To see a consolidate cabling diagram with only the used ports, uncheck “Show unused ports.” +
  +
-Test procedure Ã¢â‚¬â€œ CLI: +
+Test procedure – CLI: +
 Log in to the NetApp AFX CLI +
 Verify cluster health. +
 AFX::*> set advanced +
@@ -175,9 +175,9 @@ ONTAP can be configured with multiple network interfaces for management, data ac
 | Test procedure: +
 Log into the System Manager GUI via https://[clus_mgmt_IP] +
 Navigate to Network -> Overview. +
-Click the Ã¢â‚¬Å“+ AddÃ¢â‚¬Â button under Network interfaces. +
+Click the “+ Add” button under Network interfaces. +
  +
-Select Ã¢â‚¬Å“dataÃ¢â‚¬Â for the interface type and select the desired options, specify a name, home node, etc. +
+Select “data” for the interface type and select the desired options, specify a name, home node, etc. +
  +
 Repeat the above step for each node. Create at least 2 data interfaces per node to provide paths for NFS session trunking. +
 Alternately, use the LIF creation script found in the Appendix of this document. |  |  |  |
@@ -211,15 +211,15 @@ A secondary cluster running ONTAP (or replicate to the same cluster to a differe
 Ensure intercluster interfaces exist.  +
 Click Network -> Overview. +
  +
-Click the magnifying glass to search for interfaces with the type of Ã¢â‚¬Å“intercluster.Ã¢â‚¬Â +
+Click the magnifying glass to search for interfaces with the type of “intercluster.” +
  +
-Type Ã¢â‚¬Å“interclusterÃ¢â‚¬Â in the search field to find any intercluster interfaces. +
+Type “intercluster” in the search field to find any intercluster interfaces. +
 If there are none, move on to the next step to create intercluster interfaces. If they do exist, move to the following step to set up the cluster peer. +
  +
 Create intercluster interfaces (if they do not already exist) +
 Each node in both clusters should have at least one intercluster interface. +
  +
-Navigate to Protection -> Overview and click Ã¢â‚¬Å“Add network interfacesÃ¢â‚¬Â.  +
+Navigate to Protection -> Overview and click “Add network interfaces”.  +
  +
  +
 Configure the interfaces for each node, as shown below  +
@@ -228,28 +228,28 @@ Configure the interfaces for each node, as shown below  +
 Click save and confirm the interfaces. +
  +
   +
-Verify the interfaces have been created from the Ã¢â‚¬Å“Network interfaces overview.Ã¢â‚¬Â +
+Verify the interfaces have been created from the “Network interfaces overview.” +
  +
 *Note:* If necessary, make any edits to interfaces here. +
  +
 Add a cluster peer via System Manager on the source ONTAP cluster. +
 Navigate to (Protection -> Overview) +
  +
-Click the  next to Ã¢â‚¬Å“Cluster peersÃ¢â‚¬Â and click Ã¢â‚¬Å“Add cluster peersÃ¢â‚¬Â or click  the Ã¢â‚¬Å“Add a cluster peerÃ¢â‚¬Â button +
+Click the  next to “Cluster peers” and click “Add cluster peers” or click  the “Add a cluster peer” button +
  +
 To peer to a remote cluster, a passphrase will be needed.  +
-Click Ã¢â‚¬Å“Launch remote cluster.Ã¢â‚¬Â +
+Click “Launch remote cluster.” +
  +
-Add the remote cluster management IP address and click Ã¢â‚¬Å“Launch.Ã¢â‚¬Â +
+Add the remote cluster management IP address and click “Launch.” +
  +
 Generate passphrase +
 This will open a new window to the NetApp AFX cluster to generate a new passphrase for cluster peer authentication. From here, copy the passphrase and add it to the unified ONTAP system. +
  +
 Add the passphrase +
-Verify if the intercluster IP addresses for the NetApp AFX cluster are populated. If everything looks good, click Ã¢â‚¬Å“Initiate cluster peering.Ã¢â‚¬Â +
+Verify if the intercluster IP addresses for the NetApp AFX cluster are populated. If everything looks good, click “Initiate cluster peering.” +
  +
 Verify the cluster peer status +
-If successful, you will see cluster peers listed under Protection -> Overview. Initially, the peer may show as Ã¢â‚¬Å“partialÃ¢â‚¬Â with a red X next to the name. This can happen when the peer job is finishing. Eventually, the status should show a green check: +
+If successful, you will see cluster peers listed under Protection -> Overview. Initially, the peer may show as “partial” with a red X next to the name. This can happen when the peer job is finishing. Eventually, the status should show a green check: +
  +
 You can also check the cluster peer health from the command line. +
 AFX::*> cluster peer health show +
@@ -277,19 +277,19 @@ Use source volume with production datasets on unified ONTAP cluster to the NetAp
 Navigate to the volume using the left menu. (Storage -> Volumes). +
  +
 Hover over the volume name and click the to expand the menu.  +
-Select Ã¢â‚¬Å“ProtectÃ¢â‚¬Â. +
+Select “Protect”. +
  +
-Configure the SnapMirror settings and click Ã¢â‚¬Å“ProtectÃ¢â‚¬Â +
+Configure the SnapMirror settings and click “Protect” +
  +
 If the above steps fail, you can attempt to create the relationship via the CLI. +
  +
 CLI Steps +
-Check the constituent count on the source volumeÃ¢â‚¬â„¢s FlexGroup volume. +
+Check the constituent count on the source volume’s FlexGroup volume. +
 SnapMirror of FlexGroup volumes will require identical constituent counts on source and destination. +
 AFX::> set advanced; volume show -vserver vs0 -volume dataset -fields constituent-count +
  +
 Create a FlexGroup on the AFX cluster +
-The volume will need the same number of constituent volumes + equal/greater size with a type of Ã¢â‚¬Å“DP.Ã¢â‚¬Â +
+The volume will need the same number of constituent volumes + equal/greater size with a type of “DP.” +
 AFX::> set advanced; vol create -volume dataset_dst -state online -size 2T -type DP -number-of-constituents [number from previous step] +
  +
 Create the SnapMirror relationship +
@@ -342,26 +342,26 @@ The command can take considerable time (depending on file count and size), as it
 Break the SnapMirror relationship and test ability to access and write to destination volume on NetApp AFX. +
 From the NetApp AFX System Manager GUI, navigate to Protection -> Replication. +
  +
-Hover over the relationship and use the  to expand the menu. Select Ã¢â‚¬Å“Break.Ã¢â‚¬Â +
+Hover over the relationship and use the  to expand the menu. Select “Break.” +
  +
-Confirm the details and click Ã¢â‚¬Å“Break.Ã¢â‚¬Â +
+Confirm the details and click “Break.” +
  +
 Establish a SnapMirror from NetApp AFX to unified ONTAP with DR/backup as a goal. +
-There are two ways to achieve this goal. One way is to create a separate, brand new SnapMirror to a new destination volume. The other way is to initiate a Ã¢â‚¬Å“reverse resync,Ã¢â‚¬Â which will re-use the original source volume. The below covers both steps. You can perform both or you can choose one. +
+There are two ways to achieve this goal. One way is to create a separate, brand new SnapMirror to a new destination volume. The other way is to initiate a “reverse resync,” which will re-use the original source volume. The below covers both steps. You can perform both or you can choose one. +
  +
-Destination ONTAP cluster will need to be on 9.16.1 or later to allow Advanced Capacity Balancing to be enabled. If itÃ¢â‚¬â„¢s not possible to use a destination unified ONTAP cluster, use the NetApp AFX cluster as the destination instead. +
+Destination ONTAP cluster will need to be on 9.16.1 or later to allow Advanced Capacity Balancing to be enabled. If it’s not possible to use a destination unified ONTAP cluster, use the NetApp AFX cluster as the destination instead. +
 New SnapMirror steps +
 Navigate to Storage -> Volumes +
  +
 Hover over the volume name and click the to expand the menu. +
-Select Ã¢â‚¬Å“ProtectÃ¢â‚¬Â. +
+Select “Protect”. +
  +
-Review the options and click Ã¢â‚¬Å“Protect.Ã¢â‚¬Â +
+Review the options and click “Protect.” +
  +
 Reverse Resync steps: +
 Navigate to Protection -> Replication. +
  +
-Hover over the relationship and use the  to expand the menu. Select Ã¢â‚¬Å“Reverse Resync.Ã¢â‚¬Â +
+Hover over the relationship and use the  to expand the menu. Select “Reverse Resync.” +
  +
 Verify in the unified ONTAP destination cluster that the relationship appears when navigating to Protection -> Relationships. |  |  |  |
 | Expected outcome(s): +
@@ -394,11 +394,11 @@ Review the location of the constituent volumes of the FlexGroup volumes. Note th
 AFX::> vol show -volume name* -is-constituent true -fields size -node [node-name] +
 Example: +
 AFX::*> vol show -node AFX-01 +
-Ã¢â‚¬Â¦ +
+… +
 98 entries were displayed. << SVM root is the +1 +
  +
 AFX::*> vol show -node AFX-02 +
-Ã¢â‚¬Â¦ +
+… +
 97 entries were displayed. +
  +
 Create a new volume FlexGroup on a dedicated aggregate in admin privilege. Note the error.  +
@@ -408,10 +408,10 @@ AFX::> volume create -volume fg1 -aggr-list dataFA[tab] -aggr-list-multiplier 20
  +
 Error: command failed: Aggregate "dataFA_2_p0_i1" cannot be used to create a volume on this platform. +
  +
-Create a new FlexGroup volume on a specific nodeÃ¢â‚¬â„¢s virtual aggregate using the -aggr-list-multiplier flag in diag priv. Use tab completion to suggest one of the virtual data aggregates. +
+Create a new FlexGroup volume on a specific node’s virtual aggregate using the -aggr-list-multiplier flag in diag priv. Use tab completion to suggest one of the virtual data aggregates. +
 AFX::> set diag +
 AFX::*> volume create -volume fg1 -aggr-list dataFA[tab] -aggr-list-multiplier 20 +
-While NetApp AFX no longer leverages aggregates as a physical construct, there are still virtualized aggregates that Ã¢â‚¬Å“ownÃ¢â‚¬Â volumes. These provide a location for NVRAM commits to occur, since we still write the same way as unified ONTAP. By default, all volumes are created in the Storage Availability Zone and ONTAP handles the volume placement. +
+While NetApp AFX no longer leverages aggregates as a physical construct, there are still virtualized aggregates that “own” volumes. These provide a location for NVRAM commits to occur, since we still write the same way as unified ONTAP. By default, all volumes are created in the Storage Availability Zone and ONTAP handles the volume placement. +
 View the volume count for each data aggregate after creating the FlexGroup volume. Note that the volumes counts are imbalanced. +
 AFX::*> aggr show -aggregate data* -fields volcount +
 aggregate      volcount +
@@ -614,7 +614,7 @@ Some workloads might benefit from special mount options during benchmark tests. 
 | acregmin | Sets the minimum time (seconds) the client caches attributes for a regular file before revalidating. Default is typically 3s. | Workloads with frequently updated small files where you want to fine-tune freshness vs. performance (e.g., log ingestion, config file polling).
 | acregmax | Sets the maximum time (seconds) the client caches attributes for a regular file. Default is typically 60s. | Mostly-static file workloads where extending the max reduces metadata chatter (e.g., large read-only datasets, package repositories).
 | acdirmin | Sets the minimum time (seconds) the client caches attributes for a directory before revalidating. Default is typically 30s. | Workloads with frequent directory listing or creation (e.g., build systems, mail spools with Maildir format) where directory freshness matters.
-| acdirmax | Sets the maximum time (seconds) the client caches attributes for a directory. Default is typically 60s. | Stable directory structures that rarely change Ã¢â‚¬â€ raising this reduces GETATTR calls (e.g., large static directory trees, archival storage).
+| acdirmax | Sets the maximum time (seconds) the client caches attributes for a directory. Default is typically 60s. | Stable directory structures that rarely change — raising this reduces GETATTR calls (e.g., large static directory trees, archival storage).
 | clientaddr | Specifies the client IP address to advertise to the NFS server for callback communication (NFSv4/v4.1+). The server uses this address to send delegation recalls and other callbacks. | Multi-homed clients or environments with complex networking (e.g., clients with multiple NICs, VPN/overlay networks, or NAT) where the auto-detected address may be incorrect.
 | nconnect | Creates multiple TCP connections (up to the specified count) to the NFS server for a single mount, allowing parallel I/O over separate connections. | High-throughput, I/O-intensive workloads that are bottlenecked by a single TCP stream (e.g., large file transfers, HPC/scientific computing, video editing, database backups, big data analytics). Particularly beneficial on high-bandwidth networks (10 GbE+).
 | krb5* | Specifies what Kerberos security flavor to use with the mount. Requires Kerberos configuration to work properly. See TR-4616 NFS Kerberos with Active Directory for details. | Securing NFS mounts; has a negative impact on performance.
@@ -700,7 +700,7 @@ The goal of these workload tests is to show that real data workloads can be port
 | Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
 Mount NetApp AFX volume using NAS protocol of your choice. +
-Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single clientÃ¢â‚¬â„¢s performance. +
+Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single client’s performance. +
  +
 Find the export path of your data volume in System Manager. +
  +
@@ -742,13 +742,13 @@ Navigate to the Storage -> Volumes menu in System Manager +
  +
 Click + Add +
  +
-Enter the volume name, capacity and select Ã¢â‚¬Å“High throughputÃ¢â‚¬Â to create a FlexGroup +
+Enter the volume name, capacity and select “High throughput” to create a FlexGroup +
  +
-Optionally, click Ã¢â‚¬Å“More optionsÃ¢â‚¬Â to disable/enable data protection features and add export policies and rules +
+Optionally, click “More options” to disable/enable data protection features and add export policies and rules +
  +
 Click save. +
 Mount NetApp AFX volume using NAS protocol of your choice. +
-Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single clientÃ¢â‚¬â„¢s performance. +
+Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single client’s performance. +
  +
 Find the export path of your data volume in System Manager. +
  +
@@ -795,7 +795,7 @@ To verify if this activity is happening on the volume you created, you can click
  +
 Use CLI statistics to capture performance information. +
  +
-Cluster statistics can be captured in real time with Ã¢â‚¬Å“statistics show-periodicÃ¢â‚¬Â +
+Cluster statistics can be captured in real time with “statistics show-periodic” +
 AFX::*> statistics show-periodic +
 AFX: cluster.cluster: 5/8/2025 01:34:46 +
   cpu  cpu    total                     fcache             total    total data     data     data cluster  cluster  cluster     disk     disk     pkts     pkts +
@@ -824,7 +824,7 @@ Workload            ID     IOPS       Throughput    Latency +
 -total-              -     1005       985.07MB/s  1177.00us +
 Collect protocol-level statistics during performance tests. +
 Performance tests can be real data or benchmarks. +
-From the command line, you can run Ã¢â‚¬Å“statistics startÃ¢â‚¬Â to begin a stats collection during a specific job run. For this example, we will collect NFSv4.1 statistics. You can run these statistics at any time, but it is best to run these before starting a benchmark or data workload and then stopping them when the job is complete. These commands can be run in advanced privilege. +
+From the command line, you can run “statistics start” to begin a stats collection during a specific job run. For this example, we will collect NFSv4.1 statistics. You can run these statistics at any time, but it is best to run these before starting a benchmark or data workload and then stopping them when the job is complete. These commands can be run in advanced privilege. +
 AFX::> set advanced -confirmations off +
  +
 AFX::*> statistics start -object nfsv4_1 -vserver svm1 -sample-id unet3d_datagen +
@@ -927,7 +927,7 @@ Viewing and managing capacity in NetApp AFX has been streamlined to improve simp
 | Test 10 | Tester: |  | Date: |
 | Test requirements: | No specific requirements.  +
 Performance testing being run during live node additions. |  |  |
-| Test procedure Ã¢â‚¬â€œ GUI: +
+| Test procedure – GUI: +
 View capacity in the dashboard. +
  +
  +
@@ -969,7 +969,7 @@ AFX::> set advanced +
 AFX::*> vol show -fields node,size,constituent-count -is-constituent true -node * +
  +
 Log into the service processor of the node(s) you wish to add to the cluster. +
-From the prompt, type Ã¢â‚¬Å“system consoleÃ¢â‚¬Â to access the nodeÃ¢â‚¬â„¢s console. If the node is not at the LOADER prompt, you can use ctl+d to exit to the BMC/service processor prompt. Type Ã¢â‚¬Å“system resetÃ¢â‚¬Â, answer y for dirty shutdown, then Ã¢â‚¬Å“system consoleÃ¢â‚¬Â to watch the boot process. Hit ctl+c when you see the Ã¢â‚¬Å“interrupt AutobootÃ¢â‚¬Â message. +
+From the prompt, type “system console” to access the node’s console. If the node is not at the LOADER prompt, you can use ctl+d to exit to the BMC/service processor prompt. Type “system reset”, answer y for dirty shutdown, then “system console” to watch the boot process. Hit ctl+c when you see the “interrupt Autoboot” message. +
 Once at the LOADER prompt, run the following: +
 set-defaults +
 setenv bootarg.init.unjoined true +
@@ -1052,16 +1052,16 @@ Cluster +
  +
 Repeat the above setup steps on the other NetApp AFX node(s). +
  +
-From here, access the System Manager window via the cluster management IP. Navigate to Cluster -> Overview and click on the Ã¢â‚¬Å“NodesÃ¢â‚¬Â tab. +
+From here, access the System Manager window via the cluster management IP. Navigate to Cluster -> Overview and click on the “Nodes” tab. +
  +
  +
-At the bottom of the page, you should see a section called Ã¢â‚¬Å“Not part of this clusterÃ¢â‚¬Â and your new nodes below that. Click Ã¢â‚¬Å“+ AddÃ¢â‚¬Â to add the node to the cluster.  +
+At the bottom of the page, you should see a section called “Not part of this cluster” and your new nodes below that. Click “+ Add” to add the node to the cluster.  +
 An odd number of nodes cannot be added to a cluster. +
 If the nodes are discovered before the cluster interconnect IP addresses are changed, then you will need to re-discover the nodes by exiting the window and navigating back. +
 If the GUI addition does not work, try the CLI command cluster add-node instead If issues persist, utilize contact NetApp support or reach out to [email]. +
  +
  +
-Use the Ã¢â‚¬Å“Add nodesÃ¢â‚¬Â screen to fill in your information. Management IP addresses can be added manually or by using a subnet. +
+Use the “Add nodes” screen to fill in your information. Management IP addresses can be added manually or by using a subnet. +
  +
  +
  +
@@ -1169,7 +1169,7 @@ This process can take a long time due to the size of the core files. Booting bac
  +
 While the nodes are in takeover, check the network interfaces and if they have been migrated. +
 AFX::*> net int show -vserver SVM1 -fields is-home,is-home,home-node,home-port,curr-node,curr-port +
-Ã¢â‚¬Å“is-home falseÃ¢â‚¬Â means the interface has been migrated from its home node. +
+“is-home false” means the interface has been migrated from its home node. +
  +
 Check the volume locations for each node. Note and compare to before takeover.  +
 Volume moves after failover can take roughly 17-22 minutes as ONTAP waits to verify the node is actually down. But once they are enacted, they will complete quickly. +
@@ -1212,7 +1212,7 @@ AFX-04 +
                                        Waiting for cluster applications to +
                                        come online on the local node. +
  +
-If in Ã¢â‚¬Å“Partial GivebackÃ¢â‚¬Â wait another 5 minutes and rerun the Ã¢â‚¬Å“showÃ¢â‚¬Â command. +
+If in “Partial Giveback” wait another 5 minutes and rerun the “show” command. +
 AFX::system*> storage failover show +
                               Takeover +
                                  of +

@@ -1,4 +1,4 @@
-= Test 10: Capacity management
+﻿= Test 10: Capacity management
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -17,10 +17,10 @@ Viewing and managing capacity in NetApp AFX has been streamlined to improve simp
 |===
 | *Test plan 10 - Capacity management*
 
-a| Test procedure Ã¢â‚¬â€œ GUI: +
+a| Test procedure – GUI: +
 View capacity in the dashboard.
 
-image::images/test-10-image-01.png[]
+image::images/test-10-image-01.png[width=50%,link=images/test-10-image-01.png]
 
 From the CLI +
 Display the Storage Availability Zone

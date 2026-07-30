@@ -7,7 +7,7 @@
 :doctype: book
 
 
-xref:appendix.adoc[â† Back to Appendix]
+xref:appendix.adoc[← Back to Appendix]
 
 Guides for SPEC SFS 2020 and DLIO/MLcommons benchmark tools including workload definitions, model runs, data generation, and NFS operation breakdowns.
 

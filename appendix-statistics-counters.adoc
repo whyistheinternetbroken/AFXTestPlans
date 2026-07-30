@@ -7,7 +7,7 @@
 :doctype: book
 
 
-xref:appendix.adoc[â† Back to Appendix]
+xref:appendix.adoc[← Back to Appendix]
 
 NFS, pNFS, and session trunking statistics counters with command examples and output samples.
 

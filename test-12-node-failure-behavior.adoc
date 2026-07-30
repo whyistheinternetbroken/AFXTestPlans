@@ -1,4 +1,4 @@
-= Test 12: Node failure behavior
+﻿= Test 12: Node failure behavior
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -73,7 +73,7 @@ While the nodes are in takeover, check the network interfaces and if they have b
 [source,console]
 ----
 AFX::*> net int show -vserver SVM1 -fields is-home,is-home,home-node,home-port,curr-node,curr-port
-Ã¢â‚¬Å“is-home falseÃ¢â‚¬Â means the interface has been migrated from its home node.
+“is-home false” means the interface has been migrated from its home node.
 ----
 
 Check the volume locations for each node. Note and compare to before takeover. +
@@ -143,7 +143,7 @@ AFX-01         true     Connected to AFX-01.
                                        come online on the local node.
 ----
 
-If in Ã¢â‚¬Å“Partial GivebackÃ¢â‚¬Â wait another 5 minutes and rerun the Ã¢â‚¬Å“showÃ¢â‚¬Â command.
+If in “Partial Giveback” wait another 5 minutes and rerun the “show” command.
 
 [source,console]
 ----

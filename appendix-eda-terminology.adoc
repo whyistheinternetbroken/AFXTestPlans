@@ -1,4 +1,4 @@
-= Appendix: EDA Frontend, Backend, and Blended Terminology
+﻿= Appendix: EDA Frontend, Backend, and Blended Terminology
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[â† Back to Appendix]
+xref:appendix.adoc[← Back to Appendix]
 
 Defines EDA workload terminology used throughout this test plan.
 

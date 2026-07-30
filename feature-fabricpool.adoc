@@ -1,4 +1,4 @@
-= Optional Feature: FabricPool Tiering
+﻿= Optional Feature: FabricPool Tiering
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:test-plans.adoc[â† Back to Test Plans]
+xref:test-plans.adoc[← Back to Test Plans]
 
 FabricPool automatically tiers cold data blocks to an S3-compatible object store. NetApp AFX support begins in ONTAP 9.19.1P2.
 

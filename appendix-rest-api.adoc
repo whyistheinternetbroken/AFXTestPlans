@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[Ã¢â€ Â Back to Appendix]
+xref:appendix.adoc[Ã¢â€ Â Back to Appendix]
 
 ONTAP REST API examples for authentication, FlexGroup volume creation, deletion, network interfaces, and NFS server configuration.
 

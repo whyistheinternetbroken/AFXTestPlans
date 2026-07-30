@@ -7,7 +7,7 @@
 :doctype: book
 
 
-xref:test-plans.adoc[â† Back to Test Plans]
+xref:test-plans.adoc[← Back to Test Plans]
 
 This optional test validates the non-disruptive upgrade process for NetApp AFX.
 
@@ -50,7 +50,7 @@ AFX::*> cluster image package delete -version [version] +
 Package Delete Operation Completed Successfully +
  +
 Execute the upload and upgrade of ONTAP +
-AFX::> cluster image package get -urlÂ http://<webserver>/image.tgz +
+AFX::> cluster image package get -urlÂ http://<webserver>/image.tgz +
 Package download completed. +
 Package processing completed. +
  +

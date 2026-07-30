@@ -7,7 +7,7 @@
 :doctype: book
 
 
-xref:test-plans.adoc[â† Back to Test Plans]
+xref:test-plans.adoc[← Back to Test Plans]
 
 This optional test plan covers S3 protocol configuration and testing on NetApp AFX.
 
@@ -32,10 +32,10 @@ Enable S3 on the SVM +
 Navigate to Cluster -> Storage VMs +
  +
  +
-Click on the desired SVM and look for the â€œProtocolsâ€ section. That shows if S3 is enabled. +
+Click on the desired SVM and look for the “Protocols” section. That shows if S3 is enabled. +
  +
  +
-Click on the â€œSettingsâ€ tab and then the  on the S3 section. +
+Click on the “Settings” tab and then the  on the S3 section. +
  +
  +
 Give the S3 server a name and configuration. This name should be a FQDN that is resolvable in DNS. +
@@ -44,28 +44,28 @@ If desired for this test plan, use HTTP to avoid requiring certificates. +
  +
 Click save. ONTAP will perform configurations behind the scenes, such as user creation, certificates, etc. +
  +
-Once itâ€™s finished, a screen will pop up with information about the S3 server needed for authentication to the buckets. Download these or copy and save for future use. +
+Once it’s finished, a screen will pop up with information about the S3 server needed for authentication to the buckets. Download these or copy and save for future use. +
  +
  +
 To add a unique user, click on the  once S3 has been enabled. +
   +
  +
 An S3 user needs to map to a corresponding NAS user. If you want to use the root user, you need to generate a passkey for root. +
-For root user, click the  and â€œRegenerate keyâ€ and then save the information. +
+For root user, click the  and “Regenerate key” and then save the information. +
  +
  +
-To add a user, click â€œAddâ€ and type the name and set the desired key validity. Remember, the user must map to a NAS user if you intend on leveraging NAS/Object protocol duality. +
+To add a user, click “Add” and type the name and set the desired key validity. Remember, the user must map to a NAS user if you intend on leveraging NAS/Object protocol duality. +
  +
  +
 This will create your access/secret keys. Save for later use. +
  +
  +
 Create an S3 bucket that can connect to the NAS volume for file/object duality. +
-Navigate to Storage -> Buckets and then click â€œAddâ€ and â€œMore optionsâ€ and add your name, SVM and map the bucket to a folder with the NAS data. +
+Navigate to Storage -> Buckets and then click “Add” and “More options” and add your name, SVM and map the bucket to a folder with the NAS data. +
   +
 If only one Storage VM is present, you will not need to select the Storage VM. +
  +
-Optionally, modify bucket permissions, users who have access, etc. Then click â€œSave.â€ +
+Optionally, modify bucket permissions, users who have access, etc. Then click “Save.” +
   +
  +
 Your bucket will be listed. Clicking on it allows you to manage it further and view the URL. +

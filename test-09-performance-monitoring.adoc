@@ -1,4 +1,4 @@
-= Test 9: Performance monitoring
+﻿= Test 9: Performance monitoring
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -26,15 +26,15 @@ Performance tests can be real data or benchmarks. +
 From the System Manager GUI +
 Login to System Manager. On the main page, you can see performance graphs on the right. This shows if there is activity in the cluster.
 
-image::images/test-09-image-01.png[]
+image::images/test-09-image-01.png[width=50%,link=images/test-09-image-01.png]
 
 To verify if this activity is happening on the volume you created, you can click on Storage->Volumes and then click on the volume you created.
 
-image::images/test-09-image-02.png[]
+image::images/test-09-image-02.png[width=50%,link=images/test-09-image-02.png]
 
 Use CLI statistics to capture performance information.
 
-Cluster statistics can be captured in real time with Ã¢â‚¬Å“statistics show-periodicÃ¢â‚¬Â
+Cluster statistics can be captured in real time with “statistics show-periodic”
 
 [source,console]
 ----
@@ -70,7 +70,7 @@ Workload            ID     IOPS       Throughput    Latency
 -total-              -     1005       985.07MB/s  1177.00us
 Collect protocol-level statistics during performance tests.
 Performance tests can be real data or benchmarks.
-From the command line, you can run Ã¢â‚¬Å“statistics startÃ¢â‚¬Â to begin a stats collection during a specific job run. For this example, we will collect NFSv4.1 statistics. You can run these statistics at any time, but it is best to run these before starting a benchmark or data workload and then stopping them when the job is complete. These commands can be run in advanced privilege.
+From the command line, you can run “statistics start” to begin a stats collection during a specific job run. For this example, we will collect NFSv4.1 statistics. You can run these statistics at any time, but it is best to run these before starting a benchmark or data workload and then stopping them when the job is complete. These commands can be run in advanced privilege.
 AFX::> set advanced -confirmations off
 ----
 

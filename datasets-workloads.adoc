@@ -126,7 +126,7 @@ link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volu
 
 To create a FlexGroup volume in System Manager:
 
-* Navigate to Storage â†’ Volumes
+* Navigate to Storage → Volumes
 * Click +Add
 * Select "High throughput" to create a FlexGroup
 

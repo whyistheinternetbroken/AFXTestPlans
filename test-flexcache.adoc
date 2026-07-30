@@ -7,7 +7,7 @@
 :doctype: book
 
 
-xref:test-plans.adoc[â† Back to Test Plans]
+xref:test-plans.adoc[← Back to Test Plans]
 
 NetApp FlexCache volumes provide a way to localize reads on remote datasets by caching only the active working set.
 
@@ -29,27 +29,27 @@ NetApp FlexCache volumes provide a way to localize reads on remote datasets by p
 Navigate to the NetApp AFX System Manager and login +
  +
 Peer the clusters (if necessary) +
-This step may not be necessary if youâ€™ve already peered the clusters for SnapMirror. +
+This step may not be necessary if you’ve already peered the clusters for SnapMirror. +
 Follow the steps in the Data Migration test plan above to peer clusters. +
  +
 Create a SVM peer for the FlexCache volume +
 You may need to re-peer the clusters in some cases. +
  +
-Navigate to â€œCluster -> settingsâ€ +
-Scroll down to Storage VM peers and click the  and select â€œAdd a storage VM peerâ€ +
+Navigate to “Cluster -> settings” +
+Scroll down to Storage VM peers and click the  and select “Add a storage VM peer” +
  +
 Select the peered cluster and the desired SVM to peer. +
  +
 Specify FlexCache as the application to use. +
  +
 Create the FlexCache volume +
-Click on Storage -> Volumes and click â€œAddâ€ +
+Click on Storage -> Volumes and click “Add” +
  +
-In the Add volume window, click â€œMore optionsâ€ +
+In the Add volume window, click “More options” +
  +
-Give the cache a name and select â€œAdd as a cache for remote volumeâ€ below the name and select the cluster, SVM and volume to connect to as a cache. +
+Give the cache a name and select “Add as a cache for remote volume” below the name and select the cluster, SVM and volume to connect to as a cache. +
  +
-Give the cache a size â€“ it doesnâ€™t have to be the same size as the origin volume â€“ and configure the access permissions. +
+Give the cache a size – it doesn’t have to be the same size as the origin volume – and configure the access permissions. +
 FlexCache writeback is not currently supported for FlexGroup volumes in NetApp AFX. +
  +
 Click save. The FlexCache will be created. +
@@ -77,12 +77,12 @@ drwxr-xr-x 2 root root 4096 May 18 02:17 host-configs +
 drwxr-xr-x 9 root root 4096 May 18 02:05 storage +
  +
 FlexCache volumes can also be pre-populated if you know what data you need cached to reduce the initial latency hit on first read. +
-In System Manager, on the FlexCache volume, click  and select â€œPrepopulate foldersâ€ +
+In System Manager, on the FlexCache volume, click  and select “Prepopulate folders” +
  +
-Then, click â€œ+Addâ€ in the window to select the folder to populate. For instance, if you want to run a training job on Resnet50 data, specify the folder path with that data in it and click save. +
+Then, click “+Add” in the window to select the folder to populate. For instance, if you want to run a training job on Resnet50 data, specify the folder path with that data in it and click save. +
  +
  +
-As this happens, you will see the â€œCache missâ€ graph get activity and the Capacity increase in real time in the System Manager view for the cache volume. +
+As this happens, you will see the “Cache miss” graph get activity and the Capacity increase in real time in the System Manager view for the cache volume. +
  +
 The Resnet50 training folder in this test is ~320GB in size. The view in System Manager shows that capacity used after the pre-populate. +
 Pre-populate can take some time to complete. The ~320GB test below took around 25 minutes to pre-populate data. +
