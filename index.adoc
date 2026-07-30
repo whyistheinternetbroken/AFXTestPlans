@@ -7,9 +7,6 @@
 :doctype: book
 :description: NetApp AFX Test Plan for ONTAP 9.19.1
 
-Welcome to the NetApp AFX Test Plan for ONTAP 9.19.1.
-
-
 == How to Use This Document
 
 This test plan is split into focused AsciiDoc files linked from this index. Use the navigation below to jump to the section you need.
