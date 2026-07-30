@@ -20,16 +20,19 @@ Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP s
 
 a| *Test procedure:*
 
++
+--
 *Contents:*
-* <<t04-manage-intercluster-network-interfaces,Manage intercluster network interfaces (steps 1-8)>>
-* <<t04-cluster-and-svm-peering,Cluster and SVM peering (steps 9-16)>>
-* <<t04-establish-snapmirror-afx-to-unified-ontap,Establish SnapMirror from AFX to unified ONTAP (steps 17-20)>>
-* <<t04-create-snapmirror-cli-steps,Create SnapMirror - CLI steps (steps 21-25)>>
+* <<t04-manage-intercluster-network-interfaces,Manage intercluster network interfaces>>
+* <<t04-cluster-and-svm-peering,Cluster and SVM peering>>
+* <<t04-establish-snapmirror-afx-to-unified-ontap,Establish SnapMirror from AFX to unified ONTAP>>
+* <<t04-create-snapmirror-cli-steps,Create SnapMirror - CLI steps>>
 * <<t04-verify-snapmirror-status-gui-steps,Verify SnapMirror status - GUI steps>>
 * <<t04-verify-snapmirror-status-cli-steps,Verify SnapMirror status - CLI steps>>
-* <<t04-break-the-snapmirror,Break the SnapMirror (steps 32-34)>>
-* <<t04-establish-snapmirror-from-unified-ontap-to-afx,Establish SnapMirror from unified ONTAP to AFX (steps 35-37)>>
-* <<t04-reverse-resync-snapmirror,Reverse resync SnapMirror (steps 38-40)>>
+* <<t04-break-the-snapmirror,Break the SnapMirror>>
+* <<t04-establish-snapmirror-from-unified-ontap-to-afx,Establish SnapMirror from unified ONTAP to AFX>>
+* <<t04-reverse-resync-snapmirror,Reverse resync SnapMirror>>
+--
 
 [[t04-manage-intercluster-network-interfaces]]
 *Manage intercluster network interfaces*
@@ -66,7 +69,7 @@ image::images/test-04-image-06.png[width=50%,link=images/test-04-image-06.png]
 
 [[t04-cluster-and-svm-peering]]
 *Cluster and SVM peering*
-[start=9]
+[start=1]
 . Add a cluster peer via System Manager on the source ONTAP cluster. Navigate to Protection -> Overview.
 +
 image::images/test-04-image-07.png[width=50%,link=images/test-04-image-07.png]
@@ -105,7 +108,7 @@ AFX::*> vserver peer show
 
 [[t04-establish-snapmirror-afx-to-unified-ontap]]
 *Establish SnapMirror from AFX to unified ONTAP*
-[start=17]
+[start=1]
 . Use a source volume with production datasets on the NetApp AFX cluster and replicate to the unified ONTAP cluster. Navigate to Storage -> Volumes.
 +
 image::images/test-04-image-15.png[width=50%,link=images/test-04-image-15.png]
@@ -122,7 +125,7 @@ image::images/test-04-image-17.png[width=50%,link=images/test-04-image-17.png]
 
 [[t04-create-snapmirror-cli-steps]]
 *Create SnapMirror - CLI steps*
-[start=21]
+[start=1]
 . Check the constituent count on the source volume's FlexGroup volume. SnapMirror of FlexGroup volumes will require identical constituent counts on source and destination.
 +
 [source,console]
@@ -214,7 +217,7 @@ The command can take considerable time (depending on file count and size), as it
 
 [[t04-break-the-snapmirror]]
 *Break the SnapMirror*
-[start=32]
+[start=1]
 . From NetApp AFX System Manager, navigate to Protection -> Replication.
 +
 image::images/test-04-image-21.png[width=50%,link=images/test-04-image-21.png]
@@ -229,7 +232,7 @@ image::images/test-04-image-23.png[width=50%,link=images/test-04-image-23.png]
 
 [[t04-establish-snapmirror-from-unified-ontap-to-afx]]
 *Establish SnapMirror from unified ONTAP to AFX*
-[start=35]
+[start=1]
 . Start a new SnapMirror from unified ONTAP to NetApp AFX for DR/backup testing.
 
 *Note:* Destination ONTAP cluster will need to be on 9.16.1 or later to allow Advanced Capacity Balancing to be enabled. If it's not possible to use a destination unified ONTAP cluster, use the NetApp AFX cluster as the destination instead.
@@ -242,7 +245,7 @@ image::images/test-04-image-24.png[width=50%,link=images/test-04-image-24.png]
 
 [[t04-reverse-resync-snapmirror]]
 *Reverse resync SnapMirror*
-[start=38]
+[start=1]
 . Navigate to Protection -> Replication.
 
 . Hover over the relationship and expand the menu. Select "Reverse Resync."
