@@ -182,7 +182,7 @@ This error is a common root cause for test failures, as the max file value is va
  +
 By default, the maximum files value is determined by the volume size (one inode per 4K of space) and does *not* allow the absolute maximum number of files. For instance, if a volume size is 100GB, then the default value is 3,112,959, but the maximum allowed would be 24,903,679.  +
  +
-Remediation/prevention +
+[underline]#*Remediation/prevention*# +
 Create volumes at a large enough size to support the maximum files allowed. (>7.8TB for FlexVol, 7.8 * 10 * nodes for FlexGroup) +
 Set `-files-set-maximum true` at volume creation +
 Monitor for inode allocation for the volume  +
@@ -195,13 +195,13 @@ It is a best practice to keep the file counts in single directories lower than t
  +
 320MB is the size allocated to memory for a directory's index file size. Each time a file is added to a directory, the index file increases in size. This size is impacted by file count, file name length, hardlinks, and character types. The exact number of files can be varied depending on those factors. It is generally not recommended to increase the maxdirsize value, as it can impact overall system performance for all workloads when approaching the higher end of the limits. However, in benchmark tests, this limit can be modified to verify the impacts seen.  +
  +
-Remediation/prevention +
+[underline]#*Remediation/prevention*# +
 Avoid creating millions of files in a single directory when possible. +
 Monitor for maxdirsize usage via the EMS message wafl.dir.size.warning and wafl.dir.size.max.warning +
 Increase the `-maxdirsize` value to no more than 4GB if testing includes creating >2 million files in a single directory
 | TCP connections | 100,000 per node | If a TCP connection maximum is exceeded on a node, then new mounts will be disallowed until connections are freed up. This scenario is an uncommon occurrence due to the high number of connections allowed, but in Kubernetes/container environments where NFS is used, this can happen on occasion -- particularly when initial mounts are occurring across many clients, TCP is not specified in the mount options, and nconnect is in use. This mainly impacts NFSv3. +
  +
-Remediation/prevention +
+[underline]#*Remediation/prevention*# +
 Use the `tcp` mount option value to avoid UDP mount requests for NFSv3 +
 If using nconnect, remember your total mount connections allowed will be 100,000/nconnect value +
 Leverage DNS load balancing or some other round robin mechanism to balance mounts across nodes in the cluster
@@ -210,7 +210,7 @@ https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-con
  +
 Session slots are the number of supported in-flight requests in a single NFSv4.x session. By default, ONTAP supports 180 session slots, but in-house performance testing has shown that lowering this value to 64 is optimal. +
  +
-Remediation/prevention +
+[underline]#*Remediation/prevention*# +
 Limit the session slots (`-v4.x-session-num-slots`) to 64 when using NFSv4.x
 | RPC slot tables | 128 per TCP connection | NFS slot tables help control the concurrency of operations for NFS mounts. If they are exceeded in ONTAP, then the NFS server will create a wait queue for incoming operations, which will then impact performance. One of the main signs of this is the EMS message nblade.execsOverLimit. This event is triggered when a delta of incoming requests exceeds the monitored value in ONTAP. In some cases, this event may fire as a false positive where performance isn't being negatively impacted, but if you are seeing these messages, you are generally exceeding the 128 limit. +
  +
@@ -218,7 +218,7 @@ By default, modern NFS clients allow dynamic control of NFS slot tables by way o
  +
 This can impact both NFSv3 and NFSv4.x. +
  +
-Remediation/prevention +
+[underline]#*Remediation/prevention*# +
 Modify your sunrpc slot tables value on your NFS clients to no more than 128 (preferably 64) for NFSv3 (see NetApp ONTAP NFS Best Practices for more information on page 122) +
 Modify the session slot value for NFSv4.x on the ONTAP NFS server +
 Monitor for nblade.execsOverLimit
