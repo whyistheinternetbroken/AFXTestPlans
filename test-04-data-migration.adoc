@@ -14,7 +14,7 @@ xref:test-plans.adoc[← Back to Test Plans]
 The goal for this test is to provide a mechanism to display the ease and speed of migration of data from unified ONTAP to NetApp AFX using NetApp SnapMirror technology. This test is optional if you plan on generating your own datasets on the cluster.
 Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP system to provide a cost-effective way to provide disaster recovery, provided the SnapMirror version requirements are met.
 
-[cols="1",width="100%"]
+[cols="<1",width="100%"]
 |===
 <| *Test plan 4 - Data migration (optional)*
 
@@ -247,12 +247,6 @@ a| *Expected outcome(s):*
 * Source and destination volume datasets are compared to verify successful migration.
 * SnapMirror relationship is broken; destination volume is verified as writeable and ready for workload testing.
 * OPTIONAL: Replicate from NetApp AFX to unified ONTAP
-| *Test results:*
-
-| *Test summary:*
-
-| *Comments:*
-
 |===
 
 // navigation-links:start

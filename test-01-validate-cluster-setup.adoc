@@ -13,7 +13,7 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 The first test plan here is to validate the cluster heath, configuration, etc.
 
-[cols="1",width="100%"]
+[cols="<1",width="100%"]
 |===
 <| *Test plan 1 - Validate the cluster setup*
 
@@ -33,16 +33,18 @@ image::images/test-01-image-03.png[width=50%,link=images/test-01-image-03.png]
 
 . Under Cluster -> Overview, you can see the following via the tabs on the page:
 +
+--
 * Node health and information
 * Shelves
 * Shelf IO modules
 * Disks
 * Switches
 * Cabling
-+
+
 Scroll through each of these and take note of the different components in the NetApp AFX architecture.
-+
+
 *Note:* You can toggle between list view and graphical view on each tab.
+--
 
 . The cabling diagram provides a clean view of the clusters physical layout.
 +

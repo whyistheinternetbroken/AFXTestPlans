@@ -15,7 +15,7 @@ The goal of these workload tests is to show that real data workloads can be port
 
 *Note:* For NFS considerations, see the Appendix in this document.
 
-[cols="1",width="100%"]
+[cols="<1",width="100%"]
 |===
 <| *Test plan 7 - Customer workload testing -- real data*
 
@@ -33,12 +33,6 @@ a| *Expected outcome(s):*
 
 * Workloads should not need additional configuration or changes to run properly using NetApp AFX.
 * Performance should be as good or better than unified ONTAP.
-| *Test results:*
-
-| *Test summary:*
-
-| *Comments:*
-
 |===
 
 // navigation-links:start

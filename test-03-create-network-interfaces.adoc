@@ -13,7 +13,7 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 ONTAP can be configured with multiple network interfaces for management, data access and inter-cluster connectivity.
 
-[cols="1",width="100%"]
+[cols="<1",width="100%"]
 |===
 <| *Test plan 3 - Create network interfaces*
 
@@ -32,12 +32,6 @@ image::images/test-03-image-02.png[width=50%,link=images/test-03-image-02.png]
 a| *Expected outcome(s):*
 
 * Two or more data interfaces are created per node.
-| *Test results:*
-
-| *Test summary:*
-
-| *Comments:*
-
 |===
 
 // navigation-links:start

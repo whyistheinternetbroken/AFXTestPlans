@@ -13,7 +13,7 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 Viewing and managing capacity in NetApp AFX has been streamlined to improve simplicity and understanding of what capacity you actually have available. Aggregates as a managed construct are removed. Instead, volumes and the new Storage Availability Zone concept are how we view and managed capacity. This test plan shows different ways capacity is managed in NetApp AFX.
 
-[cols="1",width="100%"]
+[cols="<1",width="100%"]
 |===
 <| *Test plan 10 - Capacity management*
 
@@ -36,12 +36,6 @@ a| *Expected outcome(s):*
 
 * Capacity views should be easy to understand.
 * Storage availability zones should simplify capacity use.
-| *Test results:*
-
-| *Test summary:*
-
-| *Comments:*
-
 |===
 
 // navigation-links:start
