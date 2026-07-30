@@ -24,9 +24,9 @@ This section lists relevant statistics counters for some of the sections listed 
 
 The following table defines the NFS operation types seen in ONTAP performance statistics and classifies them by metadata or IO.
 
-[.light-gray-header,cols="1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1"]
 |===
-h| Operation h| Use case h| Category
+| Operation | Use case | Category
 | ACCESS | Permission checks/verifcation of files/directory. | Metadata
 | CLOSE | Call to close an open file. Buffered data written, locks are released. | Metadata
 | COMPOUND | Multiple calls combine into a single call. Can include any of the other operation calls mentioned here. | Metadata

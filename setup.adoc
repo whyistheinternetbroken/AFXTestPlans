@@ -174,9 +174,9 @@ All data network interfaces in an ONTAP SVM should be routable to all clients fo
 
 The following shows the NFS server options that should be configured for this test plan. Other NFS server options can be enabled as well (for instance, NFSv4 ACL support), but they are outside of the scope of this NetApp AFX-focused test plan.
 
-[.light-gray-header,cols="1,1",options="header",stripes=none]
+[%header,cols="1,1"]
 |===
-h| Option h| Value
+| Option | Value
 | v4.1 | Enabled
 | v4-id-domain | [domain name]*
 | v4.1-pnfs | Enabled

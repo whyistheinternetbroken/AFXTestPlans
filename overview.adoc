@@ -25,9 +25,9 @@ Using the general NetApp support avenues is the preferred method of reporting an
 === Document version information
 
 
-[.light-gray-header,cols="1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1"]
 |===
-h| Version h| Date h| Summary
+| Version | Date | Summary
 | 1.0 | July 2026 | Initial release
 |===
 
@@ -45,9 +45,9 @@ This disaggregated architecture offers a way to present an asymmetric number of 
 Each ONTAP release delivers new features to improve overall performance, stability, usability, etc. This test plan is intended to be ever-evolving and include new features to test and try out. You can find version-specific feature tests in the "OPTIONAL: New feature tests" test plan.
 New features in this release of ONTAP:
 
-[.light-gray-header,cols="1,1",options="header",stripes=none]
+[%header,cols="1,1"]
 |===
-h| ONTAP 9.19.1GA feature h| Full or limited support
+| ONTAP 9.19.1GA feature | Full or limited support
 | FabricPool tiering | limited/dark content until 9.19.1P2
 | Larger Storage Availability Zone | Full
 | Aggressive readahead | Full

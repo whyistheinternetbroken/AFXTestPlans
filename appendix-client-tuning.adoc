@@ -109,9 +109,9 @@ For workloads that leverage NFSv4.1 + pNFS + session trunking, nconnect is not a
 NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystems rsize. For details on rsize/wsize, see the section above.
 The following table shows the default read-ahead values for each given rsize mount option.
 
-[.light-gray-header,cols="1,1",options="header"]
+[%header,cols="1,1"]
 |===
-h| Rsize value h| Blocks read-ahead default
+| Rsize value | Blocks read-ahead default
 | 64 KiB | 960 KiB
 | 256 KiB | 3,840 KiB
 | 1,024 KiB | 15,360 KiB
@@ -120,9 +120,9 @@ h| Rsize value h| Blocks read-ahead default
 RHEL 8.3 and Ubuntu 18.04 introduced changes that might negatively impact client sequential read performance. Unlike earlier releases, these distributions set read-ahead to a default of 128 KiB regardless of the rsize mount option used. Upgrading from releases with the larger read-ahead value to releases with the 128-KiB default experienced decreases in sequential read performance. However, read-ahead values may be tuned upward both dynamically and persistently. For example, testing found the 15,360 KiB read value optimal compared to 3,840 KiB, 960 KiB, and 128 KiB. Not enough tests have been run beyond 15,360 KiB to determine positive or negative impact.
 The following table shows the default read-ahead values for each currently available distribution.
 
-[.light-gray-header,cols="1,1,1",options="header"]
+[%header,cols="1,1,1"]
 |===
-h| Distribution h| Release h| Blocks read-ahead default
+| Distribution | Release | Blocks read-ahead default
 | RHEL | 8.3 | 128 KiB
 | RHEL | 7.X, 8.0, 8.1, 8.2 | 15 X rsize
 | SLES | 12.X â€“ at least 15SP2 | 15 X rsize

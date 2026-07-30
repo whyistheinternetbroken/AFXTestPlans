@@ -19,9 +19,9 @@ Use this template for any performance tests outside of the scenarios described a
 .Test ) Blank test template
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | <Insert cross reference> | Tester: |  | Date: |
 | Test requirements: |  |  |  |
 | Test procedure: |  |  |  |

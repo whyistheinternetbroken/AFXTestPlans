@@ -23,9 +23,9 @@ This optional test plan covers configuration of S3 for use with the datasets cre
 .Test ) OPTIONAL: S3 in ONTAP
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 14 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. |  |  |
 | Test procedure: +

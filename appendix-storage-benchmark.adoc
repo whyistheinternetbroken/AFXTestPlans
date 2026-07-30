@@ -29,9 +29,9 @@ We will be using the SPEC SFS 2020 benchmark to simulate EDA frontend, backend a
 
 The following table shows the NFS operations involved in the SPECSFS 2020 benchmark.
 
-[.light-gray-header,cols="1,1,1,1",options="header"]
+[%header,cols="1,1,1,1"]
 |===
-h| NFS operation distribution
+| NFS operation distribution
 | Operation type | % | Operation type | %
 | read | 0 | read file | 7
 | mmap read | 0 | random read | 8
@@ -57,9 +57,9 @@ h| NFS operation distribution
 
 The following table shows the NFS operations involved in the SPECSFS 2020 benchmark.
 
-[.light-gray-header,cols="1,1,1,1",options="header"]
+[%header,cols="1,1,1,1"]
 |===
-h| NFS operation distribution
+| NFS operation distribution
 | Operation type | % | Operation type | %
 | read | 50 | read file | 0
 | mmap read | 0 | random read | 0
@@ -85,9 +85,9 @@ h| NFS operation distribution
 
 The following section attempts to define the operations mentioned in the frontend and backend workload sections above.
 
-[.light-gray-header,cols="1,1",options="header"]
+[%header,cols="1,1"]
 |===
-h| Operation type h| What it does
+| Operation type | What it does
 | read | Sequential reads to an already open file.
 | read file | Open, read, close file. End-to-end read.
 | mmap read | Memory map read.
@@ -240,9 +240,9 @@ Cosmoflow is a deep learning model that attempts to model the universe and predi
 The following table shows a breakdown of the NFS operations seen during a training run of each model. The point of this table is to help make decisions about how to best configure storage and clients for these benchmark runs.
 These were generated using default NFS mount options and a 1MB rsize.
 
-[.light-gray-header,cols="1,1,1,1",options="header"]
+[%header,cols="1,1,1,1"]
 |===
-h| U-Net3D h| Resnet50 h| Cosmoflow
+| U-Net3D | Resnet50 | Cosmoflow
 | Number of files trained | 12000 | 2395 | 242954
 | ACCESS | <1% |  | 5%
 | CLOSE | <1% |  | 5%
@@ -262,9 +262,9 @@ h| U-Net3D h| Resnet50 h| Cosmoflow
 
 The following table shows the incoming block sizes observed for each training workload test on a 1MB mount using default mount options.
 
-[.light-gray-header,cols="1,1,1,1",options="header"]
+[%header,cols="1,1,1,1"]
 |===
-h| U-Net3D h| Resnet50 h| Cosmoflow
+| U-Net3D | Resnet50 | Cosmoflow
 | Number of files trained | 12000 | 2395 | 242954
 | Average file size | ~140MB | ~136MB | ~2.7MB
 | <= 512B | 1636 |  |

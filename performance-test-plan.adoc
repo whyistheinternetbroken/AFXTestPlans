@@ -24,9 +24,9 @@ The first test plan here is to validate the cluster heath, configuration, etc.
 .Test ) Validate the cluster setup.
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 1 | Tester: |  | Date: |
 | Test requirements: | No specific requirements |  |  |
 | Test procedure Ã¢â‚¬â€œ GUI: +
@@ -141,9 +141,9 @@ For more information on what AutoSupport is, the information that AutoSupport co
 .Test ) Enable AutoSupport
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 2 | Tester: |  | Date: |
 | Test requirements: | No specific requirements |  |  |
 | Test procedure: +
@@ -169,9 +169,9 @@ ONTAP can be configured with multiple network interfaces for management, data ac
 .Test ) Create network interfaces.
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 3 | Tester: |  | Date: |
 | Test requirements: | No specific requirements |  |  |
 | Test procedure: +
@@ -200,9 +200,9 @@ Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP s
 .Test ) Data migration
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 4 | Tester: |  | Date: |
 | Test requirements: | Intercluster LIFs on each node +
 ONTAP versions within 2 releases (ie 9.16.1 -> 9.18.1) +
@@ -385,9 +385,9 @@ NetApp AFX makes some changes to how volumes are created and managed. This test 
 .Test ) Volume management.
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Error! Reference source not found. | Tester: |  | Date: |
 | Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
@@ -472,9 +472,9 @@ If no current API-based automation suites are in use, then some basic REST API c
 .Test ) API testing/seamless support for customer automation
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 6 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
@@ -528,9 +528,9 @@ export-policy rule create -policyname [name] -clientmatch [client1],[client2],..
 
 The following section covers volume creation/configuration considerations and shows what options should be used during the initial creation.
 
-[.light-gray-header,cols="1,1",options="header",stripes=none]
+[%header,cols="1,1"]
 |===
-h| Volume type h| FlexGroup
+| Volume type | FlexGroup
 | Creation method | CLI +
 set diag; vol create -vserver [SVM] -volume [name] -size [size] -junction-path [/path] -unix-permissions 777 -files-set-maximum true -maxdir-size 4G -is-large-size-enabled true -snapshot-policy none -autosize-mode grow_shrink -policy [data policy] -snapdir-access false
 | Defaults changed | Snapshot policy disabled +
@@ -607,9 +607,9 @@ Some workloads might benefit from special mount options during benchmark tests. 
 .Alternate NFS mount options and their use cases
 
 
-[.light-gray-header,cols="1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1"]
 |===
-h| NFS mount option h| Description h| Use case
+| NFS mount option | Description | Use case
 | nocto | Disables "close-to-open" cache consistency. The client will not revalidate cached file attributes when a file is opened, relying instead on cached data even if it may be stale. | Read-heavy, single-client workloads where files rarely change (e.g., static web content, software libraries, read-only media archives). Not suitable for multi-client writes.
 | cto | Enables close-to-open cache consistency (default). When a file is opened, the client checks with the server to ensure its cached copy is still valid. Guarantees that a file closed on one client is seen as up-to-date when opened on another. | Multi-client shared access workloads where data consistency matters (e.g., shared home directories, collaborative development environments).
 | actimeo | Sets all attribute cache timeouts (acregmin, acregmax, acdirmin, acdirmax) to a single value in seconds. Controls how long the client trusts cached file/directory metadata before revalidating with the server. | Simplifying tuning when you want a uniform caching policy. High values benefit read-heavy/static workloads; low values (e.g., actimeo=0) suit rapidly changing data needing near-real-time consistency.
@@ -695,9 +695,9 @@ The goal of these workload tests is to show that real data workloads can be port
 .Test ) Customer workload testing -- real workloads, real data
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 7 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
@@ -731,9 +731,9 @@ For details on installing, configuring and running SpecSFS or MLcommons, see the
 .Test ) Customer workload testing - benchmarks
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 8 | Tester: |  | Date: |
 | Test requirements: | No specific requirements.  +
 Benchmark tests are run using specific parameters stated in this document. |  |  |
@@ -781,9 +781,9 @@ NetApp Harvest - GitHub
 .Test ) Performance monitoring
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 9 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. +
 Performance testing being run during monitoring, |  |  |
@@ -923,9 +923,9 @@ Viewing and managing capacity in NetApp AFX has been streamlined to improve simp
 .Test ) Capacity management
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 10 | Tester: |  | Date: |
 | Test requirements: | No specific requirements.  +
 Performance testing being run during live node additions. |  |  |
@@ -955,9 +955,9 @@ One of the main benefits of NetApp AFX is the ability to scale compute and capac
 .Test ) Node additions during live workloads
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 11 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. +
 Performance running during live node additions. |  |  |
@@ -1132,9 +1132,9 @@ This test's goal is to not only show that failovers and givebacks are capable of
 .Test ) Node failure behavior
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
+[%header,cols="1,1,1,1,1"]
 |===
-h| Section h| Details
+| Section | Details
 | Test 12 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. +
 Benchmarks or performance workloads are active. |  |  |

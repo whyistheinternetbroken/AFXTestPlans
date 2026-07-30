@@ -21,9 +21,9 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 === Throughput Budget per Client
 
-[.light-gray-header,cols="2,3",options="header",stripes=none]
+[%header,cols="2,3"]
 |===
-h| Parameter h| Value
+| Parameter | Value
 
 | Target aggregate throughput
 | 12 GB/s (96 Gb/s)
@@ -40,9 +40,9 @@ h| Parameter h| Value
 
 === Client Hardware Specifications
 
-[.light-gray-header,cols="2,4",options="header",stripes=none]
+[%header,cols="2,4"]
 |===
-h| Component h| Specification
+| Component | Specification
 
 | CPU
 | 2× Intel Xeon (16+ cores each) or AMD EPYC equivalent
@@ -65,9 +65,9 @@ h| Component h| Specification
 
 === Network Infrastructure
 
-[.light-gray-header,cols="2,4",options="header",stripes=none]
+[%header,cols="2,4"]
 |===
-h| Component h| Specification
+| Component | Specification
 
 | Switch fabric
 | 100GbE spine/leaf with RDMA-capable NICs (optional)
@@ -88,9 +88,9 @@ h| Component h| Specification
 
 Verify the ONTAP NFS server is configured with the following settings before running tests:
 
-[.light-gray-header,cols="2,2",options="header",stripes=none]
+[%header,cols="2,2"]
 |===
-h| Setting h| Required Value
+| Setting | Required Value
 
 | Protocol
 | NFSv4.1
@@ -196,9 +196,9 @@ To achieve a *5:1 dedupe ratio*, 80% of the data blocks must be duplicates and 2
 
 === Dedupe Parameters
 
-[.light-gray-header,cols="2,1,4",options="header",stripes=none]
+[%header,cols="2,1,4"]
 |===
-h| Parameter h| Value h| Purpose
+| Parameter | Value | Purpose
 
 | `dedupratio=5`
 | 5:1
@@ -717,9 +717,9 @@ done
 
 === Performance Targets
 
-[.light-gray-header,cols="2,2,2,3",options="header",stripes=none]
+[%header,cols="2,2,2,3"]
 |===
-h| Test Phase h| Metric h| Target h| Pass Criteria
+| Test Phase | Metric | Target | Pass Criteria
 
 | Phase 2: Seq Read
 | Throughput
@@ -759,9 +759,9 @@ h| Test Phase h| Metric h| Target h| Pass Criteria
 
 === Data Efficiency Targets
 
-[.light-gray-header,cols="2,3",options="header",stripes=none]
+[%header,cols="2,3"]
 |===
-h| Metric h| Target
+| Metric | Target
 
 | Dedupe ratio (storage-reported)
 | 4.5:1 – 5.5:1
@@ -775,9 +775,9 @@ h| Metric h| Target
 
 === Stability Criteria
 
-[.light-gray-header,cols="2,4",options="header",stripes=none]
+[%header,cols="2,4"]
 |===
-h| Metric h| Criteria
+| Metric | Criteria
 
 | Throughput variance
 | < 10% CoV during steady state
@@ -794,9 +794,9 @@ h| Metric h| Criteria
 
 == Test Schedule
 
-[.light-gray-header,cols="1,3,2,2",options="header",stripes=none]
+[%header,cols="1,3,2,2"]
 |===
-h| Phase h| Description h| Duration h| Cumulative
+| Phase | Description | Duration | Cumulative
 
 | Setup
 | Client config, mount, tuning
@@ -913,9 +913,9 @@ grep -v "^$\|Starting\|Vdbench" ${OUTDIR}/flatfile.html | \
 
 == Troubleshooting Guide
 
-[.light-gray-header,cols="2,3,4",options="header",stripes=none]
+[%header,cols="2,3,4"]
 |===
-h| Issue h| Diagnosis h| Resolution
+| Issue | Diagnosis | Resolution
 
 | Throughput < 1 GB/s per client
 | Check `nconnect` value, NIC speed
