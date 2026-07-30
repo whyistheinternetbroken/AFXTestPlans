@@ -27,7 +27,7 @@ NOTE: Images in these test plans may differ from your actual lab environment. Fo
 
 [.light-gray-header,cols="1,3,1",options="header"]
 |===
-| Test | Description | File
+h| Test | Description | File
 
 | Test 1: Validate cluster setup
 | Validate cluster health, node configuration, disk and network state
@@ -82,7 +82,7 @@ NOTE: Images in these test plans may differ from your actual lab environment. Fo
 
 [.light-gray-header,cols="1,3,1",options="header"]
 |===
-| Test | Description | File
+h| Test | Description | File
 
 | Test 13: FlexCache
 | Use FlexCache between unified ONTAP and NetApp AFX for read localization
@@ -105,7 +105,7 @@ NOTE: Images in these test plans may differ from your actual lab environment. Fo
 
 [.light-gray-header,cols="1,3,1",options="header"]
 |===
-| Feature | Description | File
+h| Feature | Description | File
 
 | Global Deduplication
 | Cross-node deduplication across the shared capacity pool (new in 9.19.1)

@@ -111,7 +111,7 @@ The following table shows the default read-ahead values for each given rsize mou
 
 [.light-gray-header,cols="1,1",options="header"]
 |===
-| Rsize value | Blocks read-ahead default
+h| Rsize value | Blocks read-ahead default
 | 64 KiB | 960 KiB
 | 256 KiB | 3,840 KiB
 | 1,024 KiB | 15,360 KiB
@@ -122,7 +122,7 @@ The following table shows the default read-ahead values for each currently avail
 
 [.light-gray-header,cols="1,1,1",options="header"]
 |===
-| Distribution | Release | Blocks read-ahead default
+h| Distribution | Release | Blocks read-ahead default
 | RHEL | 8.3 | 128 KiB
 | RHEL | 7.X, 8.0, 8.1, 8.2 | 15 X rsize
 | SLES | 12.X â€“ at least 15SP2 | 15 X rsize

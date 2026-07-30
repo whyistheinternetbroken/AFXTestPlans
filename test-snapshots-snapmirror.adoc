@@ -22,9 +22,9 @@ Snapshots and SnapMirror are integral to a complete data protection story for ON
 .Test ) OPTIONAL: Snapshots and SnapMirror during live workloads.
 
 
-[.light-gray-header,cols="1,1,1,1,1",options="header"]
+[.light-gray-header,cols="1,1,1,1,1",options="header",stripes=none]
 |===
-| Section | Details |  |  |
+h| Section | Details |  |  |
 | Test 15 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. +
 Performance testing being run during mirroring and snapshots. |  |  |

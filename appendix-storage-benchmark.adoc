@@ -31,7 +31,7 @@ The following table shows the NFS operations involved in the SPECSFS 2020 benchm
 
 [.light-gray-header,cols="1,1,1,1",options="header"]
 |===
-| NFS operation distribution |  |  |
+h| NFS operation distribution |  |  |
 | Operation type | % | Operation type | %
 | read | 0 | read file | 7
 | mmap read | 0 | random read | 8
@@ -59,7 +59,7 @@ The following table shows the NFS operations involved in the SPECSFS 2020 benchm
 
 [.light-gray-header,cols="1,1,1,1",options="header"]
 |===
-| NFS operation distribution |  |  |
+h| NFS operation distribution |  |  |
 | Operation type | % | Operation type | %
 | read | 50 | read file | 0
 | mmap read | 0 | random read | 0
@@ -87,7 +87,7 @@ The following section attempts to define the operations mentioned in the fronten
 
 [.light-gray-header,cols="1,1",options="header"]
 |===
-| Operation type | What it does
+h| Operation type | What it does
 | read | Sequential reads to an already open file.
 | read file | Open, read, close file. End-to-end read.
 | mmap read | Memory map read.
@@ -242,7 +242,7 @@ These were generated using default NFS mount options and a 1MB rsize.
 
 [.light-gray-header,cols="1,1,1,1",options="header"]
 |===
-|  | U-Net3D | Resnet50 | Cosmoflow
+h|  | U-Net3D | Resnet50 | Cosmoflow
 | Number of files trained | 12000 | 2395 | 242954
 | ACCESS | <1% |  | 5%
 | CLOSE | <1% |  | 5%
@@ -264,7 +264,7 @@ The following table shows the incoming block sizes observed for each training wo
 
 [.light-gray-header,cols="1,1,1,1",options="header"]
 |===
-|  | U-Net3D | Resnet50 | Cosmoflow
+h|  | U-Net3D | Resnet50 | Cosmoflow
 | Number of files trained | 12000 | 2395 | 242954
 | Average file size | ~140MB | ~136MB | ~2.7MB
 | <= 512B | 1636 |  |
