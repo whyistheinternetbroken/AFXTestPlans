@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 This section covers supported workload types, data protocols, NAS protocol features, volume recommendations, S3 features, and ONTAP limits that affect testing.
 
