@@ -5,18 +5,8 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-
-++++
-<style>
-table.light-gray-header thead th {
-  background-color: #f2f2f2;
-}
-table.light-gray-header tbody td,
-table.light-gray-header tbody th {
-  background-color: #ffffff;
-}
-</style>
-++++
+:stylesheet: styles/table-styling.css
+:stylesdir: .
 
 This section covers supported workload types, data protocols, NAS protocol features, volume recommendations, S3 features, and ONTAP limits that affect testing.
 

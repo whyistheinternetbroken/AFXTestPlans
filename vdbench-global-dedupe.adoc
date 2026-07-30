@@ -8,18 +8,8 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-
-++++
-<style>
-table.light-gray-header thead th {
-  background-color: #f2f2f2;
-}
-table.light-gray-header tbody td,
-table.light-gray-header tbody th {
-  background-color: #ffffff;
-}
-</style>
-++++
+:stylesheet: styles/table-styling.css
+:stylesdir: .
 
 :description: NFSv4.1 with pNFS and Session Trunking - Performance Test Plan targeting 12+ GB/s throughput with 5:1 deduplication datasets
 

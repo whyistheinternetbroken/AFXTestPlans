@@ -1,0 +1,11 @@
+/* Table styling for AsciiDoc test plans */
+
+/* Light gray header row styling */
+table.light-gray-header thead th {
+  background-color: #f2f2f2;
+}
+
+table.light-gray-header tbody td,
+table.light-gray-header tbody th {
+  background-color: #ffffff;
+}
