@@ -18,7 +18,7 @@ AutoSupport is enabled for these environments to ensure the following:
 AutoSupport requires the ONTAP system to be able to access the internet to send its payload to NetApp. For environments that do not allow external access please follow this procedure to manually upload an AutoSupport.
 For more information on what AutoSupport is, the information that AutoSupport contains, or how to configure AutoSupport, please consult .
 
-[cols="1"]
+[cols="1",%autowidth]
 |===
 | *Test plan 2 - Enable AutoSupport (optional)*
 

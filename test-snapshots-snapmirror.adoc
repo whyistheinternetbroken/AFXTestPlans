@@ -17,13 +17,13 @@ Snapshots and SnapMirror are integral to a complete data protection story for ON
 
 .Test ) OPTIONAL: Snapshots and SnapMirror during live workloads.
 
-[cols="1,1,1,1,1"]
+[cols="1,4",%autowidth]
 |===
 | Section | Details
-| Test 15 | Tester: |  | Date: |
+| Test 15 | Tester: ________________  Date: ________________
 | Test requirements: | No specific requirements. +
-Performance testing being run during mirroring and snapshots. |  |  |
-5+a| *Test procedure:*
+Performance testing being run during mirroring and snapshots.
+2+a| *Test procedure:*
 
 . Snapshot steps Verify benchmarks or performance workloads are running during these tests. In most cases, you won’t be able to see any sort of impact show up on the performance graphs in System Manager, so you would be best served to view the impact from the command line.
 
@@ -112,13 +112,13 @@ nfs-ops     recv     sent
 . From the NetApp AFX GUI, update the SnapMirror relationship you created in the Data Migration section while the job is running Navigate to Protection -> Replication on the NetApp AFX GUI
 
 
-5+a| *Expected outcome(s):*
+2+a| *Expected outcome(s):*
 
 * Snapshots and SnapMirror should not impact production workload performance in any meaningful way.
 
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
+| Test results: |
+| Test summary: |
+| Comments: |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

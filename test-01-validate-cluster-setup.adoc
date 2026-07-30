@@ -13,7 +13,7 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 The first test plan here is to validate the cluster heath, configuration, etc.
 
-[cols="1"]
+[cols="1",%autowidth]
 |===
 | *Test plan 1 - Validate the cluster setup*
 

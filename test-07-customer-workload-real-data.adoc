@@ -15,7 +15,7 @@ The goal of these workload tests is to show that real data workloads can be port
 
 *Note:* For NFS considerations, see the Appendix in this document.
 
-[cols="1"]
+[cols="1",%autowidth]
 |===
 | *Test plan 7 - Customer workload testing -- real data*
 

@@ -16,7 +16,7 @@ NetApp System Manager can be used for basic performance monitoring and is covere
 NetApp Harvest can be used to monitor performance at a more advanced level:
 NetApp Harvest - GitHub
 
-[cols="1"]
+[cols="1",%autowidth]
 |===
 | *Test plan 9 - Performance monitoring*
 

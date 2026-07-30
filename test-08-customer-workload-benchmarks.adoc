@@ -16,7 +16,7 @@ For EDA workloads, we can leverage SPEC SFS 2020 EDA for benchmarking. This benc
 For AI/ML workloads, we will leverage MLcommons, which can also act as a throughput-specific benchmark.
 For details on installing, configuring and running SpecSFS or MLcommons, see the Appendix of this document.
 
-[cols="1"]
+[cols="1",%autowidth]
 |===
 | *Test plan 8 - Customer workload testing -- performance benchmarks*
 

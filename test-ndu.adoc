@@ -17,12 +17,12 @@ The upgrade process for NetApp AFX is identical to that of unified ONTAP. This t
 
 .Test ) OPTIONAL: Non-Disruptive ONTAP Upgrade
 
-[cols="1,1,1,1,1"]
+[cols="1,4",%autowidth]
 |===
 | Section | Details
-| Test 16 | Tester: |  | Date: |
-| Test requirements: | No specific requirements. |  |  |
-5+a| *Test procedure:*
+| Test 16 | Tester: ________________  Date: ________________
+| Test requirements: | No specific requirements.
+2+a| *Test procedure:*
 
 . Download the latest ONTAP image from the NetApp website. Place the image.tgz file on a webserver. Do not use TinyWeb as it has a 2GB limit. Validate the current version of ONTAP
 +
@@ -204,13 +204,13 @@ NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1>
 ----
 
 
-5+a| *Expected outcome(s):*
+2+a| *Expected outcome(s):*
 
 * ONTAP Cluster will be updated with new version of ONTAP.
 
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
+| Test results: |
+| Test summary: |
+| Comments: |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
