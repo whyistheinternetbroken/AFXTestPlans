@@ -1,4 +1,4 @@
-﻿= Test 6: API testing/seamless support for customer automation
+= Test 6: API testing/seamless support for customer automation
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -14,27 +14,28 @@ xref:test-plans.adoc[← Back to Test Plans]
 NetApp AFX is intended to provide a seamless ONTAP experience. Included in that is API parity between unified and NetApp AFX so that legacy automation suites using REST API calls to ONTAP will be plug-and-play into NetApp AFX.
 If no current API-based automation suites are in use, then some basic REST API calls are provided to test functionality. See the appendix for examples.
 
-.Test ) API testing/seamless support for customer automation
-
-
-[cols="1,1,1,1,1"]
+[cols="1"]
 |===
-| Section | Details
-| Test 6 | Tester: |  | Date: |
-| Test requirements: | No specific requirements. |  |  |
-| Test procedure: +
-Test your REST API calls against unified ONTAP. +
- +
-If you are not already using standard automation REST calls against unified ONTAP, then leverage the example calls in the appendix of this document. +
- +
+| *Test plan 6 - API testing/seamless support for customer automation*
+
+a| Test procedure: +
+Test your REST API calls against unified ONTAP.
+
+If you are not already using standard automation REST calls against unified ONTAP, then leverage the example calls in the appendix of this document.
+
 Test your REST API calls against NetApp AFX. +
-If you are not already using standard automation REST calls against NetApp AFX, then leverage the example calls in the appendix of this document. |  |  |  |
-| Expected outcome(s): +
+If you are not already using standard automation REST calls against NetApp AFX, then leverage the example calls in the appendix of this document.
+
+a| Expected outcome(s): +
 REST API calls used with unified ONTAP are tested. +
-The same REST API calls are tested against NetApp AFX and are successful, with the exception of SAN-related and aggregate-related calls. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
+The same REST API calls are tested against NetApp AFX and are successful, with the exception of SAN-related and aggregate-related calls.
+
+| *Test results:*
+
+| *Test summary:*
+
+| *Comments:*
+
 |===
 
 

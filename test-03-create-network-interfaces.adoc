@@ -1,4 +1,4 @@
-﻿= Test 3: Create network interfaces
+= Test 3: Create network interfaces
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -13,31 +13,34 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 ONTAP can be configured with multiple network interfaces for management, data access and inter-cluster connectivity.
 
-.Test ) Create network interfaces.
-
-
-[cols="1,1,1,1,1"]
+[cols="1"]
 |===
-| Section | Details
-| Test 3 | Tester: |  | Date: |
-| Test requirements: | No specific requirements |  |  |
-| Test procedure: +
+| *Test plan 3 - Create network interfaces*
+
+a| Test procedure: +
 Log into the System Manager GUI via https://[clus_mgmt_IP] +
 Navigate to Network -> Overview. +
-Click the Ã¢â‚¬Å“+ AddÃ¢â‚¬Â button under Network interfaces. +
- +
-Select Ã¢â‚¬Å“dataÃ¢â‚¬Â for the interface type and select the desired options, specify a name, home node, etc. +
- +
+Click the Ã¢â‚¬Å“+ AddÃ¢â‚¬Â button under Network interfaces.
+
+image::images/test-03-image-01.png[]
+
+Select Ã¢â‚¬Å“dataÃ¢â‚¬Â for the interface type and select the desired options, specify a name, home node, etc.
+
+image::images/test-03-image-02.png[]
+
 Repeat the above step for each node. Create at least 2 data interfaces per node to provide paths for NFS session trunking. +
-Alternately, use the LIF creation script found in the Appendix of this document. |  |  |  |
-| Expected outcome(s): +
-Two or more data interfaces are created per node. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
+Alternately, use the LIF creation script found in the Appendix of this document.
+
+a| Expected outcome(s): +
+Two or more data interfaces are created per node.
+
+| *Test results:*
+
+| *Test summary:*
+
+| *Comments:*
+
 |===
-
-
 
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

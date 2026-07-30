@@ -1,4 +1,4 @@
-﻿= Test 9: Performance monitoring
+= Test 9: Performance monitoring
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -16,78 +16,99 @@ NetApp System Manager can be used for basic performance monitoring and is covere
 NetApp Harvest can be used to monitor performance at a more advanced level:
 NetApp Harvest - GitHub
 
-.Test ) Performance monitoring
-
-
-[cols="1,1,1,1,1"]
+[cols="1"]
 |===
-| Section | Details
-| Test 9 | Tester: |  | Date: |
-| Test requirements: | No specific requirements. +
-Performance testing being run during monitoring, |  |  |
-| Test procedure: +
+| *Test plan 9 - Performance monitoring*
+
+a| Test procedure: +
 Verify performance tests are running. +
 Performance tests can be real data or benchmarks. +
 From the System Manager GUI +
-Login to System Manager. On the main page, you can see performance graphs on the right. This shows if there is activity in the cluster. +
- +
-To verify if this activity is happening on the volume you created, you can click on Storage->Volumes and then click on the volume you created. +
- +
-Use CLI statistics to capture performance information. +
- +
-Cluster statistics can be captured in real time with Ã¢â‚¬Å“statistics show-periodicÃ¢â‚¬Â +
-AFX::*> statistics show-periodic +
-AFX: cluster.cluster: 5/8/2025 01:34:46 +
-  cpu  cpu    total                     fcache             total    total data     data     data cluster  cluster  cluster     disk     disk     pkts     pkts +
-  avg busy      ops  nfs-ops cifs-ops      ops spin-ops     recv     sent busy     recv     sent    busy     recv     sent     read    write     recv     sent +
- ---- ---- -------- -------- -------- -------- -------- -------- -------- ---- -------- -------- ------- -------- -------- -------- -------- -------- -------- +
-   7%  13%      777      777        0        0      678    699MB   2.67MB   2%    698MB   2.37MB      0%    326KB    300KB   8.39MB   31.7KB   482985    36295 +
-   7%  13%      907      907        0        0      795    785MB   2.89MB   2%    784MB   2.59MB      0%    334KB    307KB   12.2MB   15.8KB   542564    39790 +
-   8%  14%      797      797        0        0      705    707MB   2.75MB   1%    706MB   2.46MB      0%    337KB    304KB    109MB    341MB   488621    37404 +
-cluster: cluster.cluster: 5/8/2025 01:34:52 +
-  cpu  cpu    total                     fcache             total    total data     data     data cluster  cluster  cluster     disk     disk     pkts     pkts +
-  avg busy      ops  nfs-ops cifs-ops      ops spin-ops     recv     sent busy     recv     sent    busy     recv     sent     read    write     recv     sent +
- ---- ---- -------- -------- -------- -------- -------- -------- -------- ---- -------- -------- ------- -------- -------- -------- -------- -------- -------- +
-Minimums: +
-   7%  13%      777      777        0        0      678    699MB   2.67MB   1%    698MB   2.37MB      0%    326KB    300KB   8.39MB   15.8KB   482985    36295 +
-Averages for 3 samples: +
-   7%  13%      827      827        0        0      726    730MB   2.77MB   1%    730MB   2.47MB      0%    332KB    304KB   43.5MB    113MB   504723    37829 +
-Maximums: +
-   8%  14%      907      907        0        0      795    785MB   2.89MB   2%    784MB   2.59MB      0%    337KB    307KB    109MB    341MB   542564    39790 +
- +
-For volume-level: +
-AFX::*> qos statistics volume performance show -volume dataset -vserver svm1 +
-Workload            ID     IOPS       Throughput    Latency +
---------------- ------ -------- ---------------- ---------- +
--total-              -      854       838.93MB/s  1178.00us +
--total-              -      586       561.70MB/s  1190.00us +
--total-              -     1005       985.07MB/s  1177.00us +
-Collect protocol-level statistics during performance tests. +
-Performance tests can be real data or benchmarks. +
-From the command line, you can run Ã¢â‚¬Å“statistics startÃ¢â‚¬Â to begin a stats collection during a specific job run. For this example, we will collect NFSv4.1 statistics. You can run these statistics at any time, but it is best to run these before starting a benchmark or data workload and then stopping them when the job is complete. These commands can be run in advanced privilege. +
-AFX::> set advanced -confirmations off +
- +
-AFX::*> statistics start -object nfsv4_1 -vserver svm1 -sample-id unet3d_datagen +
-Statistics collection is being started for sample-id: unet3d_datagen +
- +
-[run test to completion] +
- +
-AFX::*> statistics stop -sample-id unet3d_datagen +
-Statistics collection is being started for sample-id: unet3d_datagen +
- +
-Once the statistics are stopped, you can view all the counter collected with: +
-AFX::*> statistics show -sample-id unet3d_datagen +
- +
-To view specific counters, you can use the counter name or wildcards. For instance, to see all GETATTR values: +
-AFX::*> statistics show -sample-id unet3d_datagen -counter *getattr* +
- +
+Login to System Manager. On the main page, you can see performance graphs on the right. This shows if there is activity in the cluster.
+
+image::images/test-09-image-01.png[]
+
+To verify if this activity is happening on the volume you created, you can click on Storage->Volumes and then click on the volume you created.
+
+image::images/test-09-image-02.png[]
+
+Use CLI statistics to capture performance information.
+
+Cluster statistics can be captured in real time with Ã¢â‚¬Å“statistics show-periodicÃ¢â‚¬Â
+
+[source,console]
+----
+AFX::*> statistics show-periodic
+AFX: cluster.cluster: 5/8/2025 01:34:46
+  cpu  cpu    total                     fcache             total    total data     data     data cluster  cluster  cluster     disk     disk     pkts     pkts
+  avg busy      ops  nfs-ops cifs-ops      ops spin-ops     recv     sent busy     recv     sent    busy     recv     sent     read    write     recv     sent
+ ---- ---- -------- -------- -------- -------- -------- -------- -------- ---- -------- -------- ------- -------- -------- -------- -------- -------- --------
+   7%  13%      777      777        0        0      678    699MB   2.67MB   2%    698MB   2.37MB      0%    326KB    300KB   8.39MB   31.7KB   482985    36295
+   7%  13%      907      907        0        0      795    785MB   2.89MB   2%    784MB   2.59MB      0%    334KB    307KB   12.2MB   15.8KB   542564    39790
+   8%  14%      797      797        0        0      705    707MB   2.75MB   1%    706MB   2.46MB      0%    337KB    304KB    109MB    341MB   488621    37404
+cluster: cluster.cluster: 5/8/2025 01:34:52
+  cpu  cpu    total                     fcache             total    total data     data     data cluster  cluster  cluster     disk     disk     pkts     pkts
+  avg busy      ops  nfs-ops cifs-ops      ops spin-ops     recv     sent busy     recv     sent    busy     recv     sent     read    write     recv     sent
+ ---- ---- -------- -------- -------- -------- -------- -------- -------- ---- -------- -------- ------- -------- -------- -------- -------- -------- --------
+Minimums:
+   7%  13%      777      777        0        0      678    699MB   2.67MB   1%    698MB   2.37MB      0%    326KB    300KB   8.39MB   15.8KB   482985    36295
+Averages for 3 samples:
+   7%  13%      827      827        0        0      726    730MB   2.77MB   1%    730MB   2.47MB      0%    332KB    304KB   43.5MB    113MB   504723    37829
+Maximums:
+   8%  14%      907      907        0        0      795    785MB   2.89MB   2%    784MB   2.59MB      0%    337KB    307KB    109MB    341MB   542564    39790
+----
+
+For volume-level:
+
+[source,console]
+----
+AFX::*> qos statistics volume performance show -volume dataset -vserver svm1
+Workload            ID     IOPS       Throughput    Latency
+--------------- ------ -------- ---------------- ----------
+-total-              -      854       838.93MB/s  1178.00us
+-total-              -      586       561.70MB/s  1190.00us
+-total-              -     1005       985.07MB/s  1177.00us
+Collect protocol-level statistics during performance tests.
+Performance tests can be real data or benchmarks.
+From the command line, you can run Ã¢â‚¬Å“statistics startÃ¢â‚¬Â to begin a stats collection during a specific job run. For this example, we will collect NFSv4.1 statistics. You can run these statistics at any time, but it is best to run these before starting a benchmark or data workload and then stopping them when the job is complete. These commands can be run in advanced privilege.
+AFX::> set advanced -confirmations off
+----
+
+[source,console]
+----
+AFX::*> statistics start -object nfsv4_1 -vserver svm1 -sample-id unet3d_datagen
+Statistics collection is being started for sample-id: unet3d_datagen
+----
+
+[run test to completion]
+
+[source,console]
+----
+AFX::*> statistics stop -sample-id unet3d_datagen
+Statistics collection is being started for sample-id: unet3d_datagen
+----
+
+Once the statistics are stopped, you can view all the counter collected with:
+
+[source,console]
+----
+AFX::*> statistics show -sample-id unet3d_datagen
+----
+
+To view specific counters, you can use the counter name or wildcards. For instance, to see all GETATTR values:
+
+[source,console]
+----
+AFX::*> statistics show -sample-id unet3d_datagen -counter *getattr*
+----
+
 Object: nfsv4_1 +
 Instance: svm1 +
 Start-time: 5/8/2025 01:44:16 +
 End-time: 5/8/2025 01:49:55 +
 Elapsed-time: 339s +
-Scope: cluster +
- +
+Scope: cluster
+
     Counter                                                     Value +
     -------------------------------- -------------------------------- +
     getattr_avg_latency                                          21us +
@@ -101,35 +122,43 @@ Scope: cluster +
                               <200us                                8 +
                               <400us                               17 +
     getattr_success                                              3028 +
-    getattr_total                                                3028 +
- +
-To see a breakdown of the workload percentages: +
-AFX::*> statistics show -sample-id unet3d_datagen -counter *percent* +
- +
+    getattr_total                                                3028
+
+To see a breakdown of the workload percentages:
+
+[source,console]
+----
+AFX::*> statistics show -sample-id unet3d_datagen -counter *percent*
+----
+
 Object: nfsv4_1 +
 Instance: svm1 +
 Start-time: 5/8/2025 01:44:16 +
 End-time: 5/8/2025 01:49:55 +
 Elapsed-time: 339s +
-Scope: cluster +
- +
+Scope: cluster
+
     Counter                                                     Value +
     -------------------------------- -------------------------------- +
     compound_percent                                              33% +
     putfh_percent                                                 33% +
     sequence_percent                                              33% +
-    write_percent                                                 32% +
- +
-To see a breakdown of read and write sizes: +
-cluster::*> statistics show -sample-id unet3d_datagen -counter *size_hist* +
- +
+    write_percent                                                 32%
+
+To see a breakdown of read and write sizes:
+
+[source,console]
+----
+cluster::*> statistics show -sample-id unet3d_datagen -counter *size_hist*
+----
+
 Object: nfsv4_1 +
 Instance: svm1 +
 Start-time: 5/8/2025 01:44:16 +
 End-time: 5/8/2025 01:49:55 +
 Elapsed-time: 339s +
-Scope: cluster +
- +
+Scope: cluster
+
     Counter                                                     Value +
     -------------------------------- -------------------------------- +
     nfs41_write_size_histo                                          - +
@@ -143,16 +172,19 @@ Scope: cluster +
                              <=128KB                              204 +
                              <=256KB                              315 +
                              <=512KB                              471 +
-                               <=1MB                           207785 |  |  |  |
-| Expected outcome(s): +
+                               <=1MB                           207785
+
+a| Expected outcome(s): +
 Benchmarks should show the performance capabilities of this system. +
-Performance statistic collection should be nearly identical to ONTAP. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
+Performance statistic collection should be nearly identical to ONTAP.
+
+| *Test results:*
+
+| *Test summary:*
+
+| *Comments:*
+
 |===
-
-
 
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

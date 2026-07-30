@@ -1,4 +1,4 @@
-﻿= Test 10: Capacity management
+= Test 10: Capacity management
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -13,33 +13,36 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 Viewing and managing capacity in NetApp AFX has been streamlined to improve simplicity and understanding of what capacity you actually have available. Aggregates as a managed construct are removed. Instead, volumes and the new Storage Availability Zone concept are how we view and managed capacity. This test plan shows different ways capacity is managed in NetApp AFX.
 
-.Test ) Capacity management
-
-
-[cols="1,1,1,1,1"]
+[cols="1"]
 |===
-| Section | Details
-| Test 10 | Tester: |  | Date: |
-| Test requirements: | No specific requirements.  +
-Performance testing being run during live node additions. |  |  |
-| Test procedure Ã¢â‚¬â€œ GUI: +
-View capacity in the dashboard. +
- +
- +
+| *Test plan 10 - Capacity management*
+
+a| Test procedure Ã¢â‚¬â€œ GUI: +
+View capacity in the dashboard.
+
+image::images/test-10-image-01.png[]
+
 From the CLI +
-Display the Storage Availability Zone +
-AFX::> storage availability-zone show +
-Display the cluster space +
-AFX::> cluster space show |  |  |  |
-| Expected outcome(s): +
+Display the Storage Availability Zone
+
+[source,console]
+----
+AFX::> storage availability-zone show
+Display the cluster space
+AFX::> cluster space show
+----
+
+a| Expected outcome(s): +
 Capacity views should be easy to understand. +
-Storage availability zones should simplify capacity use. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
+Storage availability zones should simplify capacity use.
+
+| *Test results:*
+
+| *Test summary:*
+
+| *Comments:*
+
 |===
-
-
 
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
