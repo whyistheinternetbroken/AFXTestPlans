@@ -20,7 +20,7 @@ Viewing and managing capacity in NetApp AFX has been streamlined to improve simp
 a| Test procedure – GUI: +
 View capacity in the dashboard.
 
-image::images/test-10-image-01.png[width=50%,link=images/test-10-image-01.png]
+image::images/test-10-image-01.png[width=50%,link=images/test-10-image-01.png,border]
 
 From the CLI +
 Display the Storage Availability Zone
