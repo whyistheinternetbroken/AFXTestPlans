@@ -7,7 +7,7 @@
 :doctype: book
 :description: NetApp AFX Test Plan for ONTAP 9.19.1
 
-Welcome to the NetApp AFX Test Plan for ONTAP 9.19.1. Navigate the sections below or use the sidebar table of contents.
+Welcome to the NetApp AFX Test Plan for ONTAP 9.19.1.
 
 
 == How to Use This Document
