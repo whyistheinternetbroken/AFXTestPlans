@@ -17,7 +17,8 @@ NetApp AFX makes some changes to how volumes are created and managed. This test 
 |===
 | *Test plan 5 - Volume management*
 
-a| *Test procedure:* +
+a| *Test procedure:*
+
 . Use the script found in the appendix to create a large number of volumes on the cluster. Review the location of the constituent volumes of the FlexGroup volumes. Note the balance of volume counts per node. Volume counts should be relatively evenly distributed (+/- 2).
 +
 [source,console]
@@ -117,7 +118,8 @@ AFX::*> debug smdb table atm_kick run
 
 . HA failover testing in a later part of this test plan will cover volume rebalancing there as well. If you need to delete volumes/clean up volumes, you can leverage the volume delete script in the Scripts section.
 
-a| *Expected outcome(s):* +
+a| *Expected outcome(s):*
+
 * Volume counts will be balanced across nodes.
 * Volume counts will rebalance when uneven.
 | *Test results:*

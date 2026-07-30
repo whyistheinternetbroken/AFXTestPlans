@@ -22,7 +22,8 @@ NetApp FlexCache volumes provide a way to localize reads on remote datasets by p
 | Section | Details
 | Test 13 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. |  |  |
-| *Test procedure:* +
+5+a| *Test procedure:*
+
 . Navigate to the NetApp AFX System Manager and login
 
 . Peer the clusters (if necessary) This step may not be necessary if you’ve already peered the clusters for SnapMirror. Follow the steps in the Data Migration test plan above to peer clusters.
@@ -93,15 +94,14 @@ drwxr-xr-x 9 root root 4096 May 18 02:05 storage
 
 . Run a performance test against the origin volume in unified ONTAP. Then, run it again on the pre-warmed FlexCache volume on the same dataset. Run a 2nd performance test against a different folder in unified ONTAP. Then, re-run it on a FlexCache that has not been pre-warmed to see the performance hit on a cache that needs to populate data.
 
-|  |  |  |
 
-| *Expected outcome(s):* +
+5+a| *Expected outcome(s):*
+
 * FlexCache peering and creation should be identical to how unified ONTAP creates FlexCache volumes.
 * FlexCache in NetApp AFX should be able to leverage a unified ONTAP origin.
 * FlexCache pre-populate should allow for pre-warming of cache data.
 * FlexCache should improve read performance for local reads over remote reads.
 
-|  |  |  |
 | Test results: |  |  |  |
 | Test summary: |  |  |  |
 | Comments: |  |  |  |

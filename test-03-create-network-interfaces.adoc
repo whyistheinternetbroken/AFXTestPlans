@@ -17,18 +17,20 @@ ONTAP can be configured with multiple network interfaces for management, data ac
 |===
 | *Test plan 3 - Create network interfaces*
 
-a| *Test procedure:* +
+a| *Test procedure:*
+
 . Log into the System Manager GUI via https://[clus_mgmt_IP] Navigate to Network -> Overview. Click the “+ Add” button under Network interfaces.
 +
-image::images/test-03-image-01.png[width=50%,link=images/test-03-image-01.png,border]
+image::images/test-03-image-01.png[width=50%,link=images/test-03-image-01.png]
 
 . Select “data” for the interface type and select the desired options, specify a name, home node, etc.
 +
-image::images/test-03-image-02.png[width=50%,link=images/test-03-image-02.png,border]
+image::images/test-03-image-02.png[width=50%,link=images/test-03-image-02.png]
 
 . Repeat the above step for each node. Create at least 2 data interfaces per node to provide paths for NFS session trunking. Alternately, use the LIF creation script found in the Appendix of this document.
 
-a| *Expected outcome(s):* +
+a| *Expected outcome(s):*
+
 * Two or more data interfaces are created per node.
 | *Test results:*
 

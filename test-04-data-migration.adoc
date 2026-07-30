@@ -18,14 +18,15 @@ Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP s
 |===
 | *Test plan 4 - Data migration (optional)*
 
-a| *Test procedure:* +
+a| *Test procedure:*
+
 . Ensure intercluster interfaces exist. Click Network -> Overview.
 +
-image::images/test-04-image-01.png[width=50%,link=images/test-04-image-01.png,border]
+image::images/test-04-image-01.png[width=50%,link=images/test-04-image-01.png]
 
 . Click the magnifying glass to search for interfaces with the type of “intercluster.”
 +
-image::images/test-04-image-02.png[width=50%,link=images/test-04-image-02.png,border]
+image::images/test-04-image-02.png[width=50%,link=images/test-04-image-02.png]
 
 . Type “intercluster” in the search field to find any intercluster interfaces. If there are none, move on to the next step to create intercluster interfaces. If they do exist, move to the following step to set up the cluster peer.
 
@@ -33,51 +34,51 @@ image::images/test-04-image-02.png[width=50%,link=images/test-04-image-02.png,bo
 
 . Navigate to Protection -> Overview and click “Add network interfaces”.
 +
-image::images/test-04-image-03.png[width=50%,link=images/test-04-image-03.png,border]
+image::images/test-04-image-03.png[width=50%,link=images/test-04-image-03.png]
 
 . Configure the interfaces for each node, as shown below
 +
-image::images/test-04-image-04.png[width=50%,link=images/test-04-image-04.png,border]
+image::images/test-04-image-04.png[width=50%,link=images/test-04-image-04.png]
 
 . Click save and confirm the interfaces.
 +
-image::images/test-04-image-05.png[width=50%,link=images/test-04-image-05.png,border]
+image::images/test-04-image-05.png[width=50%,link=images/test-04-image-05.png]
 
 . Verify the interfaces have been created from the “Network interfaces overview.”
 +
-image::images/test-04-image-06.png[width=50%,link=images/test-04-image-06.png,border]
+image::images/test-04-image-06.png[width=50%,link=images/test-04-image-06.png]
 +
 *Note:* If necessary, make any edits to interfaces here.
 
 . Add a cluster peer via System Manager on the source ONTAP cluster. Navigate to (Protection -> Overview)
 +
-image::images/test-04-image-07.png[width=50%,link=images/test-04-image-07.png,border]
+image::images/test-04-image-07.png[width=50%,link=images/test-04-image-07.png]
 
 . Click the  next to “Cluster peers” and click “Add cluster peers” or click  the “Add a cluster peer” button
 +
-image::images/test-04-image-08.png[width=50%,link=images/test-04-image-08.png,border]
+image::images/test-04-image-08.png[width=50%,link=images/test-04-image-08.png]
 +
-image::images/test-04-image-09.png[width=50%,link=images/test-04-image-09.png,border]
+image::images/test-04-image-09.png[width=50%,link=images/test-04-image-09.png]
 
 . To peer to a remote cluster, a passphrase will be needed. Click “Launch remote cluster.”
 +
-image::images/test-04-image-10.png[width=50%,link=images/test-04-image-10.png,border]
+image::images/test-04-image-10.png[width=50%,link=images/test-04-image-10.png]
 
 . Add the remote cluster management IP address and click “Launch.”
 +
-image::images/test-04-image-11.png[width=50%,link=images/test-04-image-11.png,border]
+image::images/test-04-image-11.png[width=50%,link=images/test-04-image-11.png]
 
 . Generate passphrase This will open a new window to the NetApp AFX cluster to generate a new passphrase for cluster peer authentication. From here, copy the passphrase and add it to the unified ONTAP system.
 +
-image::images/test-04-image-12.png[width=50%,link=images/test-04-image-12.png,border]
+image::images/test-04-image-12.png[width=50%,link=images/test-04-image-12.png]
 
 . Add the passphrase Verify if the intercluster IP addresses for the NetApp AFX cluster are populated. If everything looks good, click “Initiate cluster peering.”
 +
-image::images/test-04-image-13.png[width=50%,link=images/test-04-image-13.png,border]
+image::images/test-04-image-13.png[width=50%,link=images/test-04-image-13.png]
 
 . Verify the cluster peer status If successful, you will see cluster peers listed under Protection -> Overview. Initially, the peer may show as “partial” with a red X next to the name. This can happen when the peer job is finishing. Eventually, the status should show a green check:
 +
-image::images/test-04-image-14.png[width=50%,link=images/test-04-image-14.png,border]
+image::images/test-04-image-14.png[width=50%,link=images/test-04-image-14.png]
 
 . You can also check the cluster peer health from the command line.
 +
@@ -106,15 +107,15 @@ AFX-02
 
 . Establish SnapMirror from unified ONTAP to AFX. Use source volume with production datasets on unified ONTAP cluster to the NetApp AFX cluster. Navigate to the volume using the left menu. (Storage -> Volumes).
 +
-image::images/test-04-image-15.png[width=50%,link=images/test-04-image-15.png,border]
+image::images/test-04-image-15.png[width=50%,link=images/test-04-image-15.png]
 
 . Hover over the volume name and click the to expand the menu. Select “Protect”.
 +
-image::images/test-04-image-16.png[width=50%,link=images/test-04-image-16.png,border]
+image::images/test-04-image-16.png[width=50%,link=images/test-04-image-16.png]
 
 . Configure the SnapMirror settings and click “Protect”
 +
-image::images/test-04-image-17.png[width=50%,link=images/test-04-image-17.png,border]
+image::images/test-04-image-17.png[width=50%,link=images/test-04-image-17.png]
 
 . If the above steps fail, you can attempt to create the relationship via the CLI.
 
@@ -150,15 +151,15 @@ AFX::> snapmirror initialize -destination-path svm1:dataset_dst
 
 . GUI steps Navigate to Protection -> Replication
 +
-image::images/test-04-image-18.png[width=50%,link=images/test-04-image-18.png,border]
+image::images/test-04-image-18.png[width=50%,link=images/test-04-image-18.png]
 
 . Click on the SnapMirror relationship
 +
-image::images/test-04-image-19.png[width=50%,link=images/test-04-image-19.png,border]
+image::images/test-04-image-19.png[width=50%,link=images/test-04-image-19.png]
 
 . Verify the status Is it healthy? What state is it in? What was the last transfer status?
 +
-image::images/test-04-image-20.png[width=50%,link=images/test-04-image-20.png,border]
+image::images/test-04-image-20.png[width=50%,link=images/test-04-image-20.png]
 
 . CLI Steps
 +
@@ -205,15 +206,15 @@ The command can take considerable time (depending on file count and size), as it
 
 . Break the SnapMirror relationship and test ability to access and write to destination volume on NetApp AFX. From the NetApp AFX System Manager GUI, navigate to Protection -> Replication.
 +
-image::images/test-04-image-21.png[width=50%,link=images/test-04-image-21.png,border]
+image::images/test-04-image-21.png[width=50%,link=images/test-04-image-21.png]
 
 . Hover over the relationship and use the  to expand the menu. Select “Break.”
 +
-image::images/test-04-image-22.png[width=50%,link=images/test-04-image-22.png,border]
+image::images/test-04-image-22.png[width=50%,link=images/test-04-image-22.png]
 
 . Confirm the details and click “Break.”
 +
-image::images/test-04-image-23.png[width=50%,link=images/test-04-image-23.png,border]
+image::images/test-04-image-23.png[width=50%,link=images/test-04-image-23.png]
 
 . Establish a SnapMirror from NetApp AFX to unified ONTAP with DR/backup as a goal. There are two ways to achieve this goal. One way is to create a separate, brand new SnapMirror to a new destination volume. The other way is to initiate a “reverse resync,” which will re-use the original source volume. The below covers both steps. You can perform both or you can choose one.
 +
@@ -228,19 +229,20 @@ Navigate to Storage -> Volumes
 
 . Review the options and click “Protect.”
 +
-image::images/test-04-image-24.png[width=50%,link=images/test-04-image-24.png,border]
+image::images/test-04-image-24.png[width=50%,link=images/test-04-image-24.png]
 
 . Reverse Resync steps: Navigate to Protection -> Replication.
 
 . Hover over the relationship and use the  to expand the menu. Select “Reverse Resync.”
 +
-image::images/test-04-image-25.png[width=50%,link=images/test-04-image-25.png,border]
+image::images/test-04-image-25.png[width=50%,link=images/test-04-image-25.png]
 
 . Verify in the unified ONTAP destination cluster that the relationship appears when navigating to Protection -> Relationships.
 +
-image::images/test-04-image-26.png[width=50%,link=images/test-04-image-26.png,border]
+image::images/test-04-image-26.png[width=50%,link=images/test-04-image-26.png]
 
-a| *Expected outcome(s):* +
+a| *Expected outcome(s):*
+
 * A data protection relationship from unified ONTAP to NetApp AFX is established, and data migration is completed.
 * Source and destination volume datasets are compared to verify successful migration.
 * SnapMirror relationship is broken; destination volume is verified as writeable and ready for workload testing.

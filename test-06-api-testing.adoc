@@ -18,14 +18,16 @@ If no current API-based automation suites are in use, then some basic REST API c
 |===
 | *Test plan 6 - API testing/seamless support for customer automation*
 
-a| *Test procedure:* +
+a| *Test procedure:*
+
 . Test your REST API calls against unified ONTAP.
 
 . If you are not already using standard automation REST calls against unified ONTAP, then leverage the example calls in the appendix of this document.
 
 . Test your REST API calls against NetApp AFX. If you are not already using standard automation REST calls against NetApp AFX, then leverage the example calls in the appendix of this document.
 
-a| *Expected outcome(s):* +
+a| *Expected outcome(s):*
+
 * REST API calls used with unified ONTAP are tested.
 * The same REST API calls are tested against NetApp AFX and are successful, with the exception of SAN-related and aggregate-related calls.
 | *Test results:*

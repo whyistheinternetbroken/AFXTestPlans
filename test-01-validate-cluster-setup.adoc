@@ -17,18 +17,19 @@ The first test plan here is to validate the cluster heath, configuration, etc.
 |===
 | *Test plan 1 - Validate the cluster setup*
 
-a| *Test procedure – GUI:* +
+a| *Test procedure – GUI:*
+
 . Log into the System Manager GUI via https://[clus_mgmt_IP] The system dashboard will show errors, warnings, capacity information, and a high-level overview of the storage hardware.
 +
-image::images/test-01-image-01.png[width=50%,link=images/test-01-image-01.png,border]
+image::images/test-01-image-01.png[width=50%,link=images/test-01-image-01.png]
 
 . Click on “Errors” to view any issues the cluster may be having. This will take you to Events & Jobs -> Events.
 +
-image::images/test-01-image-02.png[width=50%,link=images/test-01-image-02.png,border]
+image::images/test-01-image-02.png[width=50%,link=images/test-01-image-02.png]
 
 . Click on System Alerts to see specific alerts.
 +
-image::images/test-01-image-03.png[width=50%,link=images/test-01-image-03.png,border]
+image::images/test-01-image-03.png[width=50%,link=images/test-01-image-03.png]
 
 . Under Cluster -> Overview, you can see the following via the tabs on the page:
 +
@@ -45,13 +46,14 @@ Scroll through each of these and take note of the different components in the Ne
 
 . The cabling diagram provides a clean view of the clusters physical layout.
 +
-image::images/test-01-image-04.png[width=50%,link=images/test-01-image-04.png,border]
+image::images/test-01-image-04.png[width=50%,link=images/test-01-image-04.png]
 
 . Use the down arrows  in each of the Nodes, Switches and Disk Shelves to see their associated ports. Some ports will be unused. To see a consolidate cabling diagram with only the used ports, uncheck “Show unused ports.”
 +
-image::images/test-01-image-06.png[width=50%,link=images/test-01-image-06.png,border]
+image::images/test-01-image-06.png[width=50%,link=images/test-01-image-06.png]
 
 *Test procedure – CLI:*
+
 . Log in to the NetApp AFX CLI Verify cluster health.
 +
 [source,console]
@@ -154,7 +156,8 @@ AFX::*> nfs show -fields v4.1,v4-id-domain,v4.1-pnfs,v4.1-trunking,tcp-max-xfer-
 
 . The NFS server output should show:
 
-a| *Expected outcome(s):* +
+a| *Expected outcome(s):*
+
 * The cluster is healthy and available.
 * The shelves are cabled properly.
 * The network interfaces are present for management Ips.

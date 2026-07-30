@@ -23,7 +23,8 @@ This optional test plan covers configuration of S3 for use with the datasets cre
 | Section | Details
 | Test 14 | Tester: |  | Date: |
 | Test requirements: | No specific requirements. |  |  |
-| *Test procedure:* +
+5+a| *Test procedure:*
+
 . Enable S3 on the SVM
 
 . Navigate to Cluster -> Storage VMs
@@ -161,13 +162,12 @@ img_0001_of_2395.tfrecord  img_0480_of_2395.tfrecord  img_0959_of_2395.tfrecord 
 -rw-r----- 1 root root 0 May 22  2025 /mnt/s3_bucket/testfile
 ----
 
-|  |  |  |
 
-| *Expected outcome(s):* +
+5+a| *Expected outcome(s):*
+
 * A volume will be able to be presented to both NAS and object clients.
 * The same data is accessible to both NAS and object clients without needing to move.
 
-|  |  |  |
 | Test results: |  |  |  |
 | Test summary: |  |  |  |
 | Comments: |  |  |  |

@@ -17,7 +17,8 @@ One of the main benefits of NetApp AFX is the ability to scale compute and capac
 |===
 | *Test plan 11 - Compute scaling (optional)*
 
-a| *Test procedure:* +
+a| *Test procedure:*
+
 . Ensure benchmarks or performance workloads are running during these tests. Note the current average throughput and IOPS.
 +
 [source,console]
@@ -104,17 +105,17 @@ Cluster
 
 . From here, access the System Manager window via the cluster management IP. Navigate to Cluster -> Overview and click on the “Nodes” tab.
 +
-image::images/test-11-image-01.png[width=50%,link=images/test-11-image-01.png,border]
+image::images/test-11-image-01.png[width=50%,link=images/test-11-image-01.png]
 
 . At the bottom of the page, you should see a section called “Not part of this cluster” and your new nodes below that. Click “+ Add” to add the node to the cluster. An odd number of nodes cannot be added to a cluster. If the nodes are discovered before the cluster interconnect IP addresses are changed, then you will need to re-discover the nodes by exiting the window and navigating back. If the GUI addition does not work, try the CLI command cluster add-node instead If issues persist, utilize contact NetApp support or reach out to [email].
 +
-image::images/test-11-image-02.png[width=50%,link=images/test-11-image-02.png,border]
+image::images/test-11-image-02.png[width=50%,link=images/test-11-image-02.png]
 
 . Use the “Add nodes” screen to fill in your information. Management IP addresses can be added manually or by using a subnet.
 +
-image::images/test-11-image-03.png[width=50%,link=images/test-11-image-03.png,border]
+image::images/test-11-image-03.png[width=50%,link=images/test-11-image-03.png]
 +
-image::images/test-11-image-04.png[width=50%,link=images/test-11-image-04.png,border]
+image::images/test-11-image-04.png[width=50%,link=images/test-11-image-04.png]
 
 . Log into the cluster CLI. Monitor the node add status.
 +
@@ -183,9 +184,10 @@ AFX::*> qos statistics volume performance show -vserver svm1 -volume [volname]
 From System Manager, you can view the performance graph.
 ----
 +
-image::images/test-11-image-05.png[width=50%,link=images/test-11-image-05.png,border]
+image::images/test-11-image-05.png[width=50%,link=images/test-11-image-05.png]
 
-a| *Expected outcome(s):* +
+a| *Expected outcome(s):*
+
 * Adding new nodes to the cluster should be nondisruptive.
 * Volume moves should happen automatically and be nondisruptive.
 * Performance should scale up linearly.

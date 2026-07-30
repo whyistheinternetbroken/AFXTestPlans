@@ -19,16 +19,18 @@ The goal of these workload tests is to show that real data workloads can be port
 |===
 | *Test plan 7 - Customer workload testing -- real data*
 
-a| *Test procedure:* +
+a| *Test procedure:*
+
 . Mount NetApp AFX volume using NAS protocol of your choice. Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single client’s performance.
 
 . Find the export path of your data volume in System Manager.
 +
-image::images/test-07-image-01.png[width=50%,link=images/test-07-image-01.png,border]
+image::images/test-07-image-01.png[width=50%,link=images/test-07-image-01.png]
 
 . Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter* *Recommended NFS versions and mount options are found in the NFS considerations above. Run designated workloads against existing datasets that have been migrated over from unified ONTAP. While benchmarks are running, move on to Test 5) Performance Monitoring. Test real-world data using everyday workloads. As workloads are running, test the limits of NetApp AFX by adding more clients or more jobs to the workload to push the limits of scale.
 
-a| *Expected outcome(s):* +
+a| *Expected outcome(s):*
+
 * Workloads should not need additional configuration or changes to run properly using NetApp AFX.
 * Performance should be as good or better than unified ONTAP.
 | *Test results:*

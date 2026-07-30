@@ -20,7 +20,8 @@ This test's goal is to not only show that failovers and givebacks are capable of
 |===
 | *Test plan 12 - Node failure behavior*
 
-a| *Test procedure:* +
+a| *Test procedure:*
+
 . Log into the cluster via the cluster management LIF. Verify benchmarks or performance workloads are running during these tests.
 +
 [source,console]
@@ -209,7 +210,8 @@ AFX::*> vol show -fields node,size,constituent-count -is-constituent true -node 
 AFX::*> vol move show -vserver svm1 -instance
 ----
 
-a| *Expected outcome(s):* +
+a| *Expected outcome(s):*
+
 * The selected node will panic.
 * Cluster will send AutoSupport to NetApp support.
 * Cluster will perform give back to normal operations.
