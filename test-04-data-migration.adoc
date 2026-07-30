@@ -56,10 +56,10 @@ Add a cluster peer via System Manager on the source ONTAP cluster. +
 Navigate to (Protection -> Overview)
 
 image::images/test-04-image-07.png[]
-image::images/test-04-image-08.png[]
 
 Click the  next to Ã¢â‚¬Å“Cluster peersÃ¢â‚¬Â and click Ã¢â‚¬Å“Add cluster peersÃ¢â‚¬Â or click  the Ã¢â‚¬Å“Add a cluster peerÃ¢â‚¬Â button
 
+image::images/test-04-image-08.png[]
 image::images/test-04-image-09.png[]
 
 To peer to a remote cluster, a passphrase will be needed. +

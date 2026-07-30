@@ -26,8 +26,6 @@ AFX::> set advanced
 AFX::*> qos statistics volume performance show -vserver svm1 -volume [volname]
 ----
 
-image::images/test-11-image-05.png[]
-
 Check volume location of current nodes. Note the number of volumes per node.
 
 [source,console]
@@ -214,6 +212,8 @@ AFX::> set advanced
 AFX::*> qos statistics volume performance show -vserver svm1 -volume [volname]
 From System Manager, you can view the performance graph.
 ----
+
+image::images/test-11-image-05.png[]
 
 a| Expected outcome(s): +
 Adding new nodes to the cluster should be nondisruptive. +

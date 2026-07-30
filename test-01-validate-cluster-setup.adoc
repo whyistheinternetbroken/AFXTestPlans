@@ -45,10 +45,10 @@ Scroll through each of these and take note of the different components in the Ne
 The cabling diagram provides a clean view of the clusters physical layout.
 
 image::images/test-01-image-04.png[]
-image::images/test-01-image-05.png[]
 
 Use the down arrows  in each of the Nodes, Switches and Disk Shelves to see their associated ports. Some ports will be unused. To see a consolidate cabling diagram with only the used ports, uncheck Ã¢â‚¬Å“Show unused ports.Ã¢â‚¬Â
 
+image::images/test-01-image-05.png[]
 image::images/test-01-image-06.png[]
 
 Test procedure Ã¢â‚¬â€œ CLI: +
