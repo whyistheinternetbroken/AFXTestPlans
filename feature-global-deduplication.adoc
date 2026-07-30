@@ -39,7 +39,7 @@ Enabled
 ----
 
 
-<b>Note:</b> NetApp AFX doesn't use the concept of physical aggregates, but the storage efficiency commands do run under the storage aggregate command family for backwards compatibility.
+*Note:* NetApp AFX doesn't use the concept of physical aggregates, but the storage efficiency commands do run under the storage aggregate command family for backwards compatibility.
 
 Global deduplication can be disabled with the "stop" command, but it is not recommended to modify it in general. For the purposes of these tests, we will disable global dedupe to illustrate what impact it can have on performance and space savings. However, the current ONTAP release can only re-enable it via diag privilege commands (a bug has been opened to correct that and should be fixed in a future release.
 To re-enable global deduplication:
@@ -51,7 +51,7 @@ AFX::*> run local flexaggr global_dedup enable -all
 ----
 
 
-<b>Note:</b> This process can take a few minutes to complete.
+*Note:* This process can take a few minutes to complete.
 
 You can check the current status with:
 

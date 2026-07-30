@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 This section covers hardware requirements, client configurations, networking, and NFS server configuration. See also xref:appendix-client-tuning.adoc[Client Tuning] for detailed NFS performance tuning.
 
@@ -20,7 +18,7 @@ This section covers hardware requirements, client configurations, networking, an
 
 Hardware installation and initial configuration documentation links can be found in the "Documentation requirements" section. This test plan assumes that the initial setup and configuration has already been performed.
 
-<b>Note:</b> It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and FabricPool. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at: link:https://github.com/whyistheinternetbroken/AFX[https://github.com/whyistheinternetbroken/AFX]
+*Note:* It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and FabricPool. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at: link:https://github.com/whyistheinternetbroken/AFX[https://github.com/whyistheinternetbroken/AFX]
 
 
 [[initial-state-of-the-test-environment]]
@@ -50,7 +48,7 @@ NetApp AFX officially supports a minimum configuration of:
 
 For the best results, provide at least four modern NFS clients to run storage benchmarks. Client OS is not important, provided it adheres to RFC standards and are within a few minor releases of the newest versions available. All clients should have high performance specs including CPU, memory & networking, ideally 100GB+. All clients should be routable to all data interfaces in the NetApp AFX cluster -- especially if features such as pNFS and NFSv4.1 session trunking are used.
 
-<b>Note:</b> This test plan mainly focuses on NFS, but many of the concepts can also be applied to SMB operations. Future versions of this test plan may include SMB, multiprotocol NAS, etc.
+*Note:* This test plan mainly focuses on NFS, but many of the concepts can also be applied to SMB operations. Future versions of this test plan may include SMB, multiprotocol NAS, etc.
 
 Our internal benchmark results were generated with the following client configurations:
 
@@ -111,7 +109,7 @@ ls /sys/class/infiniband/
 sudo sh -c 'echo 106 > /sys/class/infiniband/mlx5_0/cma_roce_tos'
 ----
 
-<b>Note:</b> These settings are not persistent across reboots. Use the provided script with the `--persistent` flag or configure via systemd/udev rules for production use.
+*Note:* These settings are not persistent across reboots. Use the provided script with the `--persistent` flag or configure via systemd/udev rules for production use.
 
 
 [[client-os-tuning]]
@@ -174,7 +172,7 @@ All data network interfaces in an ONTAP SVM should be routable to all clients fo
 
 The following shows the NFS server options that should be configured for this test plan. Other NFS server options can be enabled as well (for instance, NFSv4 ACL support), but they are outside of the scope of this NetApp AFX-focused test plan.
 
-[%header,cols="1,1"]
+[cols="1,1"]
 |===
 | Option | Value
 | v4.1 | Enabled
@@ -207,7 +205,7 @@ Domain = user-domain.company.com
 ----
 
 
-<b>Note:</b> If those commands do not work, you likely have not installed the proper NFS packages to leverage NFSv4.x. For example, nfs-common for Debian/Ubuntu-based systems.
+*Note:* If those commands do not work, you likely have not installed the proper NFS packages to leverage NFSv4.x. For example, nfs-common for Debian/Ubuntu-based systems.
 
 
 [[benchmark-cli-configuration]]
@@ -218,7 +216,7 @@ The following shows the NFS CLI command used for internal performance benchmark 
 A script that connects to the cluster via SSH and applies this configuration is available at:
 link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/ONTAP/NAS/configure-nfs-server.sh[ONTAP/NAS/configure-nfs-server.sh]
 
-<b>Note:</b> RDMA reduces latency and increases throughput for most workloads -- roughly 10-30%.
+*Note:* RDMA reduces latency and increases throughput for most workloads -- roughly 10-30%.
 
 [source,console]
 ----

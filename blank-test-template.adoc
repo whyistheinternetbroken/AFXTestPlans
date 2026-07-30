@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 Use this template for any performance tests outside of the scenarios described in this test plan.
 
@@ -19,7 +17,7 @@ Use this template for any performance tests outside of the scenarios described a
 .Test ) Blank test template
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | <Insert cross reference> | Tester: |  | Date: |

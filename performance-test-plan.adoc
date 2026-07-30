@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 This section covers core performance tests (Tests 1-12), NFS export policy, volume configuration, mount options, client and network configuration, and ONTAP feature settings. For NFS server configuration reference, see xref:setup.adoc[Setup].
 
@@ -24,7 +22,7 @@ The first test plan here is to validate the cluster heath, configuration, etc.
 .Test ) Validate the cluster setup.
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 1 | Tester: |  | Date: |
@@ -46,7 +44,7 @@ Switches +
 Cabling +
 Scroll through each of these and take note of the different components in the NetApp AFX architecture. +
  +
-<b>Note:</b> You can toggle between list view and graphical view on each tab. +
+*Note:* You can toggle between list view and graphical view on each tab. +
  +
 The cabling diagram provides a clean view of the clusters physical layout.  +
  +
@@ -141,7 +139,7 @@ For more information on what AutoSupport is, the information that AutoSupport co
 .Test ) Enable AutoSupport
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 2 | Tester: |  | Date: |
@@ -169,7 +167,7 @@ ONTAP can be configured with multiple network interfaces for management, data ac
 .Test ) Create network interfaces.
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 3 | Tester: |  | Date: |
@@ -200,7 +198,7 @@ Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP s
 .Test ) Data migration
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 4 | Tester: |  | Date: |
@@ -232,7 +230,7 @@ Click save and confirm the interfaces. +
   +
 Verify the interfaces have been created from the Ã¢â‚¬Å“Network interfaces overview.Ã¢â‚¬Â +
  +
-<b>Note:</b> If necessary, make any edits to interfaces here. +
+*Note:* If necessary, make any edits to interfaces here. +
  +
 Add a cluster peer via System Manager on the source ONTAP cluster. +
 Navigate to (Protection -> Overview) +
@@ -385,7 +383,7 @@ NetApp AFX makes some changes to how volumes are created and managed. This test 
 .Test ) Volume management.
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Error! Reference source not found. | Tester: |  | Date: |
@@ -472,7 +470,7 @@ If no current API-based automation suites are in use, then some basic REST API c
 .Test ) API testing/seamless support for customer automation
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 6 | Tester: |  | Date: |
@@ -520,7 +518,7 @@ export-policy rule create -policyname [name] -clientmatch [client1],[client2],..
 ----
 
 
-<b>Note:</b> The NFS server configuration reference table and benchmark CLI command are consolidated in xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration].
+*Note:* The NFS server configuration reference table and benchmark CLI command are consolidated in xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration].
 
 
 [[volume-configuration]]
@@ -528,7 +526,7 @@ export-policy rule create -policyname [name] -clientmatch [client1],[client2],..
 
 The following section covers volume creation/configuration considerations and shows what options should be used during the initial creation.
 
-[%header,cols="1,1"]
+[cols="1,1"]
 |===
 | Volume type | FlexGroup
 | Creation method | CLI +
@@ -569,7 +567,7 @@ In general, snapshots in ONTAP are not detrimental to overall system performance
 * Granular control over the environment -- We can create snapshots when we want to create them to better control the scenarios when snapshots are created and make it easier to measure their impact.
 * Data churn -- Many benchmark tests will create a lot of data and then subsequently delete that data, which will rapidly grow the size of any existing snapshots on the volume. To avoid space allocation issues, we disable snapshots.
 
-<b>Note:</b> Snapdir access is also disabled to prevent unwanted filesystem crawls across snapshots.
+*Note:* Snapdir access is also disabled to prevent unwanted filesystem crawls across snapshots.
 
 
 [[mount-options]]
@@ -607,7 +605,7 @@ Some workloads might benefit from special mount options during benchmark tests. 
 .Alternate NFS mount options and their use cases
 
 
-[%header,cols="1,1,1"]
+[cols="1,1,1"]
 |===
 | NFS mount option | Description | Use case
 | nocto | Disables "close-to-open" cache consistency. The client will not revalidate cached file attributes when a file is opened, relying instead on cached data even if it may be stale. | Read-heavy, single-client workloads where files rarely change (e.g., static web content, software libraries, read-only media archives). Not suitable for multi-client writes.
@@ -681,7 +679,7 @@ aggr efficiency wise-tsse modify -aggregate data* -enable-workload-informed-tsse
 ----
 
 
-<b>Note:</b> Aggressive Readahead feature configuration, caveats, and statistics are covered in xref:feature-aggressive-readahead.adoc[Aggressive Readahead Feature Test].
+*Note:* Aggressive Readahead feature configuration, caveats, and statistics are covered in xref:feature-aggressive-readahead.adoc[Aggressive Readahead Feature Test].
 
 
 [[customer-workload-testing--real-data]]
@@ -689,13 +687,13 @@ aggr efficiency wise-tsse modify -aggregate data* -enable-workload-informed-tsse
 
 The goal of these workload tests is to show that real data workloads can be ported over to NetApp AFX seamlessly and can potentially provide performance benefits over unified ONTAP -- particularly when growing the compute side of the cluster.
 
-<b>Note:</b> For NFS considerations, see the Appendix in this document.
+*Note:* For NFS considerations, see the Appendix in this document.
 
 
 .Test ) Customer workload testing -- real workloads, real data
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 7 | Tester: |  | Date: |
@@ -731,7 +729,7 @@ For details on installing, configuring and running SpecSFS or MLcommons, see the
 .Test ) Customer workload testing - benchmarks
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 8 | Tester: |  | Date: |
@@ -781,7 +779,7 @@ NetApp Harvest - GitHub
 .Test ) Performance monitoring
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 9 | Tester: |  | Date: |
@@ -923,7 +921,7 @@ Viewing and managing capacity in NetApp AFX has been streamlined to improve simp
 .Test ) Capacity management
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 10 | Tester: |  | Date: |
@@ -955,7 +953,7 @@ One of the main benefits of NetApp AFX is the ability to scale compute and capac
 .Test ) Node additions during live workloads
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 11 | Tester: |  | Date: |
@@ -1126,13 +1124,13 @@ Performance should scale up linearly. |  |  |  |
 In NetApp AFX, storage failovers and givebacks allow for workloads to operate even through disruptions to nodes. One main difference, however, is that volumes owned by nodes will be automatically moved evenly across surviving nodes after a time period (~17 minutes) where the cluster verifies the node is truly down. In unified ONTAP, volumes would only move to the HA partner.
 This test's goal is to not only show that failovers and givebacks are capable of operating nearly identical to unified ONTAP, but also will show that storage administrators no longer need to factor in volume counts when sizing clusters greater than 4 nodes in size because NetApp AFX will rebalance volumes across all nodes in storage failover scenarios rather than allowing a partner node to be overcommitted.
 
-<b>Note:</b> Failover here will be generated by node panic, which will automatically perform a call home to generate a case (provided ASUP is enabled). We will send a test ASUP prior to that to inform support that the cluster is under maintenance.
+*Note:* Failover here will be generated by node panic, which will automatically perform a call home to generate a case (provided ASUP is enabled). We will send a test ASUP prior to that to inform support that the cluster is under maintenance.
 
 
 .Test ) Node failure behavior
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 12 | Tester: |  | Date: |
@@ -1267,7 +1265,7 @@ Volumes will not necessarily return back to the same nodes they originated on. |
 |===
 
 
-<b>Note:</b> Optional tests 13-16 (FlexCache, S3, Snapshots/SnapMirror, NDU) are linked from xref:test-plans.adoc[Test Plans Overview].
+*Note:* Optional tests 13-16 (FlexCache, S3, Snapshots/SnapMirror, NDU) are linked from xref:test-plans.adoc[Test Plans Overview].
 
 
 [[optional-new-feature-tests]]

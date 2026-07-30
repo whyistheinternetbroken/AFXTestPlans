@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 
 xref:test-plans.adoc[â† Back to Test Plans]
@@ -22,7 +20,7 @@ NetApp FlexCache volumes provide a way to localize reads on remote datasets by p
 .Test ) OPTIONAL: Use FlexCache between unified and NetApp AFX
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 13 | Tester: |  | Date: |

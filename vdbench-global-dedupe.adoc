@@ -8,8 +8,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 :description: NFSv4.1 with pNFS and Session Trunking - Performance Test Plan targeting 12+ GB/s throughput with 5:1 deduplication datasets
 
@@ -21,7 +19,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 === Throughput Budget per Client
 
-[%header,cols="2,3"]
+[cols="2,3"]
 |===
 | Parameter | Value
 
@@ -40,7 +38,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 === Client Hardware Specifications
 
-[%header,cols="2,4"]
+[cols="2,4"]
 |===
 | Component | Specification
 
@@ -65,7 +63,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 === Network Infrastructure
 
-[%header,cols="2,4"]
+[cols="2,4"]
 |===
 | Component | Specification
 
@@ -88,7 +86,7 @@ This test plan validates NFS storage performance using NFSv4.1 with parallel NFS
 
 Verify the ONTAP NFS server is configured with the following settings before running tests:
 
-[%header,cols="2,2"]
+[cols="2,2"]
 |===
 | Setting | Required Value
 
@@ -131,7 +129,7 @@ mount -t nfs4 -o \
   <storage_ip>:/export/vdbench_test /mnt/vdbench
 ----
 
-<b>Note:</b> Use either `nconnect` or session trunking (`trunkdiscovery`) with these options, but not both due to some unpredictable client behavior when combining them with pNFS.
+*Note:* Use either `nconnect` or session trunking (`trunkdiscovery`) with these options, but not both due to some unpredictable client behavior when combining them with pNFS.
 
 .Multi-path trunking (Linux kernel 6.3+ with trunkdiscovery)
 [source,bash]
@@ -196,7 +194,7 @@ To achieve a *5:1 dedupe ratio*, 80% of the data blocks must be duplicates and 2
 
 === Dedupe Parameters
 
-[%header,cols="2,1,4"]
+[cols="2,1,4"]
 |===
 | Parameter | Value | Purpose
 
@@ -717,7 +715,7 @@ done
 
 === Performance Targets
 
-[%header,cols="2,2,2,3"]
+[cols="2,2,2,3"]
 |===
 | Test Phase | Metric | Target | Pass Criteria
 
@@ -759,7 +757,7 @@ done
 
 === Data Efficiency Targets
 
-[%header,cols="2,3"]
+[cols="2,3"]
 |===
 | Metric | Target
 
@@ -775,7 +773,7 @@ done
 
 === Stability Criteria
 
-[%header,cols="2,4"]
+[cols="2,4"]
 |===
 | Metric | Criteria
 
@@ -794,7 +792,7 @@ done
 
 == Test Schedule
 
-[%header,cols="1,3,2,2"]
+[cols="1,3,2,2"]
 |===
 | Phase | Description | Duration | Cumulative
 
@@ -913,7 +911,7 @@ grep -v "^$\|Starting\|Vdbench" ${OUTDIR}/flatfile.html | \
 
 == Troubleshooting Guide
 
-[%header,cols="2,3,4"]
+[cols="2,3,4"]
 |===
 | Issue | Diagnosis | Resolution
 

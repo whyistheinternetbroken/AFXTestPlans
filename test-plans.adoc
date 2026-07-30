@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 xref:index.adoc[<- Back to Index]
 
@@ -20,12 +18,12 @@ The following sections outline the testing NetApp encourages customers complete 
 Test scenarios that are executed outside of these guidelines are fine and it is still of high value to provide the results of such tests. As such, in the document we have provided a blank test plan template in Appendix B which should be filled in for such tests containing all steps that were executed, results that were expected and that were achieved as well as collected data.
 All tests have a 'Comments' section. It is appreciated if any comments -- even those not directly related to the executed tests -- are provided as either part of the tests or separately.
 
-<b>Note:</b> Images in these test plans may differ from your actual lab environment. For questions, please reach out to your account team.
+*Note:* Images in these test plans may differ from your actual lab environment. For questions, please reach out to your account team.
 
 
 == Core Tests
 
-[%header,cols="1,3,1"]
+[cols="1,3,1"]
 |===
 | Test | Description | File
 
@@ -80,7 +78,7 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 
 == Optional Functional Tests
 
-[%header,cols="1,3,1"]
+[cols="1,3,1"]
 |===
 | Test | Description | File
 
@@ -103,7 +101,7 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 
 == New Feature Tests (ONTAP 9.19.1)
 
-[%header,cols="1,3,1"]
+[cols="1,3,1"]
 |===
 | Feature | Description | File
 

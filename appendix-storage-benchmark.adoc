@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 
 xref:appendix.adoc[â† Back to Appendix]
@@ -29,7 +27,7 @@ We will be using the SPEC SFS 2020 benchmark to simulate EDA frontend, backend a
 
 The following table shows the NFS operations involved in the SPECSFS 2020 benchmark.
 
-[%header,cols="1,1,1,1"]
+[cols="1,1,1,1"]
 |===
 | NFS operation distribution
 | Operation type | % | Operation type | %
@@ -49,7 +47,7 @@ The following table shows the NFS operations involved in the SPECSFS 2020 benchm
 |===
 
 
-<b>Note:</b> Due to the metadata-heavy nature of frontend EDA workloads, it is recommended to use NFSv3.
+*Note:* Due to the metadata-heavy nature of frontend EDA workloads, it is recommended to use NFSv3.
 
 
 [[backend-eda-workload-breakdown]]
@@ -57,7 +55,7 @@ The following table shows the NFS operations involved in the SPECSFS 2020 benchm
 
 The following table shows the NFS operations involved in the SPECSFS 2020 benchmark.
 
-[%header,cols="1,1,1,1"]
+[cols="1,1,1,1"]
 |===
 | NFS operation distribution
 | Operation type | % | Operation type | %
@@ -77,7 +75,7 @@ The following table shows the NFS operations involved in the SPECSFS 2020 benchm
 |===
 
 
-<b>Note:</b> Since backend EDA workloads are read/write heavy with very little metadata, it is worth using NFSv4.1 with pNFS and session trunking.
+*Note:* Since backend EDA workloads are read/write heavy with very little metadata, it is worth using NFSv4.1 with pNFS and session trunking.
 
 
 [[definition-of-relevant-operations-in-spec-sfs-2020]]
@@ -85,7 +83,7 @@ The following table shows the NFS operations involved in the SPECSFS 2020 benchm
 
 The following section attempts to define the operations mentioned in the frontend and backend workload sections above.
 
-[%header,cols="1,1"]
+[cols="1,1"]
 |===
 | Operation type | What it does
 | read | Sequential reads to an already open file.
@@ -123,10 +121,10 @@ We will be using the MLcommons benchmark leveraging DLIO.
 For installation/configuration, see here:
 https://github.com/mlcommons/storage
 
-<b>Note:</b> It is recommended to use Ubuntu 22 (latest version), but RHEL 9.x is also a possible version to use for clients.
+*Note:* It is recommended to use Ubuntu 22 (latest version), but RHEL 9.x is also a possible version to use for clients.
 
 
-<b>Note:</b> MLcommons updates fairly regularly. Their updates may outpace what is in this document. Use their site as a single source of truth.
+*Note:* MLcommons updates fairly regularly. Their updates may outpace what is in this document. Use their site as a single source of truth.
 
 
 [[about-mlcommons]]
@@ -150,7 +148,7 @@ There are two main advantages to accelerator emulation. First, MLPerf Storage al
 The VectorDB benchmark is designed to measure the performance and efficiency of vector databases, which are specialized systems optimized for storing, indexing, and querying high-dimensional vectors. These vectors are commonly used in machine learning applications such as recommendation systems, image retrieval, and natural language processing (NLP). This type of workload is generally comprised of random reads and writes to storage systems.
 MLcommons provides _datagen_ and _run-search_ options to perform this benchmark. The datagen portion will create a simulated dataset, while run-search will perform the vectorDB search benchmark test.
 
-<b>Note:</b> Because of how new vectorDB testing is for this benchmark suite (new as of v2.0), this EAP will not cover vectorDB search benchmarks.
+*Note:* Because of how new vectorDB testing is for this benchmark suite (new as of v2.0), this EAP will not cover vectorDB search benchmarks.
 
 
 [[about-checkpointing-in-mlcommons-benchmark]]
@@ -161,7 +159,7 @@ Checkpointing in AI/ML workloads is used to reduce the impact of progress lost i
 * Random reads for restoring from checkpoints
 * Metadata operations (mostly SETATTR)
 
-<b>Note:</b> Because of how new checkpoint testing is for this benchmark suite (new as of v2.0), this EAP will not cover checkpointing benchmarks
+*Note:* Because of how new checkpoint testing is for this benchmark suite (new as of v2.0), this EAP will not cover checkpointing benchmarks
 
 
 [[about-training-in-mlcommons-benchmark]]
@@ -240,7 +238,7 @@ Cosmoflow is a deep learning model that attempts to model the universe and predi
 The following table shows a breakdown of the NFS operations seen during a training run of each model. The point of this table is to help make decisions about how to best configure storage and clients for these benchmark runs.
 These were generated using default NFS mount options and a 1MB rsize.
 
-[%header,cols="1,1,1,1"]
+[cols="1,1,1,1"]
 |===
 | U-Net3D | Resnet50 | Cosmoflow
 | Number of files trained | 12000 | 2395 | 242954
@@ -262,7 +260,7 @@ These were generated using default NFS mount options and a 1MB rsize.
 
 The following table shows the incoming block sizes observed for each training workload test on a 1MB mount using default mount options.
 
-[%header,cols="1,1,1,1"]
+[cols="1,1,1,1"]
 |===
 | U-Net3D | Resnet50 | Cosmoflow
 | Number of files trained | 12000 | 2395 | 242954

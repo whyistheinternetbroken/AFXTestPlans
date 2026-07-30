@@ -1,12 +1,10 @@
-﻿= Appendix: Client Tuning Considerations
+﻿﻿﻿= Appendix: Client Tuning Considerations
 :toc: left
 :toclevels: 4
 :sectnums:
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 
 xref:appendix.adoc[â† Back to Appendix]
@@ -14,7 +12,7 @@ xref:appendix.adoc[â† Back to Appendix]
 Detailed NFS client tuning: rsize/wsize, close-to-open consistency, nconnect, and NFS readahead settings.
 
 
-<b>Note:</b> For client hardware specifications and NIC/OS tuning settings used in internal benchmarks, see xref:setup.adoc#clients[Setup: Clients].
+*Note:* For client hardware specifications and NIC/OS tuning settings used in internal benchmarks, see xref:setup.adoc#clients[Setup: Clients].
 
 
 [[client-tuning-considerations]]
@@ -94,7 +92,7 @@ The recommendation for this test plan is to use the _actimeo=600_ and _nocto_ mo
 
 Using the nconnect mount option allows you to specify the number of connections (network flows) that should be established between the NFS client and NFS endpoint up to a limit of 16. Traditionally, an NFS client uses a single connection between itself and the endpoint. Increasing the number of network flows can increase the upper limits of I/O and throughput significantly.
 
-<b>Note:</b> nconnect does not operate well with session trunking and pNFS.
+*Note:* nconnect does not operate well with session trunking and pNFS.
 
 
 [[recommendation]]
@@ -109,7 +107,7 @@ For workloads that leverage NFSv4.1 + pNFS + session trunking, nconnect is not a
 NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystems rsize. For details on rsize/wsize, see the section above.
 The following table shows the default read-ahead values for each given rsize mount option.
 
-[%header,cols="1,1"]
+[cols="1,1"]
 |===
 | Rsize value | Blocks read-ahead default
 | 64 KiB | 960 KiB
@@ -120,7 +118,7 @@ The following table shows the default read-ahead values for each given rsize mou
 RHEL 8.3 and Ubuntu 18.04 introduced changes that might negatively impact client sequential read performance. Unlike earlier releases, these distributions set read-ahead to a default of 128 KiB regardless of the rsize mount option used. Upgrading from releases with the larger read-ahead value to releases with the 128-KiB default experienced decreases in sequential read performance. However, read-ahead values may be tuned upward both dynamically and persistently. For example, testing found the 15,360 KiB read value optimal compared to 3,840 KiB, 960 KiB, and 128 KiB. Not enough tests have been run beyond 15,360 KiB to determine positive or negative impact.
 The following table shows the default read-ahead values for each currently available distribution.
 
-[%header,cols="1,1,1"]
+[cols="1,1,1"]
 |===
 | Distribution | Release | Blocks read-ahead default
 | RHEL | 8.3 | 128 KiB

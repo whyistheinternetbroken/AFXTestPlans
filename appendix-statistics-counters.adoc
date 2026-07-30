@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 
 xref:appendix.adoc[â† Back to Appendix]
@@ -24,7 +22,7 @@ This section lists relevant statistics counters for some of the sections listed 
 
 The following table defines the NFS operation types seen in ONTAP performance statistics and classifies them by metadata or IO.
 
-[%header,cols="1,1,1"]
+[cols="1,1,1"]
 |===
 | Operation | Use case | Category
 | ACCESS | Permission checks/verifcation of files/directory. | Metadata

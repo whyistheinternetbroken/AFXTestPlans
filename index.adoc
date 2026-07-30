@@ -63,13 +63,13 @@ This test plan is split into focused AsciiDoc files linked from this index. Use 
 
 == Consolidation and Cross-Link Notes
 
-<b>Note:</b> *NFS server configuration* is consolidated in xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration]. The performance test plan contains a cross-reference back to that section.
+*Note:* *NFS server configuration* is consolidated in xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration]. The performance test plan contains a cross-reference back to that section.
 
-<b>Note:</b> *Aggressive Readahead* appears in two sections of the original document (configuration + statistics). Both are preserved in xref:feature-aggressive-readahead.adoc[feature-aggressive-readahead.adoc] with a note explaining the overlap.
+*Note:* *Aggressive Readahead* appears in two sections of the original document (configuration + statistics). Both are preserved in xref:feature-aggressive-readahead.adoc[feature-aggressive-readahead.adoc] with a note explaining the overlap.
 
-<b>Note:</b> *Client tuning* spans two files: hardware/NIC/OS specs in xref:setup.adoc#clients[Setup: Clients] and detailed NFS parameter tuning in xref:appendix-client-tuning.adoc[Client Tuning]. Both are cross-linked.
+*Note:* *Client tuning* spans two files: hardware/NIC/OS specs in xref:setup.adoc#clients[Setup: Clients] and detailed NFS parameter tuning in xref:appendix-client-tuning.adoc[Client Tuning]. Both are cross-linked.
 
-<b>Note:</b> *Mount options* appear in both xref:performance-test-plan.adoc#mount-options[Performance Test Plan] (benchmark-specific options) and xref:appendix-nfs-considerations.adoc[NFS Considerations] (OS-specific NFSv3/NFSv4.1 recommendations, fstab, automounter). Both are preserved and cross-linked.
+*Note:* *Mount options* appear in both xref:performance-test-plan.adoc#mount-options[Performance Test Plan] (benchmark-specific options) and xref:appendix-nfs-considerations.adoc[NFS Considerations] (OS-specific NFSv3/NFSv4.1 recommendations, fstab, automounter). Both are preserved and cross-linked.
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===

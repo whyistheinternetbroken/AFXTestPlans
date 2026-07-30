@@ -5,8 +5,6 @@
 :icons: font
 :source-highlighter: highlight.js
 :doctype: book
-:stylesheet: styles/table-styling.css
-:stylesdir: .
 
 
 xref:test-plans.adoc[â† Back to Test Plans]
@@ -23,7 +21,7 @@ This optional test plan covers configuration of S3 for use with the datasets cre
 .Test ) OPTIONAL: S3 in ONTAP
 
 
-[%header,cols="1,1,1,1,1"]
+[cols="1,1,1,1,1"]
 |===
 | Section | Details
 | Test 14 | Tester: |  | Date: |
