@@ -70,7 +70,7 @@ NetApp AFX is compatible with the following data protocols:
 
 [cols="1,1,1"]
 |===
-| NFS | SMB | Object
+| *NFS* | *SMB* | *Object*
 
 a|
 * NFSv3
@@ -99,7 +99,7 @@ Most modern clients have support for specific NFS features that workloads runnin
 
 [cols="1,1,1,1"]
 |===
-| Feature | Purpose | NFSv3 | NFSv4.1+
+| *Feature* | *Purpose* | *NFSv3* | *NFSv4.1+*
 | Nconnect | Multiple TCP connections per single mount point for increased performance and scale. +
   +
 Nconnect + pNFS = OK +
@@ -148,7 +148,7 @@ The following table spells out specific limits and what their impact may be on t
 
 [cols="1,1,1"]
 |===
-| Limit | Value | Potential impact
+| *Limit* | *Value* | *Potential impact*
 | Maximum volume size | 100TB  +
 (`-is-large-size-enabled false`) +
  +
