@@ -155,6 +155,20 @@ AFX::*> nfs show -fields v4.1,v4-id-domain,v4.1-pnfs,v4.1-trunking,tcp-max-xfer-
 ----
 
 . The NFS server output should show:
++
+--
+* NFSv4.1 enabled status
+* NFSv4 ID domain
+* NFSv4.1 pNFS configuration
+* NFSv4.1 trunking status
+* TCP maximum transfer size
+* NFSv3 enabled status
+* NFSv3 64-bit identifier support
+* NFSv4 64-bit identifier support
+* NFSv4.1 read delegation settings
+* NFSv4.1 write delegation settings
+* RDMA support status
+--
 
 a| *Expected outcome(s):*
 
