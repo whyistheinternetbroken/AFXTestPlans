@@ -28,6 +28,8 @@ image::images/test-03-image-01.png[width=50%,link=images/test-03-image-01.png]
 image::images/test-03-image-02.png[width=50%,link=images/test-03-image-02.png]
 
 . Repeat the above step for each node. Create at least 2 data interfaces per node to provide paths for NFS session trunking. Alternately, use the LIF creation script found in the Appendix of this document.
++
+*Note:* Benchmarking networking scripts are available here: xref:scripts.adoc#nas-performance-benchmark-scripts-benchmarkingontap-repo[LIF creation and cleanup scripts].
 
 a| *Expected outcome(s):*
 

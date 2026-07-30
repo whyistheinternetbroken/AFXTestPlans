@@ -19,7 +19,7 @@ NetApp AFX makes some changes to how volumes are created and managed. This test 
 
 a| *Test procedure:*
 
-. Use the script found in the appendix to create a large number of volumes on the cluster. Review the location of the constituent volumes of the FlexGroup volumes. Note the balance of volume counts per node. Volume counts should be relatively evenly distributed (+/- 2).
+. Use the volume create script in xref:scripts.adoc#nas-performance-benchmark-scripts-benchmarkingontap-repo[Benchmarking/ONTAP volume scripts] to create a large number of volumes on the cluster. Review the location of the constituent volumes of the FlexGroup volumes. Note the balance of volume counts per node. Volume counts should be relatively evenly distributed (+/- 2).
 +
 [source,console]
 ----
@@ -47,18 +47,23 @@ AFX::*> set admin
 [source,console]
 ----
 AFX::> volume create -volume fg1 -aggr-list dataFA[tab] -aggr-list-multiplier 20
+Error: command failed: Aggregate "dataFA_2_p0_i1" cannot be used to create a volume on this platform.
 ----
 
-. Error: command failed: Aggregate "dataFA_2_p0_i1" cannot be used to create a volume on this platform.
-
-. Create a new FlexGroup volume on a specific node’s virtual aggregate using the -aggr-list-multiplier flag in diag priv. Use tab completion to suggest one of the virtual data aggregates.
+. Create a new FlexGroup volume on a specific node's virtual aggregate using the -aggr-list-multiplier flag in diag priv. Use tab completion to suggest one of the virtual data aggregates.
 +
 [source,console]
 ----
 AFX::> set diag
 AFX::*> volume create -volume fg1 -aggr-list dataFA[tab] -aggr-list-multiplier 20
-While NetApp AFX no longer leverages aggregates as a physical construct, there are still virtualized aggregates that “own” volumes. These provide a location for NVRAM commits to occur, since we still write the same way as unified ONTAP. By default, all volumes are created in the Storage Availability Zone and ONTAP handles the volume placement.
-View the volume count for each data aggregate after creating the FlexGroup volume. Note that the volumes counts are imbalanced.
+----
++
+While NetApp AFX no longer leverages aggregates as a physical construct, there are still virtualized aggregates that "own" volumes. These provide a location for NVRAM commits to occur, since we still write the same way as unified ONTAP. By default, all volumes are created in the Storage Availability Zone and ONTAP handles the volume placement.
++
+View the volume count for each data aggregate after creating the FlexGroup volume. Note that the volume counts are imbalanced.
++
+[source,console]
+----
 AFX::*> aggr show -aggregate data* -fields volcount
 aggregate      volcount
 -------------- --------
@@ -100,9 +105,7 @@ svm1    fg2    enabled
 rtp-afx1k-c01::*> set diag; vol modify -volume fg1 -atm-state enabled
 ----
 
-. After ~5 minutes, ONTAP runs a job that periodically rebalances the volume counts to even things out. You can either wait for that duration or manually start this process.
-
-. After ~5 minutes, we see this:
+. After ~5 minutes, ONTAP runs a job that periodically rebalances the volume counts to even things out. You can either wait for that duration or manually start this process. After ~5 minutes, we see this:
 +
 [source,console]
 ----
@@ -111,7 +114,12 @@ aggregate      node             volcount
 -------------- ---------------- --------
 dataFA_2_p0_i1 rtp-afx1k-c01-01 31
 dataFA_4_p0_i1 rtp-afx1k-c01-02 30
-To manually start the rebalance, a diag level command is used (and is not recommended to use on production workloads unless guided by NetApp support).
+----
++
+To manually start the rebalance, a diag-level command is used (and is not recommended on production workloads unless guided by NetApp support).
++
+[source,console]
+----
 AFX::> set diag
 AFX::*> debug smdb table atm_kick run
 ----

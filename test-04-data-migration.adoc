@@ -20,23 +20,37 @@ Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP s
 
 a| *Test procedure:*
 
+*Contents:*
+* <<t04-manage-intercluster-network-interfaces,Manage intercluster network interfaces (steps 1-8)>>
+* <<t04-cluster-and-svm-peering,Cluster and SVM peering (steps 9-16)>>
+* <<t04-establish-snapmirror-afx-to-unified-ontap,Establish SnapMirror from AFX to unified ONTAP (steps 17-20)>>
+* <<t04-create-snapmirror-cli-steps,Create SnapMirror - CLI steps (steps 21-25)>>
+* <<t04-verify-snapmirror-status-gui-steps,Verify SnapMirror status - GUI steps>>
+* <<t04-verify-snapmirror-status-cli-steps,Verify SnapMirror status - CLI steps>>
+* <<t04-break-the-snapmirror,Break the SnapMirror (steps 32-34)>>
+* <<t04-establish-snapmirror-from-unified-ontap-to-afx,Establish SnapMirror from unified ONTAP to AFX (steps 35-37)>>
+* <<t04-reverse-resync-snapmirror,Reverse resync SnapMirror (steps 38-40)>>
+
+[[t04-manage-intercluster-network-interfaces]]
+*Manage intercluster network interfaces*
+[start=1]
 . Ensure intercluster interfaces exist. Click Network -> Overview.
 +
 image::images/test-04-image-01.png[width=50%,link=images/test-04-image-01.png]
 
-. Click the magnifying glass to search for interfaces with the type of “intercluster.”
+. Click the magnifying glass to search for interfaces with the type of "intercluster."
 +
 image::images/test-04-image-02.png[width=50%,link=images/test-04-image-02.png]
 
-. Type “intercluster” in the search field to find any intercluster interfaces. If there are none, move on to the next step to create intercluster interfaces. If they do exist, move to the following step to set up the cluster peer.
+. Type "intercluster" in the search field to find any intercluster interfaces. If there are none, move on to the next step to create intercluster interfaces. If they do exist, move to the following step to set up the cluster peer.
 
-. Create intercluster interfaces (if they do not already exist) Each node in both clusters should have at least one intercluster interface.
+. Create intercluster interfaces (if they do not already exist). Each node in both clusters should have at least one intercluster interface.
 
-. Navigate to Protection -> Overview and click “Add network interfaces”.
+. Navigate to Protection -> Overview and click "Add network interfaces."
 +
 image::images/test-04-image-03.png[width=50%,link=images/test-04-image-03.png]
 
-. Configure the interfaces for each node, as shown below
+. Configure the interfaces for each node, as shown below.
 +
 image::images/test-04-image-04.png[width=50%,link=images/test-04-image-04.png]
 
@@ -44,124 +58,122 @@ image::images/test-04-image-04.png[width=50%,link=images/test-04-image-04.png]
 +
 image::images/test-04-image-05.png[width=50%,link=images/test-04-image-05.png]
 
-. Verify the interfaces have been created from the “Network interfaces overview.”
+. Verify the interfaces have been created from the "Network interfaces overview."
 +
 image::images/test-04-image-06.png[width=50%,link=images/test-04-image-06.png]
 +
 *Note:* If necessary, make any edits to interfaces here.
 
-. Add a cluster peer via System Manager on the source ONTAP cluster. Navigate to (Protection -> Overview)
+[[t04-cluster-and-svm-peering]]
+*Cluster and SVM peering*
+[start=9]
+. Add a cluster peer via System Manager on the source ONTAP cluster. Navigate to Protection -> Overview.
 +
 image::images/test-04-image-07.png[width=50%,link=images/test-04-image-07.png]
 
-. Click the  next to “Cluster peers” and click “Add cluster peers” or click  the “Add a cluster peer” button
-+
-image::images/test-04-image-08.png[width=50%,link=images/test-04-image-08.png]
+. Click the menu next to "Cluster peers" and click "Add cluster peers" or click the "Add a cluster peer" button.
 +
 image::images/test-04-image-09.png[width=50%,link=images/test-04-image-09.png]
 
-. To peer to a remote cluster, a passphrase will be needed. Click “Launch remote cluster.”
+. To peer to a remote cluster, a passphrase will be needed. Click "Launch remote cluster."
 +
 image::images/test-04-image-10.png[width=50%,link=images/test-04-image-10.png]
 
-. Add the remote cluster management IP address and click “Launch.”
+. Add the remote cluster management IP address and click "Launch."
 +
 image::images/test-04-image-11.png[width=50%,link=images/test-04-image-11.png]
 
-. Generate passphrase This will open a new window to the NetApp AFX cluster to generate a new passphrase for cluster peer authentication. From here, copy the passphrase and add it to the unified ONTAP system.
+. Generate passphrase. This will open a new window to the NetApp AFX cluster to generate a new passphrase for cluster peer authentication. From here, copy the passphrase and add it to the unified ONTAP system.
 +
 image::images/test-04-image-12.png[width=50%,link=images/test-04-image-12.png]
 
-. Add the passphrase Verify if the intercluster IP addresses for the NetApp AFX cluster are populated. If everything looks good, click “Initiate cluster peering.”
+. Add the passphrase. Verify the intercluster IP addresses for the NetApp AFX cluster are populated. If everything looks good, click "Initiate cluster peering."
 +
 image::images/test-04-image-13.png[width=50%,link=images/test-04-image-13.png]
 
-. Verify the cluster peer status If successful, you will see cluster peers listed under Protection -> Overview. Initially, the peer may show as “partial” with a red X next to the name. This can happen when the peer job is finishing. Eventually, the status should show a green check:
+. Verify the cluster peer status. If successful, you will see cluster peers listed under Protection -> Overview. Initially, the peer may show as "partial" with a red X next to the name. This can happen when the peer job is finishing. Eventually, the status should show a green check.
 +
 image::images/test-04-image-14.png[width=50%,link=images/test-04-image-14.png]
 
-. You can also check the cluster peer health from the command line.
+. Verify cluster and SVM peering status from the CLI.
 +
 [source,console]
 ----
 AFX::*> cluster peer health show
-Node       Cluster-Name                 Node-Name
-             Ping-Status               RDB-Health Cluster-Health Availability
----------- --------------------------- --------- --------------- ------------
-AFX-01
-           unified                     unified-01
-             Data: interface_reachable
-             ICMP: -                   true      true            true
-                                       unified-02
-             Data: interface_reachable
-             ICMP: -                   true      true            true
-AFX-02
-           unified                     unified-01
-             Data: interface_reachable
-             ICMP: -                   true      true            true
-                                       unified-02
-             Data: interface_reachable
-             ICMP: -                   true      true            true
-4 entries were displayed.
+AFX::*> vserver peer show
 ----
 
-. Establish SnapMirror from unified ONTAP to AFX. Use source volume with production datasets on unified ONTAP cluster to the NetApp AFX cluster. Navigate to the volume using the left menu. (Storage -> Volumes).
+[[t04-establish-snapmirror-afx-to-unified-ontap]]
+*Establish SnapMirror from AFX to unified ONTAP*
+[start=17]
+. Use a source volume with production datasets on the NetApp AFX cluster and replicate to the unified ONTAP cluster. Navigate to Storage -> Volumes.
 +
 image::images/test-04-image-15.png[width=50%,link=images/test-04-image-15.png]
 
-. Hover over the volume name and click the to expand the menu. Select “Protect”.
+. Hover over the volume name and click to expand the menu. Select "Protect."
 +
 image::images/test-04-image-16.png[width=50%,link=images/test-04-image-16.png]
 
-. Configure the SnapMirror settings and click “Protect”
+. Configure the SnapMirror settings and click "Protect."
 +
 image::images/test-04-image-17.png[width=50%,link=images/test-04-image-17.png]
 
-. If the above steps fail, you can attempt to create the relationship via the CLI.
+*Note:* If the above GUI steps fail, you can attempt to create the relationship via the CLI.
 
-. CLI Steps Check the constituent count on the source volume’s FlexGroup volume. SnapMirror of FlexGroup volumes will require identical constituent counts on source and destination.
+[[t04-create-snapmirror-cli-steps]]
+*Create SnapMirror - CLI steps*
+[start=21]
+. Check the constituent count on the source volume's FlexGroup volume. SnapMirror of FlexGroup volumes will require identical constituent counts on source and destination.
 +
 [source,console]
 ----
 AFX::> set advanced; volume show -vserver vs0 -volume dataset -fields constituent-count
 ----
 
-. Create a FlexGroup on the AFX cluster The volume will need the same number of constituent volumes + equal/greater size with a type of “DP.”
+. Create a FlexGroup on the destination cluster. The volume will need the same number of constituent volumes with equal/greater size and a type of "DP."
 +
 [source,console]
 ----
 AFX::> set advanced; vol create -volume dataset_dst -state online -size 2T -type DP -number-of-constituents [number from previous step]
 ----
 
-. Create the SnapMirror relationship
+. Create the SnapMirror relationship.
 +
 [source,console]
 ----
 AFX::> snapmirror create -source-path vs0:dataset -destination-path svm1:dataset_dst -vserver svm1 -throttle unlimited
 ----
 
-. Initialize the SnapMirror
+. Initialize the SnapMirror.
 +
 [source,console]
 ----
 AFX::> snapmirror initialize -destination-path svm1:dataset_dst
 ----
 
-. Verify replication is progressing and eventually completed. Optional: Leverage EMS to send email notification when SnapMirror job is completed.
+. Verify replication is progressing and eventually completed. Optional: leverage EMS to send email notification when the SnapMirror job is completed.
 
-. GUI steps Navigate to Protection -> Replication
+[[t04-verify-snapmirror-status-gui-steps]]
+*Verify SnapMirror status*
+
+*GUI steps:*
+[start=1]
+. Navigate to Protection -> Replication.
 +
 image::images/test-04-image-18.png[width=50%,link=images/test-04-image-18.png]
 
-. Click on the SnapMirror relationship
+. Click on the SnapMirror relationship.
 +
 image::images/test-04-image-19.png[width=50%,link=images/test-04-image-19.png]
 
-. Verify the status Is it healthy? What state is it in? What was the last transfer status?
+. Verify the status (health, state, and last transfer status).
 +
 image::images/test-04-image-20.png[width=50%,link=images/test-04-image-20.png]
 
-. CLI Steps
+[[t04-verify-snapmirror-status-cli-steps]]
+*CLI steps:*
+[start=1]
+. Check the current snapmirror status.
 +
 [source,console]
 ----
@@ -179,11 +191,6 @@ vs0:dataset XDP  svm1:dataset_dst
 +
 [source,console]
 ----
-Source and destination datasets can be compared via the CLI to see if the file counts are identical. This is an inexact science, but is useful for a start.
-----
-+
-[source,console]
-----
 unified::*> vol show -vserver vs0 -volume dataset -fields files-used
 vserver volume  files-used
 ------- ------- ----------
@@ -194,46 +201,51 @@ vserver volume      files-used
 svm1    dataset_dst 78001
 ----
 
-. Compare contents/checksums For a more accurate comparison, you will need to compare the actual contents of the volumes. For NFS, you can do that by mounting both volumes and running a diff command on the NFS client. For the source volume, the last common snapshot should be used as the path.
+. Compare contents/checksums. For a more accurate comparison, compare the actual contents of both volumes.
 +
 [source,console]
 ----
 # mount /unifiedONTAPvol
 # mount /AFXONTAPvol
 # diff -r unifiedONTAPvol/.snapshot/lastcommonsnap/ AFXONTAPvol/
-The command can take considerable time (depending on file count and size), as it will read the entirety of the files. But if both volumes are identical, you should see no differences in the listings. If you wish to avoid this potentially lengthy step, use the files used count comparisons from the vol show command.
 ----
++
+The command can take considerable time (depending on file count and size), as it reads the entirety of the files. If both volumes are identical, you should see no differences in the listings. If you wish to avoid this potentially lengthy step, use the files-used count comparison from `vol show`.
 
-. Break the SnapMirror relationship and test ability to access and write to destination volume on NetApp AFX. From the NetApp AFX System Manager GUI, navigate to Protection -> Replication.
+[[t04-break-the-snapmirror]]
+*Break the SnapMirror*
+[start=32]
+. From NetApp AFX System Manager, navigate to Protection -> Replication.
 +
 image::images/test-04-image-21.png[width=50%,link=images/test-04-image-21.png]
 
-. Hover over the relationship and use the  to expand the menu. Select “Break.”
+. Hover over the relationship and expand the menu. Select "Break."
 +
 image::images/test-04-image-22.png[width=50%,link=images/test-04-image-22.png]
 
-. Confirm the details and click “Break.”
+. Confirm the details and click "Break."
 +
 image::images/test-04-image-23.png[width=50%,link=images/test-04-image-23.png]
 
-. Establish a SnapMirror from NetApp AFX to unified ONTAP with DR/backup as a goal. There are two ways to achieve this goal. One way is to create a separate, brand new SnapMirror to a new destination volume. The other way is to initiate a “reverse resync,” which will re-use the original source volume. The below covers both steps. You can perform both or you can choose one.
-+
-[source,console]
-----
-Destination ONTAP cluster will need to be on 9.16.1 or later to allow Advanced Capacity Balancing to be enabled. If it’s not possible to use a destination unified ONTAP cluster, use the NetApp AFX cluster as the destination instead.
-New SnapMirror steps
-Navigate to Storage -> Volumes
-----
+[[t04-establish-snapmirror-from-unified-ontap-to-afx]]
+*Establish SnapMirror from unified ONTAP to AFX*
+[start=35]
+. Start a new SnapMirror from unified ONTAP to NetApp AFX for DR/backup testing.
 
-. Hover over the volume name and click the to expand the menu. Select “Protect”.
+*Note:* Destination ONTAP cluster will need to be on 9.16.1 or later to allow Advanced Capacity Balancing to be enabled. If it's not possible to use a destination unified ONTAP cluster, use the NetApp AFX cluster as the destination instead.
 
-. Review the options and click “Protect.”
+. New SnapMirror steps: Navigate to Storage -> Volumes, hover over the volume name, and select "Protect."
 +
 image::images/test-04-image-24.png[width=50%,link=images/test-04-image-24.png]
 
-. Reverse Resync steps: Navigate to Protection -> Replication.
+. Review the options and click "Protect."
 
-. Hover over the relationship and use the  to expand the menu. Select “Reverse Resync.”
+[[t04-reverse-resync-snapmirror]]
+*Reverse resync SnapMirror*
+[start=38]
+. Navigate to Protection -> Replication.
+
+. Hover over the relationship and expand the menu. Select "Reverse Resync."
 +
 image::images/test-04-image-25.png[width=50%,link=images/test-04-image-25.png]
 
