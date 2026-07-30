@@ -70,7 +70,7 @@ An alternative method of leveraging industry standard benchmarks for the workloa
 
 NetApp AFX is compatible with the following data protocols:
 
-[%header,cols="1,1,1"]
+[cols="1,1,1",options="header",stripes=none]
 |===
 | NFS | SMB | Object
 
@@ -88,7 +88,7 @@ a|
 * File / object multiprotocol (present an existing NAS volume as an S3 bucket)
 |===
 
-<b>Note:</b> As mentioned previously, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
+*Note:* As mentioned previously, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
 
 
 [[recommended-nas-protocol-features]]
@@ -96,10 +96,10 @@ a|
 
 Most modern clients have support for specific NFS features that workloads running on NetApp AFX systems can leverage and benefit from.
 
-<b>Note:</b> When using NFSv4.x, use only NFSv4.1 and later.
+*Note:* When using NFSv4.x, use only NFSv4.1 and later.
 
 
-[%header,cols="1,1,1,1"]
+[cols="1,1,1,1",options="header",stripes=none]
 |===
 | Feature | Purpose | NFSv3 | NFSv4.1+
 | Nconnect | Multiple TCP connections per single mount point for increased performance and scale. +
@@ -148,7 +148,7 @@ link:https://docs.netapp.com/us-en/ontap/s3-config/index.html[Learn about S3 con
 NetApp AFX runs ONTAP, and because of that, you need to be aware of what file system limits are present in ONTAP, since testing/benchmarking can run into errors if these limits are reached.
 The following table spells out specific limits and what their impact may be on testing. The test plans attempt to build most of these into the tests to avoid unforeseen issues. For more information, see the Performance testing configuration section.
 
-[%header,cols="1,1,1"]
+[cols="1,1,1",options="header",stripes=none]
 |===
 | Limit | Value | Potential impact
 | Maximum volume size | 100TB  +
