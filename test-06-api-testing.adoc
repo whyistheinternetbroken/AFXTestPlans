@@ -32,8 +32,6 @@ a| *Expected outcome(s):*
 * The same REST API calls are tested against NetApp AFX and are successful, with the exception of SAN-related and aggregate-related calls.
 |===
 
-*Note:* Performance testing configuration companion content for Tests 7 and 8 is available in xref:test-07-08-performance-testing-configuration.adoc[Performance testing configuration (Tests 7 and 8)].
-
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
