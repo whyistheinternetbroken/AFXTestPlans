@@ -10,6 +10,8 @@ xref:test-plans.adoc[<- Back to Test Plans]
 
 This page is a companion for Test 7 (real data workloads) and Test 8 (benchmark workloads).
 
+*Note:* NAS benchmarking scripts (volume creation, LIF management, client tuning) are available in the xref:scripts.adoc#nas-performance-benchmark-scripts-benchmarkingontap-repo[Benchmarking/ONTAP scripts] page.
+
 [[performance-testing-configuration]]
 == Performance testing configuration
 
