@@ -46,7 +46,9 @@ The following section covers volume creation/configuration considerations and sh
 [cols="1,1"]
 |===
 | *Volume type* | *FlexGroup*
-| Creation method | CLI +
+| Creation method
+a| CLI
+
 [source,console]
 ----
 set diag; vol create -vserver [SVM] -volume [name] -size [size] -junction-path [/path] -unix-permissions 777 -files-set-maximum true -maxdir-size 4G -is-large-size-enabled true -snapshot-policy none -autosize-mode grow_shrink -policy [data policy] -snapdir-access false
