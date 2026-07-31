@@ -46,39 +46,42 @@ LOADER> boot_ontap menu
 +
 [source,console]
 ----
- (1) Normal Boot. (2) Boot without /etc/rc. (3) Change password. (4) Initialize and configure system. (5) Maintenance mode boot. (6) Update flash from backup config. (7) Install new software first. (8) Reboot node. (9) Clean System Configuration. (10) Set Onboard Key Manager recovery secrets. (11) Configure node for external key management. Selection (1-11)? 4
+ (1) Normal Boot. 
+ (2) Boot without /etc/rc.
+ (3) Change password. 
+ (4) Initialize and configure system. 
+ (5) Maintenance mode boot. 
+ (6) Update flash from backup config. 
+ (7) Install new software first. 
+ (8) Reboot node. 
+ (9) Clean System Configuration. 
+ (10) Set Onboard Key Manager recovery secrets. 
+ (11) Configure node for external key management. 
+Selection (1-11)? 4
 ----
 
 5. If prompted, type yes.
 +
 [source,console]
 ----
-WARNING: This node may not have been properly unjoined from an existing cluster, please confirm before using option (4)
-----
-+
-[source,console]
-----
 WARNING: This node may not have been properly unjoined from an existing cluster. Please confirm before continuing with option 4.
 Zero disks, reset config and install a new file system?: yes
 If you get sent back to LOADER from here, type boot_ontap at the LOADER prompt
-----
 
-6. Use the cluster setup wizard to configure a node management LIF/subnet/gateway. This will be used by System Manager to detect the node for addition into the cluster.
+Use the cluster setup wizard to configure a node management LIF/subnet/gateway. This will be used by System Manager to detect the node for addition into the cluster.
 
-7. At the setup wizard prompts, you can enter the following commands at any time: "help" or "?" if you want to have a question clarified, "back" if you want to change previously answered questions, and "exit" or "quit" if you want to quit the cluster setup wizard.
+At the setup wizard prompts, you can enter the following commands at any time: "help" or "?" if you want to have a question clarified, "back" if you want to change previously answered questions, and "exit" or "quit" if you want to quit the cluster setup wizard.
 
-8. You can return to cluster setup at any time by typing "cluster setup". To accept a default or omit a question, do not enter a value.
+You can return to cluster setup at any time by typing "cluster setup". To accept a default or omit a question, do not enter a value.
 
-9. This system will send event messages and periodic reports to NetApp Technical Support. To disable this feature, enter autosupport modify -support disable within 24 hours.
+This system will send event messages and periodic reports to NetApp Technical Support. To disable this feature, enter autosupport modify -support disable within 24 hours.
 
-10. Type yes to confirm and continue {yes}: yes May 16 02:26:09 [localhost:asup.general.optout:notice]: AutoSupport will be enabled 24 hours after system initialization.
+Type yes to confirm and continue {yes}: yes May 16 02:26:09 [localhost:asup.general.optout:notice]: AutoSupport will be enabled 24 hours after system initialization.
 
-11. Enter the node management interface port [e0M], IP address (10.232.12.128), netmask (255.255.254.0), and default gateway (10.232.12.1).
+Enter the node management interface port [e0M], IP address (10.232.12.128), netmask (255.255.254.0), and default gateway (10.232.12.1).
 
-12. Press CTL+C and enter the cluster CLI to modify the cluster interconnect IP addresses, as they auto create and may not be routable on your network. If you get a login: prompt, use admin. In most cases, you can leave these as defaults.
-+
-[source,console]
-----
+Press CTL+C and enter the cluster CLI to modify the cluster interconnect IP addresses, as they auto create and may not be routable on your network. If you get a login: prompt, use admin. In most cases, you can leave these as defaults.
+
 ::> net int show -role cluster
   (network interface show)
              Logical    Status     Network            Current       Current Is
@@ -88,37 +91,31 @@ Cluster
              clus1        up/up    169.254.118.206/16 localhost     e7a     true
              clus2        up/up    169.254.220.172/16 localhost     e7b     true
 2 entries were displayed.
-----
-+
-[source,console]
-----
+
 ::> net int modify -vserver Cluster -lif clus1 -address 192.168.76.222
   (network interface modify)
-----
-+
-[source,console]
-----
+
 ::> net int modify -vserver Cluster -lif clus2 -address 192.168.76.226
   (network interface modify)
 ----
 
-13. Repeat the above setup steps on the other NetApp AFX node(s).
+6. Repeat the above setup steps on the other NetApp AFX node(s).
 
-14. From here, access the System Manager window via the cluster management IP. Navigate to Cluster -> Overview and click on the "Nodes" tab.
+7. From here, access the System Manager window via the cluster management IP. Navigate to Cluster -> Overview and click on the "Nodes" tab.
 +
-image::images/test-11-image-01.png[width=50%,link=images/test-11-image-01.png]
+image::images/test-11-image-01.png[width=25%,link=images/test-11-image-01.png]
 
-15. At the bottom of the page, you should see a section called "Not part of this cluster" and your new nodes below that. Click "+ Add" to add the node to the cluster. If the GUI addition does not work, try the CLI command cluster add-node instead.
+8. At the bottom of the page, you should see a section called "Not part of this cluster" and your new nodes below that. Click "+ Add" to add the node to the cluster. If the GUI addition does not work, try the CLI command cluster add-node instead.
 +
 image::images/test-11-image-02.png[width=25%,link=images/test-11-image-02.png]
 
-16. Use the "Add nodes" screen to fill in your information. Management IP addresses can be added manually or by using a subnet.
+9. Use the "Add nodes" screen to fill in your information. Management IP addresses can be added manually or by using a subnet.
 +
 image::images/test-11-image-03.png[width=25%,link=images/test-11-image-03.png]
 +
 image::images/test-11-image-04.png[width=25%,link=images/test-11-image-04.png]
 
-17. Log into the cluster CLI. Monitor the node add status.
+10. Log into the cluster CLI. Monitor the node add status.
 +
 [source,console]
 ----
@@ -133,9 +130,9 @@ AFX-02           192.168.76.224      success
 4 entries were displayed.
 ----
 
-18. OPTIONAL: Log into the system console of the nodes being added via the service processor and observe the steps being performed.
+11. OPTIONAL: Log into the system console of the nodes being added via the service processor and observe the steps being performed.
 
-19. Once the node adds have completed, check the volume placement across all nodes.
+12. Once the node adds have completed, check the volume placement across all nodes.
 +
 [source,console]
 ----
@@ -146,9 +143,9 @@ AFX::*> vol show -fields node,size,constituent-count -is-constituent true -node 
 AFX::*> vol show -fields node,size,constituent-count -is-constituent true -node AFX-04
 ----
 
-20. Eventually, volumes should be distributed evenly across all nodes. Check back every 5 minutes or so. If disks are unavailable to one of the nodes (i.e., bad switch config, bad cabling, card issues), then nodes will not add properly. If the node does not have two healthy cluster LIFs (i.e., a cluster port is down), the node will not add properly.
+13. Eventually, volumes should be distributed evenly across all nodes. Check back every 5 minutes or so. If disks are unavailable to one of the nodes (i.e., bad switch config, bad cabling, card issues), then nodes will not add properly. If the node does not have two healthy cluster LIFs (i.e., a cluster port is down), the node will not add properly.
 
-21. Add/configure new network interfaces for your SVM on a per-node basis to add performance to the workload. Add at least one per node for NFSv3 and at least two per node if using NFSv4.x.
+14. Add/configure new network interfaces for your SVM on a per-node basis to add performance to the workload. Add at least one per node for NFSv3 and at least two per node if using NFSv4.x.
 +
 [source,console]
 ----
@@ -157,7 +154,7 @@ AFX::> net int create -vserver [SVM] -lif [name] -address [10.10.10.10] -netmask
 AFX::> net int create -vserver [SVM] -lif [name] -address [10.10.10.10] -netmask [255.255.255.0] -home-node [node4] -home-port [port] -rdma-protocols [optional] -broadcast-domain [optional]
 ----
 
-22. If you are using pNFS, clear the device caches to ensure the new interfaces get picked up.
+16. If you are using pNFS, clear the device caches to ensure the new interfaces get picked up.
 +
 [source,console]
 ----
@@ -167,7 +164,7 @@ AFX::*> pnfs devices cache flush -node * -vserver [SVM1]
 AFX::*> pnfs devices invalidate -global-device-table-id *
 ----
 
-23. Verify if performance has increased for the currently running workload (throughput, CPU utilization, IOPS, etc.).
+17. Verify if performance has increased for the currently running workload (throughput, CPU utilization, IOPS, etc.).
 +
 [source,console]
 ----
