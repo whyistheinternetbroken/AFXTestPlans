@@ -198,7 +198,9 @@ aggr efficiency modify -aggregate data* -cross-volume-background-dedupe false -c
 aggr efficiency wise-tsse modify -aggregate data* -enable-workload-informed-tsse false
 ----
 
-*Note:* Aggressive Readahead feature configuration, caveats, and statistics are covered in xref:feature-aggressive-readahead.adoc[Aggressive Readahead Feature Test].
+=== Aggressive readahead
+
+Aggressive readahead can help improve read performance for specific workloads (such as sequentially named files). For feature configuration, caveats, and statistics are covered in xref:feature-aggressive-readahead.adoc[Aggressive Readahead Feature Test].
 
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
