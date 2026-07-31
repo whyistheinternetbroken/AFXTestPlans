@@ -69,11 +69,11 @@ image::images/test-04-image-06.png[width=50%,link=images/test-04-image-06.png]
 [start=1]
 . Add a cluster peer via System Manager on the source ONTAP cluster. Navigate to Protection -> Overview.
 +
-image::images/test-04-image-07.png[width=25%,link=images/test-04-image-07.png]
+image::images/test-04-image-07.png[width=20%,link=images/test-04-image-07.png]
 
 . Click the menu next to "Cluster peers" and click "Add cluster peers" or click the "Add a cluster peer" button.
 +
-image::images/test-04-image-09.png[width=50%,link=images/test-04-image-09.png]
+image::images/test-04-image-09.png[width=25%,link=images/test-04-image-09.png]
 
 . To peer to a remote cluster, a passphrase will be needed. Click "Launch remote cluster."
 +
@@ -93,7 +93,7 @@ image::images/test-04-image-13.png[width=25%,link=images/test-04-image-13.png]
 
 . Verify the cluster peer status. If successful, you will see cluster peers listed under Protection -> Overview. Initially, the peer may show as "partial" with a red X next to the name. This can happen when the peer job is finishing. Eventually, the status should show a green check.
 +
-image::images/test-04-image-14.png[width=25%,link=images/test-04-image-14.png]
+image::images/test-04-image-14.png[width=20%,link=images/test-04-image-14.png]
 
 . Verify cluster and SVM peering status from the CLI.
 +
@@ -164,7 +164,7 @@ image::images/test-04-image-18.png[width=10%,link=images/test-04-image-18.png]
 
 . Click on the SnapMirror relationship.
 +
-image::images/test-04-image-19.png[width=50%,link=images/test-04-image-19.png]
+image::images/test-04-image-19.png[width=25%,link=images/test-04-image-19.png]
 
 . Verify the status (health, state, and last transfer status).
 +
