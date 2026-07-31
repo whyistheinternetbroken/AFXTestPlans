@@ -38,7 +38,7 @@ image::images/test-08-image-02.png[width=25%,link=images/test-08-image-02.png]
 
 . Enter the volume name, capacity and select “High throughput” to create a FlexGroup
 +
-image::images/test-08-image-03.png[width=50%,link=images/test-08-image-03.png]
+image::images/test-08-image-03.png[width=25%,link=images/test-08-image-03.png]
 
 . Optionally, click “More options” to disable/enable data protection features and add export policies and rules
 +
