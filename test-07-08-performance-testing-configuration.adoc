@@ -143,7 +143,8 @@ The client configuration used for our internal benchmarking is covered in the Cl
 [[nfs-readahead]]
 === NFS readahead
 
-From:
+From: https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-nfs-read-ahead
+
 _NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystems rsize._
 _RHEL 8.3 and Ubuntu 18.04 introduced changes that might negatively impact client sequential read performance. Unlike earlier releases, these distributions set read-ahead to a default of 128 KiB regardless of the rsize mount option used. Upgrading from releases with the larger read-ahead value to releases with the 128-KiB default experienced decreases in sequential read performance. However, read-ahead values may be tuned upward both dynamically and persistently. For example, testing with SAS GRID found the 15,360 KiB read value optimal compared to 3,840 KiB, 960 KiB, and 128 KiB. Not enough tests have been run beyond 15,360 KiB to determine positive or negative impact._
 For steps on how to view/set NFS readahead values, see:
