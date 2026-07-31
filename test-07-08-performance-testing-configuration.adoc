@@ -45,7 +45,7 @@ The following section covers volume creation/configuration considerations and sh
 
 [cols="1,1"]
 |===
-| Volume type | FlexGroup
+| *Volume type* | *FlexGroup*
 | Creation method | CLI +
 [source,console]
 ----
