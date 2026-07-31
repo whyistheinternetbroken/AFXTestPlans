@@ -118,11 +118,11 @@ rdma,write=eager
 
 Some workloads might benefit from special mount options during benchmark tests. The following table shows some of those options and what use cases might see performance improvements.
 
-.Alternate NFS mount options and their use cases
+*Alternate NFS mount options and their use cases*
 
 [cols="1,1,1"]
 |===
-| NFS mount option | Description | Use case
+| *NFS mount option* | *Description* | *Use case*
 | nocto | Disables "close-to-open" cache consistency. The client will not revalidate cached file attributes when a file is opened, relying instead on cached data even if it may be stale. | Read-heavy, single-client workloads where files rarely change (e.g., static web content, software libraries, read-only media archives). Not suitable for multi-client writes.
 | cto | Enables close-to-open cache consistency (default). When a file is opened, the client checks with the server to ensure its cached copy is still valid. Guarantees that a file closed on one client is seen as up-to-date when opened on another. | Multi-client shared access workloads where data consistency matters (e.g., shared home directories, collaborative development environments).
 | actimeo | Sets all attribute cache timeouts (acregmin, acregmax, acdirmin, acdirmax) to a single value in seconds. Controls how long the client trusts cached file/directory metadata before revalidating with the server. | Simplifying tuning when you want a uniform caching policy. High values benefit read-heavy/static workloads; low values (e.g., actimeo=0) suit rapidly changing data needing near-real-time consistency.
