@@ -38,20 +38,18 @@ AFX::*> vol show -fields node,size,constituent-count -is-constituent true -node 
 To access the node's console: 
 [source,console]
 ----
-BMC> system console to access the node’s console. 
+BMC> system console
 ----
 
 If the node is not at the LOADER prompt, you can use ctl+d to exit to the BMC/service processor prompt and type “system reset” then answer y for dirty shutdown, then “system console” to watch the boot process. 
 
 Hit ctl+c when you see the “interrupt Autoboot” message. Once at the LOADER prompt, run the following: 
-+
 [source,console]
 ----
 LOADER> set-defaults setenv bootarg.init.unjoined true saveenv 
 ----
 
 Then, boot the node to the boot menu prompt.
-+
 [source,console]
 ----
 LOADER> boot_ontap menu
@@ -72,7 +70,6 @@ Select option 4 from the menu. Please choose one of the following:
 Selection (1-11)? 4
 ----
 . If prompted, type yes:
-+
 [source,console]
 ----
 WARNING: This node may not have been properly unjoined from an existing cluster,                                                                              please confirm before using option (4)
