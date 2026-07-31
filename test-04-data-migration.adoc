@@ -36,7 +36,7 @@ a|
 [start=1]
 . Ensure intercluster interfaces exist. Click Network -> Overview.
 +
-image::images/test-04-image-01.png[width=25%,link=images/test-04-image-01.png]
+image::images/test-04-image-01.png[width=20%,link=images/test-04-image-01.png]
 
 . Click the magnifying glass to search for interfaces with the type of "intercluster."
 +
@@ -85,11 +85,11 @@ image::images/test-04-image-11.png[width=25%,link=images/test-04-image-11.png]
 
 . Generate passphrase. This will open a new window to the NetApp AFX cluster to generate a new passphrase for cluster peer authentication. From here, copy the passphrase and add it to the unified ONTAP system.
 +
-image::images/test-04-image-12.png[width=50%,link=images/test-04-image-12.png]
+image::images/test-04-image-12.png[width=25%,link=images/test-04-image-12.png]
 
 . Add the passphrase. Verify the intercluster IP addresses for the NetApp AFX cluster are populated. If everything looks good, click "Initiate cluster peering."
 +
-image::images/test-04-image-13.png[width=50%,link=images/test-04-image-13.png]
+image::images/test-04-image-13.png[width=25%,link=images/test-04-image-13.png]
 
 . Verify the cluster peer status. If successful, you will see cluster peers listed under Protection -> Overview. Initially, the peer may show as "partial" with a red X next to the name. This can happen when the peer job is finishing. Eventually, the status should show a green check.
 +
