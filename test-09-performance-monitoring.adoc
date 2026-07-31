@@ -66,14 +66,16 @@ Workload            ID     IOPS       Throughput    Latency
 -total-              -      854       838.93MB/s  1178.00us
 -total-              -      586       561.70MB/s  1190.00us
 -total-              -     1005       985.07MB/s  1177.00us
-Collect protocol-level statistics during performance tests.
-Performance tests can be real data or benchmarks.
+---
+
+. Collect protocol-level statistics during performance tests.
+*Note:* Performance tests can be real data or benchmarks.
 From the command line, you can run “statistics start” to begin a stats collection during a specific job run. For this example, we will collect NFSv4.1 statistics. You can run these statistics at any time, but it is best to run these before starting a benchmark or data workload and then stopping them when the job is complete. These commands can be run in advanced privilege.
-AFX::> set advanced -confirmations off
-----
 
 [source,console]
 ----
+AFX::> set advanced -confirmations off
+
 AFX::*> statistics start -object nfsv4_1 -vserver svm1 -sample-id unet3d_datagen
 Statistics collection is being started for sample-id: unet3d_datagen
 ----
