@@ -56,7 +56,7 @@ Maximums:
    8%  14%      907      907        0        0      795    785MB   2.89MB   2%    784MB   2.59MB      0%    337KB    307KB    109MB    341MB   542564    39790
 ----
 
-. For volume-level:
+*For volume-level:*
 +
 [source,console]
 ----
