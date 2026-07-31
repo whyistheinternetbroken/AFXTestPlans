@@ -266,6 +266,7 @@ operations.
 
 When you see "layoutget_total" incrementing, that means pNFS is sending and receiving device layouts to connected clients.
 
+[%nowrap]
 [source,console]
 ----
 rtp-a70-c01::*> set advanced -confirmations off; statistics show -object nfsv4_1 -counter *layout* -sample-id sample_1393185
@@ -306,6 +307,7 @@ Number of Nfsv4.1 clients using session trunking
 
 When you see "nfsv4_1_clients_using_session_trunking" values, that tells you how many clients are leveraging session trunks.
 
+[%nowrap]
 [source,console]
 ----
 AFX::*> set advanced -confirmations off; statistics show -object nfsv4_1_diag -counter *session*
