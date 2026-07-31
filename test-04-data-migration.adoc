@@ -81,7 +81,7 @@ image::images/test-04-image-10.png[width=50%,link=images/test-04-image-10.png]
 
 . Add the remote cluster management IP address and click "Launch."
 +
-image::images/test-04-image-11.png[width=50%,link=images/test-04-image-11.png]
+image::images/test-04-image-11.png[width=25%,link=images/test-04-image-11.png]
 
 . Generate passphrase. This will open a new window to the NetApp AFX cluster to generate a new passphrase for cluster peer authentication. From here, copy the passphrase and add it to the unified ONTAP system.
 +
@@ -112,7 +112,7 @@ image::images/test-04-image-15.png[width=25%,link=images/test-04-image-15.png]
 
 . Hover over the volume name and click to expand the menu. Select "Protect."
 +
-image::images/test-04-image-16.png[width=50%,link=images/test-04-image-16.png]
+image::images/test-04-image-16.png[width=25%,link=images/test-04-image-16.png]
 
 . Configure the SnapMirror settings and click "Protect."
 +
@@ -217,11 +217,11 @@ The command can take considerable time (depending on file count and size), as it
 [start=1]
 . From NetApp AFX System Manager, navigate to Protection -> Replication.
 +
-image::images/test-04-image-21.png[width=25%,link=images/test-04-image-21.png]
+image::images/test-04-image-21.png[width=1o%,link=images/test-04-image-21.png]
 
 . Hover over the relationship and expand the menu. Select "Break."
 +
-image::images/test-04-image-22.png[width=50%,link=images/test-04-image-22.png]
+image::images/test-04-image-22.png[width=25%,link=images/test-04-image-22.png]
 
 . Confirm the details and click "Break."
 +
