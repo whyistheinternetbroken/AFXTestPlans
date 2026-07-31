@@ -47,15 +47,18 @@ The following section covers volume creation/configuration considerations and sh
 |===
 | Volume type | FlexGroup
 | Creation method | CLI +
+[source,console]
+----
 set diag; vol create -vserver [SVM] -volume [name] -size [size] -junction-path [/path] -unix-permissions 777 -files-set-maximum true -maxdir-size 4G -is-large-size-enabled true -snapshot-policy none -autosize-mode grow_shrink -policy [data policy] -snapdir-access false
-| Defaults changed | Snapshot policy disabled +
-Maxfiles increased +
-Maxdirsize increased +
-Large size enabled +
-Autosize enabled +
-UNIX permissions 777 +
-File System Analytics disabled +
-Snapdir access false
+----
+| Defaults changed | * Snapshot policy disabled +
+* Maxfiles increased +
+* Maxdirsize increased +
+* Large size enabled +
+* Autosize enabled +
+* UNIX permissions 777 +
+* File System Analytics disabled +
+* Snapdir access false
 |===
 
 [[special-considerations----flexgroup-volumes]]
