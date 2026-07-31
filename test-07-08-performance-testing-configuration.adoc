@@ -21,14 +21,15 @@ Performance testing is generally intended to find the edges of what a system can
 Export policies in ONTAP are how access to NFS exports are controlled. Every volume requires an export policy to be set, with rules configured in the policy. If no rules are configured in a policy, that will be considered as "no access."
 For performance benchmarking, we are likely less concerned with permissions to the clients being used for testing and instead would like to avoid any permission-related errors.
 As a result, it is recommended to ensure that any export policy rule is set to wide-open access for the data volume, but only to the clients being used to access datasets. In addition, the vsroot policy *must* allow read access in the policy for path traversal.
-vsroot policy (uses "default" policy)
+
+*vsroot policy (uses "default" policy)*
 
 [source,console]
 ----
 export-policy rule create -policyname default -clientmatch 0/0 -rorule any -rwrule never
 ----
 
-data volume policy
+*data volume policy*
 
 [source,console]
 ----
