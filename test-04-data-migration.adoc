@@ -160,7 +160,7 @@ AFX::> snapmirror initialize -destination-path svm1:dataset_dst
 [start=1]
 . Navigate to Protection -> Replication.
 +
-image::images/test-04-image-18.png[width=25%,link=images/test-04-image-18.png]
+image::images/test-04-image-18.png[width=10%,link=images/test-04-image-18.png]
 
 . Click on the SnapMirror relationship.
 +
@@ -225,7 +225,7 @@ image::images/test-04-image-22.png[width=25%,link=images/test-04-image-22.png]
 
 . Confirm the details and click "Break."
 +
-image::images/test-04-image-23.png[width=50%,link=images/test-04-image-23.png]
+image::images/test-04-image-23.png[width=25%,link=images/test-04-image-23.png]
 
 [[t04-establish-snapmirror-from-unified-ontap-to-afx]]
 *Establish SnapMirror from unified ONTAP to AFX*
