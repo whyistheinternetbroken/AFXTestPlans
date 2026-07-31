@@ -30,11 +30,11 @@ a| *Test procedure:*
 
 . Navigate to the Storage -> Volumes menu in System Manager
 +
-image::images/test-08-image-01.png[width=50%,link=images/test-08-image-01.png]
+image::images/test-08-image-01.png[width=25%,link=images/test-08-image-01.png]
 
 . Click + Add
 +
-image::images/test-08-image-02.png[width=50%,link=images/test-08-image-02.png]
+image::images/test-08-image-02.png[width=25%,link=images/test-08-image-02.png]
 
 . Enter the volume name, capacity and select “High throughput” to create a FlexGroup
 +
