@@ -13,8 +13,11 @@ xref:test-plans.adoc[← Back to Test Plans]
 
 In lieu of - or in addition to -- testing real data workloads, storage benchmark tests can also be run against the NetApp AFX cluster to display some of the potential performance.
 For EDA workloads, we can leverage link:https://www.spec.org/storage2020/[SPEC SFS 2020 EDA] for benchmarking. This benchmark can also be used for general testing of small random IO (including high metadata) and larger sequential IO.
-For AI/ML workloads, we will leverage MLcommons, which can also act as a throughput-specific benchmark.
+
+For AI/ML workloads, we will leverage link:https://mlcommons.org/benchmarks/[MLcommons], which can also act as a throughput-specific benchmark.
+
 For details on installing, configuring and running SpecSFS or MLcommons, see the Appendix of this document.
+
 *Note:* For workload performance configuration (NFS, client/network, and ONTAP feature settings), see xref:test-07-08-performance-testing-configuration.adoc[Performance testing configuration (Tests 7 and 8)].
 
 [cols="<1",width="100%"]
