@@ -108,7 +108,7 @@ AFX::*> vserver peer show
 [start=1]
 . Use a source volume with production datasets on the NetApp AFX cluster and replicate to the unified ONTAP cluster. Navigate to Storage -> Volumes.
 +
-image::images/test-04-image-15.png[width=50%,link=images/test-04-image-15.png]
+image::images/test-04-image-15.png[width=25%,link=images/test-04-image-15.png]
 
 . Hover over the volume name and click to expand the menu. Select "Protect."
 +
