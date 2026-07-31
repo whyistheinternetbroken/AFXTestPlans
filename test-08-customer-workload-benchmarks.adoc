@@ -50,7 +50,7 @@ image::images/test-08-image-04.png[width=50%,link=images/test-08-image-04.png]
 +
 image::images/test-08-image-05.png[width=50%,link=images/test-08-image-05.png]
 
-. Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter* *Recommended NFS versions and mount options are found in the NFS considerations in the Appendix of this document..
+. Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter* *Recommended NFS versions and mount options are found in the xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS considerations in the Appendix].*
 
 . Generate datasets. For detailed steps on how to run the benchmarks, see the appendix of this document.
 
