@@ -69,7 +69,9 @@ Workload            ID     IOPS       Throughput    Latency
 ----
 
 . Collect protocol-level statistics during performance tests.
+
 *Note:* Performance tests can be real data or benchmarks.
+
 From the command line, you can run “statistics start” to begin a stats collection during a specific job run. For this example, we will collect NFSv4.1 statistics. You can run these statistics at any time, but it is best to run these before starting a benchmark or data workload and then stopping them when the job is complete. These commands can be run in advanced privilege.
 
 [source,console]
