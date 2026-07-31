@@ -32,7 +32,7 @@ image::images/test-09-image-02.png[width=20%,link=images/test-09-image-02.png]
 
 . Use CLI statistics to capture performance information.
 
-. Cluster statistics can be captured in real time with “statistics show-periodic”
+*Note:* Cluster statistics can be captured in real time with “statistics show-periodic”
 +
 [source,console]
 ----
