@@ -48,7 +48,7 @@ image::images/test-08-image-04.png[width=50%,link=images/test-08-image-04.png]
 
 . Find the export path of your data volume in System Manager.
 +
-image::images/test-08-image-05.png[width=50%,link=images/test-08-image-05.png]
+image::images/test-08-image-05.png[width=25%,link=images/test-08-image-05.png]
 
 . Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter* *Recommended NFS versions and mount options are found in the xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS considerations in the Appendix].*
 
