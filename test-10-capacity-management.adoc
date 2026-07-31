@@ -28,7 +28,12 @@ image::images/test-10-image-01.png[width=50%,link=images/test-10-image-01.png]
 [source,console]
 ----
 AFX::> storage availability-zone show
-Display the cluster space
+----
+
+. Display the cluster space
++
+[source,console]
+----
 AFX::> cluster space show
 ----
 
