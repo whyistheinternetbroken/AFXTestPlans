@@ -116,7 +116,7 @@ image::images/test-04-image-16.png[width=25%,link=images/test-04-image-16.png]
 
 . Configure the SnapMirror settings and click "Protect."
 +
-image::images/test-04-image-17.png[width=50%,link=images/test-04-image-17.png]
+image::images/test-04-image-17.png[width=25%,link=images/test-04-image-17.png]
 
 *Note:* If the above GUI steps fail, you can attempt to create the relationship via the CLI.
 
@@ -236,7 +236,7 @@ image::images/test-04-image-23.png[width=25%,link=images/test-04-image-23.png]
 
 . New SnapMirror steps: Navigate to Storage -> Volumes, hover over the volume name, and select "Protect."
 +
-image::images/test-04-image-24.png[width=50%,link=images/test-04-image-24.png]
+image::images/test-04-image-24.png[width=25%,link=images/test-04-image-24.png]
 
 . Review the options and click "Protect."
 
@@ -247,7 +247,7 @@ image::images/test-04-image-24.png[width=50%,link=images/test-04-image-24.png]
 
 . Hover over the relationship and expand the menu. Select "Reverse Resync."
 +
-image::images/test-04-image-25.png[width=50%,link=images/test-04-image-25.png]
+image::images/test-04-image-25.png[width=25%,link=images/test-04-image-25.png]
 
 . Verify in the unified ONTAP destination cluster that the relationship appears when navigating to Protection -> Relationships.
 +
