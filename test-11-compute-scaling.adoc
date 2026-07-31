@@ -20,7 +20,6 @@ One of the main benefits of NetApp AFX is the ability to scale compute and capac
 a| *Test procedure:*
 
 . Ensure benchmarks or performance workloads are running during these tests. Note the current average throughput and IOPS.
-+
 [source,console]
 ----
 AFX::> set advanced
@@ -28,7 +27,6 @@ AFX::*> qos statistics volume performance show -vserver svm1 -volume [volname]
 ----
 
 . Check volume location of current nodes. Note the number of volumes per node.
-+
 [source,console]
 ----
 AFX::> set advanced
@@ -38,7 +36,6 @@ AFX::*> vol show -fields node,size,constituent-count -is-constituent true -node 
 . Log into the service processor of the node(s) you wish to add to the cluster. 
 
 To access the node's console: 
-+
 [source,console]
 ----
 BMC> system console to access the node’s console. 
