@@ -98,7 +98,7 @@ Base options (applies to all clients/scenaros):
 -o tcp,hard,intr
 ----
 
-*.Session trunking (OS-specific)*
+*Session trunking (OS-specific)*
 
 [source,console]
 ----
@@ -115,6 +115,7 @@ rdma,write=eager
 ----
 
 *Other mount options*
+
 Some workloads might benefit from special mount options during benchmark tests. The following table shows some of those options and what use cases might see performance improvements.
 
 .Alternate NFS mount options and their use cases
