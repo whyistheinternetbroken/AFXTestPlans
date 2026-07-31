@@ -28,7 +28,7 @@ image::images/test-09-image-01.png[width=50%,link=images/test-09-image-01.png]
 
 . To verify if this activity is happening on the volume you created, you can click on Storage->Volumes and then click on the volume you created.
 +
-image::images/test-09-image-02.png[width=50%,link=images/test-09-image-02.png]
+image::images/test-09-image-02.png[width=25%,link=images/test-09-image-02.png]
 
 . Use CLI statistics to capture performance information.
 
@@ -145,7 +145,7 @@ write_percent                                                 32%
 +
 [source,console]
 ----
-cluster::*> statistics show -sample-id unet3d_datagen -counter *size_hist*
+AFX::*> statistics show -sample-id unet3d_datagen -counter *size_hist*
 ----
 
 . Object: nfsv4_1 Instance: svm1 Start-time: 5/8/2025 01:44:16 End-time: 5/8/2025 01:49:55 Elapsed-time: 339s Scope: cluster
