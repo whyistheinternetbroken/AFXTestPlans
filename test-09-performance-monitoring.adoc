@@ -124,14 +124,8 @@ getattr_total                                                3028
 [source,console]
 ----
 AFX::*> statistics show -sample-id unet3d_datagen -counter *percent*
-----
-
-. Object: nfsv4_1 Instance: svm1 Start-time: 5/8/2025 01:44:16 End-time: 5/8/2025 01:49:55 Elapsed-time: 339s Scope: cluster
-
-. Counter                                                     Value
-+
-[source,console]
-----
+Object: nfsv4_1 Instance: svm1 Start-time: 5/8/2025 01:44:16 End-time: 5/8/2025 01:49:55 Elapsed-time: 339s Scope: cluster
+Counter                                                     Value
 -------------------------------- --------------------------------
 compound_percent                                              33%
 putfh_percent                                                 33%
@@ -144,14 +138,8 @@ write_percent                                                 32%
 [source,console]
 ----
 AFX::*> statistics show -sample-id unet3d_datagen -counter *size_hist*
-----
-
-. Object: nfsv4_1 Instance: svm1 Start-time: 5/8/2025 01:44:16 End-time: 5/8/2025 01:49:55 Elapsed-time: 339s Scope: cluster
-
-. Counter                                                     Value
-+
-[source,console]
-----
+Object: nfsv4_1 Instance: svm1 Start-time: 5/8/2025 01:44:16 End-time: 5/8/2025 01:49:55 Elapsed-time: 339s Scope: cluster
+Counter                                                     Value
 -------------------------------- --------------------------------
 nfs41_write_size_histo                                          -
 <=512B                                7
