@@ -97,7 +97,7 @@ Statistics collection is being started for sample-id: unet3d_datagen
 AFX::*> statistics show -sample-id unet3d_datagen
 ----
 
-. To view specific counters, you can use the counter name or wildcards. For instance, to see all GETATTR values:
+To view specific counters, you can use the counter name or wildcards. For instance, to see all GETATTR values:
 +
 [source,console]
 ----
