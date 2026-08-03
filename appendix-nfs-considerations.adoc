@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[Ã¢â€ Â Back to Appendix]
+xref:appendix.adoc[<- Back to Appendix]
 
 Recommended NFS mount options, fstab configuration, automounter setup, 64-bit file IDs, and pNFS/session trunking validation.
 
@@ -128,7 +128,6 @@ AFX::> set advanced; nfs modify -v3-64bit-identifiers enabled -v4-64bit-identifi
 
 
 [[pnfs-and-session-trunking-validation]]
-=== pNFS and session trunking validation
 
 When using pNFS and/or session trunking, it can be difficult to determine if the protocol features are actively being used. ONTAP provides commands to check these features for activity.
 *To show pNFS devices*
