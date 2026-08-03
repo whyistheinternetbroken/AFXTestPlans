@@ -87,6 +87,7 @@ AFX::> set diag; vol modify -vserver [SVM] -volume [FlexGroup name] -granular-da
 === Why snapshots are disabled
 
 In general, snapshots in ONTAP are not detrimental to overall system performance. However, in benchmarking, we would disable snapshots for two reasons:
+
 * Granular control over the environment -- We can create snapshots when we want to create them to better control the scenarios when snapshots are created and make it easier to measure their impact.
 * Data churn -- Many benchmark tests will create a lot of data and then subsequently delete that data, which will rapidly grow the size of any existing snapshots on the volume. To avoid space allocation issues, we disable snapshots.
 
