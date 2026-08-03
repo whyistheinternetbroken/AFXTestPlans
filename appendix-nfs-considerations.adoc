@@ -34,6 +34,7 @@ Most EDA workloads make use of NFSv3 -- especially EDA frontend workloads, which
 === Recommended mount options for NFSv4.1
 
 For high read/write workloads -- such as those found with AI/ML training and inference, NFSv4.1 with parallel NFS and session trunking offer performance benefits that NFSv3 does not, with the following considerations:
+
 * pNFS will require at least one routable network interface per node to function properly.
 * With pNFS, avoid including non-routable network interfaces in the SVM configuration.
 * NFS session trunking works best when there are routable network interfaces on multiple ports per node to provide added throughput possibilities.
