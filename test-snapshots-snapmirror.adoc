@@ -76,7 +76,10 @@ image::images/test-snapshots-snapmirror-image-03.png[width=50%,link=images/test-
 2184   1.65MB    387MB
 ----
 
-. SnapMirror steps In the “Data Migration” section, you established a SnapMirror from NetApp AFX to unified ONTAP (or, alternately, to the same NetApp AFX cluster) in step 8. This SnapMirror can be used to issue an update to observe the performance impact of the transfer on a production workload.
+*SnapMirror steps*
+
+[start=1]
+. In the xref:test-04-data-migration.adoc[Data Migration] section, you established a SnapMirror from NetApp AFX to unified ONTAP (or, alternately, to the same NetApp AFX cluster) in step 8. This SnapMirror can be used to issue an update to observe the performance impact of the transfer on a production workload.
 
 . Verify benchmarks or performance workloads are running during these tests. In most cases, you won’t be able to see any sort of impact show up on the performance graphs in System Manager, so you would be best served to view the impact from the command line.
 
