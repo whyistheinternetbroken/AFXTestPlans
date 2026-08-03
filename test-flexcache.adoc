@@ -41,19 +41,19 @@ image::images/test-flexcache-image-04.png[width=20%,link=images/test-flexcache-i
 
 . In the Add volume window, click “More options”
 +
-image::images/test-flexcache-image-05.png[width=25%,link=images/test-flexcache-image-05.png]
+image::images/test-flexcache-image-05.png[width=20%,link=images/test-flexcache-image-05.png]
 
 . Give the cache a name and select “Add as a cache for remote volume” below the name and select the cluster, SVM and volume to connect to as a cache.
 +
-image::images/test-flexcache-image-06.png[width=50%,link=images/test-flexcache-image-06.png]
+image::images/test-flexcache-image-06.png[width=20%,link=images/test-flexcache-image-06.png]
 
 . Give the cache a size – it doesn’t have to be the same size as the origin volume – and configure the access permissions. FlexCache writeback is not currently supported for FlexGroup volumes in NetApp AFX.
 +
-image::images/test-flexcache-image-07.png[width=50%,link=images/test-flexcache-image-07.png]
+image::images/test-flexcache-image-07.png[width=20%,link=images/test-flexcache-image-07.png]
 
 . Click save. The FlexCache will be created.
 +
-image::images/test-flexcache-image-08.png[width=50%,link=images/test-flexcache-image-08.png]
+image::images/test-flexcache-image-08.png[width=20%,link=images/test-flexcache-image-08.png]
 
 . Mount information is found on the volume detail page.
 +
