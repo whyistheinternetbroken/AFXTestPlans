@@ -23,8 +23,10 @@ The upgrade process for NetApp AFX is identical to that of unified ONTAP. This t
 
 * Download the latest ONTAP image from the NetApp website. 
 * Place the image.tgz file on a webserver. (Do not use TinyWeb as it has a 2GB limit.) 
-*Note:* The AFX reinit script has an option to install ONTAP using its own webserver.
 * Validate the current version of ONTAP
+
+*Note:* The AFX reinit script has an option to install ONTAP using its own webserver.
+
 +
 [source,console]
 ----
