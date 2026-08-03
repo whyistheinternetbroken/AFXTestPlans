@@ -48,7 +48,7 @@ image::images/test-s3-image-06.png[width=20%,link=images/test-s3-image-06.png]
 
 . To add a unique user, click on the S3 settings once S3 has been enabled.
 +
-image::images/test-s3-image-08.png[width=20%,link=images/test-s3-image-08.png]
+image::images/test-s3-image-08.png[width=10%,link=images/test-s3-image-08.png]
 +
 image::images/test-s3-image-09.png[width=20%,link=images/test-s3-image-09.png]
 
@@ -58,23 +58,23 @@ image::images/test-s3-image-11.png[width=10%,link=images/test-s3-image-11.png]
 
 . To add a user, click “Add” and type the name and set the desired key validity. Remember, the user must map to a NAS user if you intend on leveraging NAS/Object protocol duality.
 +
-image::images/test-s3-image-12.png[width=10%,link=images/test-s3-image-12.png]
+image::images/test-s3-image-12.png[width=20%,link=images/test-s3-image-12.png]
 
 . This will create your access/secret keys. Save for later use.
 +
-image::images/test-s3-image-13.png[width=10%,link=images/test-s3-image-13.png]
+image::images/test-s3-image-13.png[width=20%,link=images/test-s3-image-13.png]
 
 . Create an S3 bucket that can connect to the NAS volume for file/object duality. Navigate to Storage -> Buckets and then click “Add” and “More options” and add your name, SVM and map the bucket to a folder with the NAS data.
 +
-image::images/test-s3-image-15.png[width=10%,link=images/test-s3-image-15.png]
+image::images/test-s3-image-15.png[width=20%,link=images/test-s3-image-15.png]
 
 . If only one Storage VM is present, you will not need to select the Storage VM.
 
 . Optionally, modify bucket permissions, users who have access, etc. Then click “Save.”
 +
-image::images/test-s3-image-16.png[width=10%,link=images/test-s3-image-16.png]
+image::images/test-s3-image-16.png[width=20%,link=images/test-s3-image-16.png]
 +
-image::images/test-s3-image-17.png[width=10%,link=images/test-s3-image-17.png]
+image::images/test-s3-image-17.png[width=20%,link=images/test-s3-image-17.png]
 
 . Your bucket will be listed. Clicking on it allows you to manage it further and view the URL.
 +
