@@ -27,7 +27,11 @@ a| *Test procedure:*
 +
 image::images/test-07-image-01.png[width=50%,link=images/test-07-image-01.png]
 
-. Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter* *Recommended NFS versions and mount options are found in the NFS considerations above. Run designated workloads against existing datasets that have been migrated over from unified ONTAP. While benchmarks are running, move on to Test 5) Performance Monitoring. Test real-world data using everyday workloads. As workloads are running, test the limits of NetApp AFX by adding more clients or more jobs to the workload to push the limits of scale.
+. Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter
++
+*Note:* Recommended NFS versions and mount options are found in the xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS considerations]. Run designated workloads against existing datasets that have been migrated over from unified ONTAP.
+
+. While benchmarks are running, move on to xref:test-09-performance-monitoring.adoc[Performance Monitoring]. Test real-world data using everyday workloads. As workloads are running, test the limits of NetApp AFX by adding more clients or more jobs to the workload to push the limits of scale. See xref:test-11-compute-scaling.adoc[Compute scaling] for details.
 
 a| *Expected outcome(s):*
 
