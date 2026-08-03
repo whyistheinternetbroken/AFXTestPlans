@@ -79,9 +79,12 @@ This system will send event messages and periodic reports to NetApp Technical Su
 Type yes to confirm and continue {yes}: yes May 16 02:26:09 [localhost:asup.general.optout:notice]: AutoSupport will be enabled 24 hours after system initialization.
 
 Enter the node management interface port [e0M], IP address (10.232.12.128), netmask (255.255.254.0), and default gateway (10.232.12.1).
-
+----
++
 Press CTL+C and enter the cluster CLI to modify the cluster interconnect IP addresses, as they auto create and may not be routable on your network. If you get a login: prompt, use admin. In most cases, you can leave these as defaults.
-
++
+[source,console]
+----
 ::> net int show -role cluster
   (network interface show)
              Logical    Status     Network            Current       Current Is
