@@ -115,7 +115,7 @@ LOADER> boot_ontap
 +
 [source,console]
 ----
-AFX::system*> storage failover show
+AFX::*> storage failover show
                               Takeover
                                  of
 Node           Partner        Possible State Description
@@ -126,22 +126,21 @@ AFX-04         true     Connected to AFX-04,
 AFX-02
 AFX-03         true     Connected to AFX-03
 ----
+*Note:* If the system is in “Partial Giveback” wait another 5 minutes and rerun the “show” command.
 +
 [source,console]
 ----
+AFX::*> storage failover show
+
 AFX-03
 AFX-02         true     Connected to AFX-02
-----
-+
-[source,console]
-----
 AFX-04
 AFX-01         true     Connected to AFX-01.
                                        Waiting for cluster applications to
                                        come online on the local node.
 ----
 
-. If in “Partial Giveback” wait another 5 minutes and rerun the “show” command.
+. Eventually the system should show all nodes are "Connected."
 +
 [source,console]
 ----
@@ -152,30 +151,10 @@ Node           Partner        Possible State Description
 -------------- -------------- -------- ---------------------------------------
 AFX-01
 AFX-04         true     Connected to AFX-04
-----
-+
-[source,console]
-----
 AFX-02
 AFX-03         true     Connected to AFX-03
 ----
-+
-[source,console]
-----
-AFX-03
-AFX-02         true     Connected to AFX-02
-----
-+
-[source,console]
-----
-AFX-04
-AFX-01         true     Connected to AFX-01
-----
-+
-[source,console]
-----
-4 entries were displayed.
-----
+
 
 . During giveback, verify if performance has changed for currently running workload (throughput, CPU utilization, IOPS, etc.) and if operations have experienced noticeable disruption. Operations using stateful NAS (such as SMB and NFSv4.x) will experience some disruption due to locking exchange. Use the steps in the performance monitoring test plan.
 
