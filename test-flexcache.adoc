@@ -57,7 +57,7 @@ image::images/test-flexcache-image-08.png[width=20%,link=images/test-flexcache-i
 
 . Mount information is found on the volume detail page.
 +
-image::images/test-flexcache-image-09.png[width=50%,link=images/test-flexcache-image-09.png]
+image::images/test-flexcache-image-09.png[width=25%,link=images/test-flexcache-image-09.png]
 
 . When you mount the FlexCache on the client, the directory structure will match what is on the origin, but data will only populate on access.
 +
