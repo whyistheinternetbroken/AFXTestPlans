@@ -72,8 +72,9 @@ This process can take a long time due to the size of the core files. Booting bac
 [source,console]
 ----
 AFX::*> net int show -vserver SVM1 -fields is-home,is-home,home-node,home-port,curr-node,curr-port
-“is-home false” means the interface has been migrated from its home node.
 ----
+Note: “is-home false” means the interface has been migrated from its home node.
+
 
 . Check the volume locations for each node. Note and compare to before takeover. Volume moves after failover can take roughly 17-22 minutes as ONTAP waits to verify the node is actually down. But once they are enacted, they will complete quickly.
 +
