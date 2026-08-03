@@ -52,11 +52,11 @@ nfs-ops     recv     sent
 
 . From the NetApp AFX GUI, take a snapshot while the job is running Navigate to the volume screen and use the menu to select Snapshot
 +
-image::images/test-snapshots-snapmirror-image-02.png[width=50%,link=images/test-snapshots-snapmirror-image-02.png]
+image::images/test-snapshots-snapmirror-image-02.png[width=25%,link=images/test-snapshots-snapmirror-image-02.png]
 
 . Specify a name and click “Add”
 +
-image::images/test-snapshots-snapmirror-image-03.png[width=50%,link=images/test-snapshots-snapmirror-image-03.png]
+image::images/test-snapshots-snapmirror-image-03.png[width=25%,link=images/test-snapshots-snapmirror-image-03.png]
 
 . Verify that little to no performance impact occurred: Example: data     data nfs-ops     recv     sent
 +
