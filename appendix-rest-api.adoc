@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:appendix.adoc[<- Back to Appendix]
+xref:appendix.adoc[← Back to Appendix]
 
 ONTAP REST API examples for authentication, FlexGroup volume creation, deletion, network interfaces, and NFS server configuration.
 
@@ -14,33 +14,60 @@ ONTAP REST API examples for authentication, FlexGroup volume creation, deletion,
 [[rest-api-examples-for-testing]]
 == REST API examples for testing.
 
-The following section shows example REST API calls for cluster operations. These can be used alongside or in lieu of current automation suites being used with unified ONTAP. These APIs cover the following standard administration scenarios. A Linux machine is required to use these scripts. Bash, and curl are required to use the scripts.
+The following section shows example REST API calls for cluster operations. These can be used alongside or in lieu of current automation suites being used with unified ONTAP. These APIs cover the following standard administration scenarios. A Linux machine is required to use these scripts. Bash and curl are required to use the scripts.
+
 The examples include:
+
 * Creating and deleting FlexGroup volumes.
 * Creating and deleting a network interface.
 * Create and initialize a SnapMirror relationship.
 * Show NFS server configuration.
 * Create an export policy rule.
+
 REST API documentation is available by accessing the System Manager link for the system below:
-https://*[clus_mgmt_ip]*/docs/api
+
+`https://[clus_mgmt_ip]/docs/api`
+
 If you prefer to use Ansible playbooks, you can generate sample YAML files in System Manager via the "Save to Ansible playbook" button, found on some System Manager functions (see below).
 
 [[generate-an-auth_token]]
 === Generate an AUTH_TOKEN
 
-Auth_tokens authenticate a user to the ONTAP cluster when using the REST API. This token is required to run the scripts below.
-One way to create the AUTH_TOK value is to use the command below substituting the password string for the password provided by the account team.
+Auth tokens authenticate a user to the ONTAP cluster when using the REST API. This token is required to run the scripts below. The token is a Base64-encoded string of `username:password`. Substitute the password provided by the account team for `<password>`.
+
+==== Generate an AUTH_TOKEN using the CLI (Linux)
+
+. Open a terminal.
+. Run the following command, replacing `<password>` with the account password:
 
 [source,console]
 ----
 echo -n admin:<password> | base64
 ----
 
-Another way if you do not have a Linux system is to retrieve the cluster's AUTH_TOKEN for the desired user is to use the REST API documentation located at _https://[clus_mgmt]/docs/api_.
-Once on the page, scroll down to find the "Login" button.
-Click the button and login with the desired username and password and click "Authorize."
-Scroll down to GET cluster. Expand and click "Try it out" and "Execute."
-The curl output will contain the AUTH_TOKEN.
+. Copy the Base64 output. Use that value as `[INSERT AUTH_TOKEN]` in the curl examples below.
+
+==== Generate an AUTH_TOKEN using the CLI (Windows)
+
+. Open PowerShell.
+. Run the following command, replacing `<password>` with the account password:
+
+[source,powershell]
+----
+[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("admin:<password>"))
+----
+
+. Copy the Base64 output. Use that value as `[INSERT AUTH_TOKEN]` in the curl examples below.
+
+==== Generate an AUTH_TOKEN from the REST API documentation UI
+
+Another way to retrieve the cluster's AUTH_TOKEN for the desired user is to use the REST API documentation located at `https://[clus_mgmt_ip]/docs/api`.
+
+. Open the REST API documentation page.
+. Scroll down to find the *Login* button.
+. Click the button, log in with the desired username and password, and click *Authorize*.
+. Scroll down to *GET cluster*. Expand the operation and click *Try it out*, then *Execute*.
+. The curl output will contain the AUTH_TOKEN.
 
 [[create-flexgroup-volume]]
 === Create FlexGroup volume
@@ -57,7 +84,7 @@ curl -k -X POST
 ----
 
 
-*Note:* For a script to perform this task, see the "Scripts" section of this doc.
+*Note:* For a script to perform this task, see xref:scripts.adoc#volume-creation-and-deletion-scripts[Volume creation and deletion scripts].
 
 
 [[delete-volumes]]
@@ -120,7 +147,7 @@ curl -k -X POST
 ----
 
 
-*Note:* For a script to create interfaces, see the "Scripts" section of this document.
+*Note:* For a script to create interfaces, see xref:scripts.adoc#lif-creation-and-cleanup-scripts[LIF creation and cleanup scripts].
 
 To delete a data interface (UUID from list required):
 
