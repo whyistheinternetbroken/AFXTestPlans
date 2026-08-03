@@ -72,9 +72,9 @@ image::images/test-s3-image-15.png[width=20%,link=images/test-s3-image-15.png]
 
 . Optionally, modify bucket permissions, users who have access, etc. Then click “Save.”
 +
-image::images/test-s3-image-16.png[width=20%,link=images/test-s3-image-16.png]
+image::images/test-s3-image-16.png[width=15%,link=images/test-s3-image-16.png]
 +
-image::images/test-s3-image-17.png[width=20%,link=images/test-s3-image-17.png]
+image::images/test-s3-image-17.png[width=15%,link=images/test-s3-image-17.png]
 
 . Your bucket will be listed. Clicking on it allows you to manage it further and view the URL.
 +
