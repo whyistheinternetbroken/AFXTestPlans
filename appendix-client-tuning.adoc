@@ -20,27 +20,27 @@ For best results, some client tuning may be useful for improving the overall per
 [[wsize-and-rsize]]
 === Wsize and rsize
 
-These mount options set the total window size of the NFS mount for reads and writes. The ONTAP NFS server will set a maximum TCP window size (default of 64K; maximum of 1MB) for NFS connections, but the client can control the window sizes granularly for reads and writes depending on the application workload and behavior.
+These mount options set the NFS read and write transfer sizes for the mount. The ONTAP NFS server enforces a maximum transfer size (controlled by `-tcp-max-xfer-size`; default of 64K; maximum of 1MB), and the client can set `rsize` and `wsize` within that limit depending on the application workload and behavior.
 
 [[wsize-rsize-recommendation]]
 ==== Recommendation
 
-The recommendation for this test plan is to use a 1MB block size for mount points.
+The recommendation for this test plan is to use `rsize=1048576` and `wsize=1048576` (1MB) for mount points.
 
 [[small-window-sizes]]
-==== Small window sizes
+==== Small transfer sizes
 
-If the TCP window size for the mount is set to a smaller value (say, 8K) and a majority of the application IO has a 64K block size, then more packets have to be transmitted across the wire to complete that communication. (64K/8K = 8 packets)
+If the NFS transfer size for the mount is set to a smaller value (say, 8K) and a majority of the application IO has a 64K block size, then more NFS operations have to be transmitted across the wire to complete that communication. (64K/8K = 8 operations)
 On the storage side, that means a single 64K request from the application becomes 8 IOPS.
-If that same application is mounted using a 64K window size, then each application block can be sent over a single packet, which means a single IOP on storage.
+If that same application is mounted using a 64K transfer size, then each application block can be sent as a single NFS operation, which means a single IOP on storage.
 Fewer IOPS mean fewer operations for the CPU to handle. Rather, the CPU will now handle larger operation sizes. The tradeoff will be CPU latency, as smaller operations will take less time to process, while larger operations mean higher CPU wait time. However, the reduction in network operations will mean less impact from network latency to the workload, and in environments with many clients, you may not want millions of IOPS being generated to a single CPU, as that will introduce other problems.
 
 [[large-window-sizes]]
-==== Large window sizes
+==== Large transfer sizes
 
-When a larger window size is specified, smaller block sizes will be able to travel over a single operation and will not be broken up. For instance, 64K over 1MB will generate a single IOP.
-If multiple blocks are sent over a larger window size, then they get sent in a single packet, rather than a packet per operation. However, larger sizes can increase the latency of operations, since the storage can take longer to process the packet and send a response. If latency is critical to your workload, then setting the wsize/rsize to an optimized size might create better overall results. For instance, if your application is latency sensitive and sends 64K application blocks, then the wsize/rsize should be set to 64K.
-Larger window sizes for mount points offer flexibility across a variety of workloads, regardless of the application block sizes involved.
+When a larger transfer size is specified, smaller application block sizes will be able to travel over a single NFS operation and will not be broken up. For instance, 64K over a 1MB `rsize`/`wsize` will generate a single IOP.
+If multiple application blocks are sent using a larger transfer size, they can be combined into fewer NFS operations rather than one operation per application block. However, larger sizes can increase the latency of operations, since the storage can take longer to process the request and send a response. If latency is critical to your workload, then setting the wsize/rsize to an optimized size might create better overall results. For instance, if your application is latency sensitive and sends 64K application blocks, then the wsize/rsize should be set to 64K.
+Larger transfer sizes for mount points offer flexibility across a variety of workloads, regardless of the application block sizes involved.
 
 [[other-considerations]]
 ==== Other considerations
@@ -56,7 +56,7 @@ NFS uses a loose consistency model. The consistency is loose because the applica
 
 _If the client has complete ownership of data, that is, it's not shared between multiple nodes or systems, there is guaranteed consistency._ If the dataset is rarely changed during the course of a read workload, then consistency can be assumed.
 
-In that case, you can reduce the getattr access operations to storage and speed up the application by turning off close-to-open (cto) consistency (`nocto` as a mount option) and by turning up the timeouts for the attribute cache management (`actimeo=600` as a mount option changes the timer to 10m versus the defaults `acregmin=3`, `acregmax=30`, `acdirmin=30`, `acdirmax=60`). In some testing, nocto reduces approximately 65-70% of the getattr access calls, and adjusting actimeo reduces these calls another 20-25%. Getattr calls can be costly to overall performance, so if the calls are unnecessary because the data is guaranteed consistent, it is best to reduce those calls as much as possible.
+In that case, you can reduce the getattr access operations to storage and speed up the application by turning off close-to-open (cto) consistency (`nocto` as a mount option) and by turning up the timeouts for the attribute cache management (`actimeo=600` as a mount option changes the timer to 10m versus the defaults `acregmin=3`, `acregmax=60`, `acdirmin=30`, `acdirmax=60`). In some testing, nocto reduces approximately 65-70% of the getattr access calls, and adjusting actimeo reduces these calls another 20-25%. Getattr calls can be costly to overall performance, so if the calls are unnecessary because the data is guaranteed consistent, it is best to reduce those calls as much as possible.
 
 [[cto-recommendation]]
 ==== Recommendation
@@ -68,7 +68,7 @@ The recommendation for this test plan is to use the `actimeo=600` and `nocto` mo
 
 The attributes `acregmin`, `acregmax`, `acdirmin`, and `acdirmax` control the coherency of the cache. The former two attributes (`acregmin`, `acregmax`) control how long the attributes of files are trusted. The latter two attributes (`acdirmin`, `acdirmax`) control how long the attributes of the directory file itself are trusted (directory size, directory ownership, directory permissions). The _min_ and _max_ attributes define minimum and maximum duration over which attributes of a directory, attributes of a file, and cache content of a file are deemed trustworthy, respectively. Between _min_ and _max_, an algorithm is used to define the amount of time over which a cached entry is trusted.
 
-For example, consider the default values for `acregmin` (3 seconds) and `acregmax` (30 seconds). Those attributes are repeatedly evaluated for the files in a directory. After 3 seconds, the NFS service is queried for cache freshness. If the attributes are deemed valid, the client doubles the trusted time to 6 seconds, 12 seconds, 24 seconds, then as the maximum is set to 30, 30 seconds. From that point on, until the cached attributes are deemed out of date (at which point the cycle starts over), trustworthiness is defined as 30 seconds being the value specified by `acregmax`.
+For example, consider the default values for `acregmin` (3 seconds) and `acregmax` (60 seconds). Those attributes are repeatedly evaluated for the files in a directory. After 3 seconds, the NFS service is queried for cache freshness. If the attributes are deemed valid, the client doubles the trusted time to 6 seconds, 12 seconds, 24 seconds, 48 seconds, then as the maximum is set to 60, 60 seconds. From that point on, until the cached attributes are deemed out of date (at which point the cycle starts over), trustworthiness is defined as 60 seconds being the value specified by `acregmax`.
 
 There are cases that can benefit from a similar set of mount options, even when there's no complete ownership by the clients. For example, if the clients use the data as read only and data update is managed through another path, such as AI/ML training and inference workloads or EDA tools and libraries, web content, or texture data. These data sets are typically updated through another client mounting the file systems and periodically pushing content updates.
 
@@ -81,7 +81,7 @@ Using these mount options significantly reduces the workload to storage in these
 
 Close-to-open consistency (the `cto` mount option) ensures that no matter the state of the cache, on open the most recent data for a file is always presented to the application. This is the default mount option if not otherwise defined.
 
-* When a directory is crawled (`ls`, `ls -l` for example) a certain set of RPCs (remote procedure calls) are issued, depending on the number of files in the directory. The NFS server shares its view of the filesystem. As long as cto is used by all NFS clients accessing a given NFS export, all clients see the same list of files and directories therein. The freshness of the attributes of the files in the directory is controlled by the attribute cache timers (see above). In other words, *as long as cto is used, files appear to remote clients as soon as the file is created and the file lands on the storage*.
+* When a directory is crawled (`ls`, `ls -l` for example) a certain set of RPCs (remote procedure calls) are issued, depending on the number of files in the directory. The NFS server shares its view of the filesystem. As long as cto is used by all NFS clients accessing a given NFS export, all clients see the same list of files and directories therein. The freshness of the attributes of the files in the directory is still controlled by the attribute cache timers (see above), so directory listings are not guaranteed to show newly created files instantly unless those timers have expired or the client otherwise revalidates.
 * When a file is opened, the content of the file is guaranteed fresh from the perspective of the NFS server. If there's a race condition where the content hasn't finished flushing from Machine 1 when a file is opened on Machine 2, Machine 2 only receives the data present on the server at the time of the open. In this case, Machine 2 doesn't retrieve more data from the file until the acreg timer is reached, and Machine 2 checks its cache coherency from the server again. This scenario can be observed using a `tail -f` of a file from Machine 2 when the file is still being written to from Machine 1.
 
 [[no-close-to-open-nocto-consistency]]
@@ -89,7 +89,7 @@ Close-to-open consistency (the `cto` mount option) ensures that no matter the st
 
 When no close-to-open consistency (`nocto`) is used, the client trusts the freshness of its current view of the file and directory until the cache attribute timers have been breached.
 
-* When a directory is crawled (`ls`, `ls -l` for example) a certain set of RPCs (remote procedure calls) are issued, depending on the number of files in the directory. The client only issues a call to the server for a current listing of files when the acdir cache timer value has been breached. *When using the nocto mount option, recently created files and directories don't appear. Recently removed files and directories do appear*.
+* When a directory is crawled (`ls`, `ls -l` for example) a certain set of RPCs (remote procedure calls) are issued, depending on the number of files in the directory. The client only issues a call to the server for a current listing of files when the acdir cache timer value has been breached. *When using the nocto mount option, recently created files and directories may not appear until the directory attribute cache expires. Recently removed files and directories may still appear in listings from stale cache until that cache is refreshed*.
 * When a file is opened, as long as the file is still in the cache, its cached content (if any) is returned without validating consistency with the NFS server.
 
 [[nconnect]]
@@ -103,12 +103,12 @@ Using the nconnect mount option allows you to specify the number of connections 
 For workloads that utilize NFSv3, use `nconnect=8`.
 For workloads that leverage NFSv4.1 + pNFS + session trunking, nconnect is not a recommended mount option for AI/ML training workload tests here.
 
-*Note:* nconnect does not operate well with session trunking and pNFS.
+*Note:* nconnect does not operate well with session trunking.
 
 [[nfs-readahead]]
 === NFS readahead
 
-NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystem's rsize. For details on rsize/wsize, see xref:#wsize-and-rsize[Wsize and rsize].
+NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystem's rsize. For details on rsize/wsize, see <<wsize-and-rsize>>.
 
 The following table shows the default read-ahead values for each given rsize mount option.
 
@@ -127,10 +127,10 @@ The following table shows the default read-ahead values for each currently avail
 [cols="1,1,1"]
 |===
 | Distribution | Release | Blocks read-ahead default
-| RHEL | 8.3 | 128 KiB
+| RHEL | 8.3 and later (including 9.x) | 128 KiB
 | RHEL | 7.X, 8.0, 8.1, 8.2 | 15 X rsize
 | SLES | 12.X – at least 15SP2 | 15 X rsize
-| Ubuntu | 18.04 – at least 20.04 | 128 KiB
+| Ubuntu | 18.04 and later | 128 KiB
 | Ubuntu | 16.04 | 15 X rsize
 | Debian | Up to at least 10 | 15 x rsize
 |===
@@ -143,13 +143,65 @@ For the purposes of this testing, most EDA workloads would benefit from the read
 [[managing-readahead-values-on-clients]]
 ==== Managing readahead values on clients
 
-NFS read-ahead is defined at the mount point for an NFS filesystem. The default setting can be viewed and set both dynamically and persistently. For convenience, the following bash script written by Red Hat is provided for viewing or dynamically setting read-ahead for a mounted NFS filesystem.
-Read-ahead can be defined either dynamically per NFS mount or persistently using udev rules as shown in the sections below.
+NFS read-ahead is defined at the mount point for an NFS filesystem. The default setting can be viewed and set both dynamically and persistently.
+
+For convenience, the following bash script written by Red Hat is provided for viewing or dynamically setting read-ahead for a mounted NFS filesystem. Source: link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-nfs-read-ahead[Linux NFS read-ahead best practices for Azure NetApp Files].
+
+Save the following script as a bash file (for example, `readahead.sh`), make it executable (`chmod 544 readahead.sh`), and run as shown.
+
+[source,bash]
+----
+#!/bin/bash
+# set | show readahead for a specific mount point
+# Useful for things like NFS and if you do not know / care about the backing device
+#
+# To the extent possible under law, Red Hat, Inc. has dedicated all copyright
+# to this software to the public domain worldwide, pursuant to the
+# CC0 Public Domain Dedication. This software is distributed without any warranty.
+# For more information, see the CC0 1.0 Public Domain Dedication:
+# http://creativecommons.org/publicdomain/zero/1.0/
+
+E_BADARGS=22
+function myusage() {
+echo "Usage: `basename $0` set|show <mount-point> [read-ahead-kb]"
+}
+
+if [ $# -gt 3 -o $# -lt 2 ]; then
+   myusage
+   exit $E_BADARGS
+fi
+
+MNT=${2%/}
+BDEV=$(grep $MNT /proc/self/mountinfo | awk '{ print $3 }')
+
+if [ $# -eq 3 -a $1 == "set" ]; then
+   echo $3 > /sys/class/bdi/$BDEV/read_ahead_kb
+elif [ $# -eq 2 -a $1 == "show" ]; then
+   echo "$MNT $BDEV /sys/class/bdi/$BDEV/read_ahead_kb = "$(cat /sys/class/bdi/$BDEV/read_ahead_kb)
+else
+   myusage
+   exit $E_BADARGS
+fi
+----
+
+To show the current read-ahead value (returned in KiB):
+
+[source,console]
+----
+./readahead.sh show <mount-point>
+----
+
+To set a new read-ahead value:
+
+[source,console]
+----
+./readahead.sh set <mount-point> [read-ahead-kb]
+----
 
 [[viewing-readahead-values-on-clients]]
 ==== Viewing readahead values on clients
 
-To display read-ahead for a mounted NFS filesystem, do the following.
+To display read-ahead for a mounted NFS filesystem manually, do the following.
 
 *Grep the mount path in `/proc/self/mountinfo`:*
 
@@ -190,7 +242,7 @@ If NFS session trunking is in use, there may be multiple devices attached to the
 ==== Manually setting readahead
 
 Readahead for a mount point can be set dynamically, without needing to remount for the changes to take effect. However, the values will reset once the mount is unmounted/remounted.
-To set readahead, echo the value you wish to use into the read_ahead file in the NFS device's folder.
+To set readahead, echo the value you wish to use into the `read_ahead_kb` file in the NFS device's folder.
 
 *Example:*
 
@@ -202,6 +254,27 @@ To set readahead, echo the value you wish to use into the read_ahead file in the
 ----
 
 When using NFS session trunking (which can utilize multiple mount points to the same NFS export), this process would need to be repeated for each connected device.
+
+[[persistently-setting-readahead]]
+==== Persistently setting readahead for NFS mounts
+
+To persistently set read-ahead for NFS mounts, `udev` rules can be written as follows.
+
+. Create and test `/etc/udev/rules.d/99-nfs.rules`:
++
+[source,config]
+----
+SUBSYSTEM=="bdi", ACTION=="add", PROGRAM="<absolute_path>/awk -v bdi=$kernel 'BEGIN{ret=1} {if ($4 == bdi) {ret=0}} END{exit ret}' /proc/fs/nfsfs/volumes", ATTR{read_ahead_kb}="15360"
+----
+
+. Apply the `udev` rule:
++
+[source,console]
+----
+sudo udevadm control --reload
+----
+
+*Note:* The `udev` example above is adapted from link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-nfs-read-ahead[Microsoft's Azure NetApp Files NFS read-ahead guidance], using `15360` to match the 15,360 KiB recommendation used elsewhere in this section.
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
