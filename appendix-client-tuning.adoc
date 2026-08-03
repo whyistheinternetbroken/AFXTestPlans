@@ -63,6 +63,11 @@ In that case, you can reduce the getattr access operations to storage and speed 
 
 The recommendation for this test plan is to use the `actimeo=600` and `nocto` mount options for EDA workloads that are heavy on reads and to use the defaults for EDA workloads that are a read/write/metadata mix.
 
+Suggested workloads:
+
+* `nocto` (often with a higher `actimeo`): read-heavy or mostly static datasets with little or no multi-writer sharing -- for example EDA libraries/tools, AI/ML training and inference reads, software package repositories, static web content, and media/texture libraries updated through a separate path.
+* `cto` (default): multi-client shared access where writers and readers expect timely consistency -- for example shared home directories, collaborative build/compile trees, and general read/write/metadata-mixed EDA workloads.
+
 [[how-attribute-cache-timers-work]]
 ==== How attribute cache timers work
 
@@ -81,6 +86,8 @@ Using these mount options significantly reduces the workload to storage in these
 
 Close-to-open consistency (the `cto` mount option) ensures that no matter the state of the cache, on open the most recent data for a file is always presented to the application. This is the default mount option if not otherwise defined.
 
+Suggested workloads for `cto`: multi-client shared datasets where file creates, deletes, and content updates must be visible promptly to other clients (shared home directories, collaborative development environments, and mixed read/write/metadata EDA jobs).
+
 * When a directory is crawled (`ls`, `ls -l` for example) a certain set of RPCs (remote procedure calls) are issued, depending on the number of files in the directory. The NFS server shares its view of the filesystem. As long as cto is used by all NFS clients accessing a given NFS export, all clients see the same list of files and directories therein. The freshness of the attributes of the files in the directory is still controlled by the attribute cache timers (see above), so directory listings are not guaranteed to show newly created files instantly unless those timers have expired or the client otherwise revalidates.
 * When a file is opened, the content of the file is guaranteed fresh from the perspective of the NFS server. If there's a race condition where the content hasn't finished flushing from Machine 1 when a file is opened on Machine 2, Machine 2 only receives the data present on the server at the time of the open. In this case, Machine 2 doesn't retrieve more data from the file until the acreg timer is reached, and Machine 2 checks its cache coherency from the server again. This scenario can be observed using a `tail -f` of a file from Machine 2 when the file is still being written to from Machine 1.
 
@@ -88,6 +95,8 @@ Close-to-open consistency (the `cto` mount option) ensures that no matter the st
 ==== No close-to-open (nocto) consistency
 
 When no close-to-open consistency (`nocto`) is used, the client trusts the freshness of its current view of the file and directory until the cache attribute timers have been breached.
+
+Suggested workloads for `nocto`: single-writer or read-mostly datasets where clients can tolerate delayed visibility of creates/deletes and attribute changes (EDA libraries, AI/ML training/inference reads, static web/media content, and other infrequently updated shared libraries). Avoid `nocto` for multi-client write/sharing scenarios that require strong open-time freshness.
 
 * When a directory is crawled (`ls`, `ls -l` for example) a certain set of RPCs (remote procedure calls) are issued, depending on the number of files in the directory. The client only issues a call to the server for a current listing of files when the acdir cache timer value has been breached. *When using the nocto mount option, recently created files and directories may not appear until the directory attribute cache expires. Recently removed files and directories may still appear in listings from stale cache until that cache is refreshed*.
 * When a file is opened, as long as the file is still in the cache, its cached content (if any) is returned without validating consistency with the NFS server.
