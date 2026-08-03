@@ -8,17 +8,18 @@
 
 xref:appendix.adoc[← Back to Appendix]
 
-Defines EDA workload terminology used throughout this test plan.
-
-
 [[about-eda-frontend-backend-and-blended-terminology]]
 == About EDA frontend, backend and blended terminology
 
 The EDA terms used in this document for workloads (such as frontend, backend, blended) refer to the workloads documented in .
 Specifically, these workloads are defined as follows:
-*Frontend* -- large number of small files, higher metadata
-*Backend* -- lower number of large files, 50/50 read write (sequential)
-*Blended* -- A mix of both frontend and backend workloads
+
+* *Frontend* -- large number of small files, higher metadata
+* *Backend* -- lower number of large files, 50/50 read write (sequential)
+* *Blended* -- A mix of both frontend and backend workloads
+
+See https://www.spec.org/storage2020/ for details.
+
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
