@@ -64,8 +64,8 @@ AFX-04> priv set diag
 Warning: These diagnostic commands are for use by NetApp
          personnel only.
 AFX-04*> panic
-This process can take a long time due to the size of the core files. Booting back up immediately may not be possible.
 ----
+This process can take a long time due to the size of the core files. Booting back up immediately may not be possible.
 
 . While the nodes are in takeover, check the network interfaces and if they have been migrated.
 +
