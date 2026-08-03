@@ -27,21 +27,21 @@ NetApp FlexCache volumes provide a way to localize reads on remote datasets by p
 
 . Navigate to “Cluster -> settings” Scroll down to Storage VM peers and click the menu and select “Add a storage VM peer”
 +
-image::images/test-flexcache-image-02.png[width=25%,link=images/test-flexcache-image-02.png]
+image::images/test-flexcache-image-02.png[width=20%,link=images/test-flexcache-image-02.png]
 
 . Select the peered cluster and the desired SVM to peer.
 +
-image::images/test-flexcache-image-03.png[width=50%,link=images/test-flexcache-image-03.png]
+image::images/test-flexcache-image-03.png[width=25%,link=images/test-flexcache-image-03.png]
 
 . Specify FlexCache as the application to use.
 
 . Create the FlexCache volume Click on Storage -> Volumes and click “Add”
 +
-image::images/test-flexcache-image-04.png[width=25%,link=images/test-flexcache-image-04.png]
+image::images/test-flexcache-image-04.png[width=20%,link=images/test-flexcache-image-04.png]
 
 . In the Add volume window, click “More options”
 +
-image::images/test-flexcache-image-05.png[width=50%,link=images/test-flexcache-image-05.png]
+image::images/test-flexcache-image-05.png[width=25%,link=images/test-flexcache-image-05.png]
 
 . Give the cache a name and select “Add as a cache for remote volume” below the name and select the cluster, SVM and volume to connect to as a cache.
 +
