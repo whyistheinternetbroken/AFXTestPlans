@@ -26,7 +26,7 @@ The upgrade process for NetApp AFX is identical to that of unified ONTAP. This t
 * Validate the current version of ONTAP
 
 *Note:* The AFX reinit script has an option to install ONTAP using its own webserver.
-+
+
 [source,console]
 ----
 AFX::*> node run -node * -command "version"
