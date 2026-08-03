@@ -28,11 +28,11 @@ image::images/test-s3-image-01.png[width=10%,link=images/test-s3-image-01.png]
 
 . Click on the desired SVM and look for the “Protocols” section. That shows if S3 is enabled.
 +
-image::images/test-s3-image-02.png[width=10%,link=images/test-s3-image-02.png]
+image::images/test-s3-image-02.png[width=20%,link=images/test-s3-image-02.png]
 
 . Click on the “Settings” tab and then the settings icon on the S3 section.
 +
-image::images/test-s3-image-04.png[width=10%,link=images/test-s3-image-04.png]
+image::images/test-s3-image-04.png[width=20%,link=images/test-s3-image-04.png]
 
 . Give the S3 server a name and configuration. This name should be a FQDN that is resolvable in DNS.
 +
