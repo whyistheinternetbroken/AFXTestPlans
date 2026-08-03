@@ -107,7 +107,7 @@ AFX::> event log show
 +
 [source,console]
 ----
-SP-CLI> system console
+BMC> system console
 LOADER> boot_ontap
 ----
 
