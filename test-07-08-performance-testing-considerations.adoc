@@ -1,4 +1,4 @@
-﻿= Performance testing configuration (Tests 7 and 8)
+﻿= Performance testing considerations (Tests 7 and 8)
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -12,8 +12,8 @@ This page is a companion for Test 7 (real data workloads) and Test 8 (benchmark 
 
 *Note:* NAS benchmarking scripts (volume creation, LIF management, client tuning) are available in the xref:scripts.adoc#nas-performance-benchmark-scripts-benchmarkingontap-repo[Benchmarking/ONTAP scripts] page.
 
-[[performance-testing-configuration]]
-== Performance testing configuration
+[[performance-testing-considerations]]
+== Performance testing considerations
 
 Performance testing is generally intended to find the edges of what a system can achieve in specific workload scenarios. Most of the time, the ONTAP default settings do not need to be adjusted to see good performance for most workloads, but in some cases, you may want to adjust some configurations to optimize the system. This section covers some genera considerations and configuration guidelines rather than serving as an actual test.
 
@@ -206,7 +206,7 @@ Aggressive readahead can help improve read performance for specific workloads (s
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:test-07-customer-workload-real-data.adoc[< Previous]
->| xref:test-08-customer-workload-benchmarks.adoc[Next >]
+| xref:test-06-api-testing.adoc[< Previous]
+>| xref:test-07-customer-workload-real-data.adoc[Next >]
 |===
 // navigation-links:end

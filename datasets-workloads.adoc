@@ -144,7 +144,7 @@ link:https://docs.netapp.com/us-en/ontap/s3-config/index.html[Learn about S3 con
 === ONTAP limits considerations
 
 NetApp AFX runs ONTAP, and because of that, you need to be aware of what file system limits are present in ONTAP, since testing/benchmarking can run into errors if these limits are reached.
-The following table spells out specific limits and what their impact may be on testing. The test plans attempt to build most of these into the tests to avoid unforeseen issues. For more information, see the Performance testing configuration section.
+The following table spells out specific limits and what their impact may be on testing. The test plans attempt to build most of these into the tests to avoid unforeseen issues. For more information, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations].
 
 [cols="1,1,1"]
 |===

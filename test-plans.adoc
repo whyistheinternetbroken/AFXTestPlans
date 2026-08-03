@@ -122,9 +122,9 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 | xref:feature-fabricpool.adoc[FabricPool Feature Test]
 |===
 
-== Performance Test Configuration
+== Performance Test Considerations
 
-For NFS export policy, volume configuration, mount options, client and network configuration, and ONTAP feature settings used during performance testing, see xref:performance-test-plan.adoc[Performance Test Plan: Configuration Sections].
+For NFS export policy, volume configuration, mount options, client and network configuration, and ONTAP feature settings used during performance testing, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations (Tests 7 and 8)].
 
 For NFS server configuration reference, see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration].
 // navigation-links:start

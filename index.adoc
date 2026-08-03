@@ -33,6 +33,7 @@ This test plan is split into focused AsciiDoc files linked from this index. Use 
 * xref:test-04-data-migration.adoc[Test 4: Data migration]
 * xref:test-05-volume-management.adoc[Test 5: Volume management]
 * xref:test-06-api-testing.adoc[Test 6: API testing]
+* xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations (Tests 7 and 8)]
 * xref:test-07-customer-workload-real-data.adoc[Test 7: Customer workload -- real data]
 * xref:test-08-customer-workload-benchmarks.adoc[Test 8: Customer workload -- benchmarks]
 * xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring]
