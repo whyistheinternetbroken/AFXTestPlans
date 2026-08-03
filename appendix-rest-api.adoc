@@ -18,10 +18,10 @@ The following section shows example REST API calls for cluster operations. These
 
 The examples include:
 
-* Creating and deleting FlexGroup volumes.
-* Creating and deleting a network interface.
+* <<create-flexgroup-volume,Creating>> and <<delete-volumes,deleting>> FlexGroup volumes.
+* <<data-interfaces,Creating and deleting a network interface>>.
 * Create and initialize a SnapMirror relationship.
-* Show NFS server configuration.
+* <<show-nfs-server-configuration,Show NFS server configuration>>.
 * Create an export policy rule.
 
 REST API documentation is available by accessing the System Manager link for the system below:
@@ -39,24 +39,22 @@ Auth tokens authenticate a user to the ONTAP cluster when using the REST API. Th
 
 . Open a terminal.
 . Run the following command, replacing `<password>` with the account password:
-
++
 [source,console]
 ----
 echo -n admin:<password> | base64
 ----
-
 . Copy the Base64 output. Use that value as `[INSERT AUTH_TOKEN]` in the curl examples below.
 
 ==== Generate an AUTH_TOKEN using the CLI (Windows)
 
 . Open PowerShell.
 . Run the following command, replacing `<password>` with the account password:
-
++
 [source,powershell]
 ----
 [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("admin:<password>"))
 ----
-
 . Copy the Base64 output. Use that value as `[INSERT AUTH_TOKEN]` in the curl examples below.
 
 ==== Generate an AUTH_TOKEN from the REST API documentation UI
