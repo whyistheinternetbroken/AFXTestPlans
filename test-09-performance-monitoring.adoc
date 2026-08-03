@@ -18,8 +18,6 @@ link:https://github.com/NetApp/harvest[NetApp Harvest - GitHub]
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 9 - Performance monitoring*
-
 a| *Test procedure:*
 
 1. Verify performance tests are running. Performance tests can be real data or benchmarks. From the System Manager GUI, log into System Manager. On the main page, you can see performance graphs on the right. This shows if there is activity in the cluster.

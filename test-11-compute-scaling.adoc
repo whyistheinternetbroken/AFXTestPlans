@@ -15,8 +15,6 @@ One of the main benefits of NetApp AFX is the ability to scale compute and capac
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 11 - Compute scaling (optional)*
-
 a| *Test procedure:*
 
 1. Ensure benchmarks or performance workloads are running during these tests. Note the current average throughput and IOPS.

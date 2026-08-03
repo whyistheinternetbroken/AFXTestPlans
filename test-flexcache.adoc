@@ -15,13 +15,8 @@ NetApp FlexCache volumes provide a way to localize reads on remote datasets by c
 
 NetApp FlexCache volumes provide a way to localize reads on remote datasets by populating only the data in use in cache to conserve capacity utilization while maximizing read performance. The goal of this test is to illustrate that NetApp AFX can be used to connect to unified ONTAP to provide a small capacity footprint for read scaling without needing to copy an entire dataset, while adding compute nodes asymmetrically in NetApp AFX.
 
-.Test ) OPTIONAL: Use FlexCache between unified and NetApp AFX
-
 [cols="1,4",width="100%"]
 |===
-| Section | Details
-| Test 13 | Tester: ________________  Date: ________________
-| Test requirements: | No specific requirements.
 2+a| *Test procedure:*
 
 . Navigate to the NetApp AFX System Manager and login
@@ -94,7 +89,6 @@ drwxr-xr-x 9 root root 4096 May 18 02:05 storage
 
 . Run a performance test against the origin volume in unified ONTAP. Then, run it again on the pre-warmed FlexCache volume on the same dataset. Run a 2nd performance test against a different folder in unified ONTAP. Then, re-run it on a FlexCache that has not been pre-warmed to see the performance hit on a cache that needs to populate data.
 
-
 2+a| *Expected outcome(s):*
 
 * FlexCache peering and creation should be identical to how unified ONTAP creates FlexCache volumes.
@@ -102,9 +96,6 @@ drwxr-xr-x 9 root root 4096 May 18 02:05 storage
 * FlexCache pre-populate should allow for pre-warming of cache data.
 * FlexCache should improve read performance for local reads over remote reads.
 
-| Test results: |
-| Test summary: |
-| Comments: |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

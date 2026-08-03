@@ -22,8 +22,6 @@ For details on installing, configuring and running SpecSFS or MLcommons, see the
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 8 - Customer workload testing -- performance benchmarks*
-
 a| *Test procedure:*
 
 . Create a FlexGroup volume in the NetApp AFX cluster.

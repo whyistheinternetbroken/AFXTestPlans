@@ -16,8 +16,6 @@ If no current API-based automation suites are in use, then some basic REST API c
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 6 - API testing/seamless support for customer automation*
-
 a| *Test procedure:*
 
 . Test your REST API calls against unified ONTAP.

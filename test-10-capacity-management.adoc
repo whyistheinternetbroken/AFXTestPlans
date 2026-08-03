@@ -15,8 +15,6 @@ Viewing and managing capacity in NetApp AFX has been streamlined to improve simp
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 10 - Capacity management*
-
 a| *Test procedure – GUI:*
 
 . View capacity in the dashboard.

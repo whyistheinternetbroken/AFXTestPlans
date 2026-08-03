@@ -8,7 +8,6 @@
 
 This section is the consolidated source for core performance tests and configuration guidance. Core Tests 1-12 are also available as dedicated pages linked from xref:test-plans.adoc[Test Plans]. For NFS server configuration reference, see xref:setup.adoc[Setup].
 
-
 [[basic-functionality-tests]]
 == Basic functionality tests
 
@@ -19,14 +18,8 @@ The goals of these tests are to illustrate the basic administrative and function
 
 The first test plan here is to validate the cluster heath, configuration, etc.
 
-.Test ) Validate the cluster setup.
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 1 | Tester: |  | Date: |
-| Test requirements: | No specific requirements |  |  |
 | Test procedure – GUI: +
 Log into the System Manager GUI via https://[clus_mgmt_IP] +
 The system dashboard will show errors, warnings, capacity information, and a high-level overview of the storage hardware. +
@@ -120,11 +113,7 @@ The network interfaces are present for management Ips. +
 Storage availability zone concepts are reviewed. +
 Cabling diagrams are viewed. +
 Error states are not present. If errors are present, resolve with support before moving on to the next sections. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[enable-autosupport-optional]]
 === Enable AutoSupport (optional)
@@ -136,14 +125,8 @@ AutoSupport is enabled for these environments to ensure the following:
 AutoSupport requires the ONTAP system to be able to access the internet to send its payload to NetApp. For environments that do not allow external access please follow this procedure to manually upload an AutoSupport.
 For more information on what AutoSupport is, the information that AutoSupport contains, or how to configure AutoSupport, please consult .
 
-.Test ) Enable AutoSupport
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 2 | Tester: |  | Date: |
-| Test requirements: | No specific requirements |  |  |
 | Test procedure: +
 Log into the System Manager GUI via https://[clus_mgmt_IP] +
 Navigate to Cluster -> Settings. +
@@ -153,25 +136,15 @@ Test AutoSupport connectivity |  |  |  |
 | Expected outcome(s): +
 AutoSupport is enabled. +
 A test ASUP succeeds. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[create-network-interfaces]]
 === Create network interfaces
 
 ONTAP can be configured with multiple network interfaces for management, data access and inter-cluster connectivity.
 
-.Test ) Create network interfaces.
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 3 | Tester: |  | Date: |
-| Test requirements: | No specific requirements |  |  |
 | Test procedure: +
 Log into the System Manager GUI via https://[clus_mgmt_IP] +
 Navigate to Network -> Overview. +
@@ -183,11 +156,7 @@ Repeat the above step for each node. Create at least 2 data interfaces per node 
 Alternately, use the LIF creation script found in the Appendix of this document. |  |  |  |
 | Expected outcome(s): +
 Two or more data interfaces are created per node. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[data-migration-optional]]
 === Data migration (optional)
@@ -195,18 +164,8 @@ Two or more data interfaces are created per node. |  |  |  |
 The goal for this test is to provide a mechanism to display the ease and speed of migration of data from unified ONTAP to NetApp AFX using NetApp SnapMirror technology. This test is optional if you plan on generating your own datasets on the cluster.
 Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP system to provide a cost-effective way to provide disaster recovery, provided the SnapMirror version requirements are met.
 
-.Test ) Data migration
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 4 | Tester: |  | Date: |
-| Test requirements: | Intercluster LIFs on each node +
-ONTAP versions within 2 releases (ie 9.16.1 -> 9.18.1) +
-A secondary cluster running ONTAP (or replicate to the same cluster to a different volume) +
- +
-*Unified ONTAP cluster must be at 9.16.1 if replicating FlexGroup volumes from NetApp AFX source to unified ONTAP destination |  |  |
 | Test procedure: +
 Ensure intercluster interfaces exist.  +
 Click Network -> Overview. +
@@ -369,25 +328,15 @@ A data protection relationship from unified ONTAP to NetApp AFX is established, 
 Source and destination volume datasets are compared to verify successful migration. +
 SnapMirror relationship is broken; destination volume is verified as writeable and ready for workload testing. +
 OPTIONAL: Replicate from NetApp AFX to unified ONTAP |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[volume-management]]
 === Volume management
 
 NetApp AFX makes some changes to how volumes are created and managed. This test aims to display some of those changes, show scale, and how volumes move automatically.
 
-.Test ) Volume management.
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Error! Reference source not found. | Tester: |  | Date: |
-| Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
 Use the script found in the appendix to create a large number of volumes on the cluster. +
 Review the location of the constituent volumes of the FlexGroup volumes. Note the balance of volume counts per node. Volume counts should be relatively evenly distributed (+/- 2). +
@@ -455,11 +404,7 @@ If you need to delete volumes/clean up volumes, you can leverage the volume dele
 | Expected outcome(s): +
 Volume counts will be balanced across nodes. +
 Volume counts will rebalance when uneven. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[api-testingseamless-support-for-customer-automation]]
 === API testing/seamless support for customer automation
@@ -467,14 +412,8 @@ Volume counts will rebalance when uneven. |  |  |  |
 NetApp AFX is intended to provide a seamless ONTAP experience. Included in that is API parity between unified and NetApp AFX so that legacy automation suites using REST API calls to ONTAP will be plug-and-play into NetApp AFX.
 If no current API-based automation suites are in use, then some basic REST API calls are provided to test functionality. See the appendix for examples.
 
-.Test ) API testing/seamless support for customer automation
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 6 | Tester: |  | Date: |
-| Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
 Test your REST API calls against unified ONTAP. +
  +
@@ -485,11 +424,7 @@ If you are not already using standard automation REST calls against NetApp AFX, 
 | Expected outcome(s): +
 REST API calls used with unified ONTAP are tested. +
 The same REST API calls are tested against NetApp AFX and are successful, with the exception of SAN-related and aggregate-related calls. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[performance-testing-configuration]]
 === Performance testing configuration
@@ -517,9 +452,7 @@ export-policy create -policyname [name] -vserver [SVM]
 export-policy rule create -policyname [name] -clientmatch [client1],[client2],..[clientN] -rorule any -rwrule any -superuser any -anon 0 -chown-mode unrestricted -ntfs-unix-security-ops ignore
 ----
 
-
 *Note:* The NFS server configuration reference table and benchmark CLI command are consolidated in xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration].
-
 
 [[volume-configuration]]
 === Volume configuration
@@ -541,7 +474,6 @@ File System Analytics disabled +
 Snapdir access false
 |===
 
-
 [[special-considerations----flexgroup-volumes]]
 ==== Special considerations -- FlexGroup volumes
 
@@ -559,7 +491,6 @@ If the workload is VMware datastores hosted on a FlexGroup volume, disable the -
 AFX::> set diag; vol modify -vserver [SVM] -volume [FlexGroup name] -granular-data disabled
 ----
 
-
 [[why-snapshots-are-disabled]]
 ==== Why snapshots are disabled
 
@@ -568,7 +499,6 @@ In general, snapshots in ONTAP are not detrimental to overall system performance
 * Data churn -- Many benchmark tests will create a lot of data and then subsequently delete that data, which will rapidly grow the size of any existing snapshots on the volume. To avoid space allocation issues, we disable snapshots.
 
 *Note:* Snapdir access is also disabled to prevent unwanted filesystem crawls across snapshots.
-
 
 [[mount-options]]
 === Mount options
@@ -581,9 +511,7 @@ Base options (applies to all clients/scenaros):
 -o tcp,hard,intr
 ----
 
-
 .Session trunking (OS-specific)
-
 
 [source,console]
 ----
@@ -604,7 +532,6 @@ Some workloads might benefit from special mount options during benchmark tests. 
 
 .Alternate NFS mount options and their use cases
 
-
 [cols="1,1,1"]
 |===
 | NFS mount option | Description | Use case
@@ -619,7 +546,6 @@ Some workloads might benefit from special mount options during benchmark tests. 
 | nconnect | Creates multiple TCP connections (up to the specified count) to the NFS server for a single mount, allowing parallel I/O over separate connections. | High-throughput, I/O-intensive workloads that are bottlenecked by a single TCP stream (e.g., large file transfers, HPC/scientific computing, video editing, database backups, big data analytics). Particularly beneficial on high-bandwidth networks (10 GbE+).
 | krb5* | Specifies what Kerberos security flavor to use with the mount. Requires Kerberos configuration to work properly. See TR-4616 NFS Kerberos with Active Directory for details. | Securing NFS mounts; has a negative impact on performance.
 |===
-
 
 [[client-configuration]]
 === Client configuration
@@ -678,9 +604,7 @@ aggr efficiency modify -aggregate data* -cross-volume-background-dedupe false -c
 aggr efficiency wise-tsse modify -aggregate data* -enable-workload-informed-tsse false
 ----
 
-
 *Note:* Aggressive Readahead feature configuration, caveats, and statistics are covered in xref:feature-aggressive-readahead.adoc[Aggressive Readahead Feature Test].
-
 
 [[customer-workload-testing--real-data]]
 === Customer workload testing -- real data
@@ -689,15 +613,8 @@ The goal of these workload tests is to show that real data workloads can be port
 
 *Note:* For NFS considerations, see the Appendix in this document.
 
-
-.Test ) Customer workload testing -- real workloads, real data
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 7 | Tester: |  | Date: |
-| Test requirements: | No specific requirements. |  |  |
 | Test procedure: +
 Mount NetApp AFX volume using NAS protocol of your choice. +
 Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single client’s performance. +
@@ -712,11 +629,7 @@ Test real-world data using everyday workloads. As workloads are running, test th
 | Expected outcome(s): +
 Workloads should not need additional configuration or changes to run properly using NetApp AFX.  +
 Performance should be as good or better than unified ONTAP. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[customer-workload-testing--performance-benchmarks]]
 === Customer workload testing -- Performance benchmarks
@@ -726,15 +639,8 @@ For EDA workloads, we can leverage SPEC SFS 2020 EDA for benchmarking. This benc
 For AI/ML workloads, we will leverage MLcommons, which can also act as a throughput-specific benchmark.
 For details on installing, configuring and running SpecSFS or MLcommons, see the Appendix of this document.
 
-.Test ) Customer workload testing - benchmarks
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 8 | Tester: |  | Date: |
-| Test requirements: | No specific requirements.  +
-Benchmark tests are run using specific parameters stated in this document. |  |  |
 | Test procedure: +
 Create a FlexGroup volume in the NetApp AFX cluster. +
  +
@@ -762,11 +668,7 @@ For detailed steps on how to run the benchmarks, see the appendix of this docume
 Run benchmarks on datasets. While benchmarks are running, move on to the Performance Monitoring test plan. |  |  |  |
 | Expected outcome(s): +
 Benchmarks should show the performance capabilities of this system. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[performance-monitoring]]
 === Performance monitoring
@@ -776,15 +678,8 @@ NetApp System Manager can be used for basic performance monitoring and is covere
 NetApp Harvest can be used to monitor performance at a more advanced level:
 NetApp Harvest - GitHub
 
-.Test ) Performance monitoring
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 9 | Tester: |  | Date: |
-| Test requirements: | No specific requirements. +
-Performance testing being run during monitoring, |  |  |
 | Test procedure: +
 Verify performance tests are running. +
 Performance tests can be real data or benchmarks. +
@@ -907,26 +802,15 @@ Scope: cluster +
 | Expected outcome(s): +
 Benchmarks should show the performance capabilities of this system. +
 Performance statistic collection should be nearly identical to ONTAP. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[capacity-management]]
 === Capacity management
 
 Viewing and managing capacity in NetApp AFX has been streamlined to improve simplicity and understanding of what capacity you actually have available. Aggregates as a managed construct are removed. Instead, volumes and the new Storage Availability Zone concept are how we view and managed capacity. This test plan shows different ways capacity is managed in NetApp AFX.
 
-.Test ) Capacity management
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 10 | Tester: |  | Date: |
-| Test requirements: | No specific requirements.  +
-Performance testing being run during live node additions. |  |  |
 | Test procedure – GUI: +
 View capacity in the dashboard. +
  +
@@ -939,26 +823,15 @@ AFX::> cluster space show |  |  |  |
 | Expected outcome(s): +
 Capacity views should be easy to understand. +
 Storage availability zones should simplify capacity use. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[compute-scaling-optional]]
 === Compute scaling (optional)
 
 One of the main benefits of NetApp AFX is the ability to scale compute and capacity independently. In this test, we will add 2 additional storage nodes to a 2-node NetApp AFX cluster during live workloads to verify that node additions are not only nondisruptive, but also increase performance scale linearly as volumes are rebalanced across nodes. This can also be done with other node count options (ie, starting with 4 nodes and adding 4 more nodes for an 8 node cluster).
 
-.Test ) Node additions during live workloads
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 11 | Tester: |  | Date: |
-| Test requirements: | No specific requirements. +
-Performance running during live node additions. |  |  |
 | Test procedure: +
 Ensure benchmarks or performance workloads are running during these tests. Note the current average throughput and IOPS. +
 AFX::> set advanced +
@@ -1112,11 +985,7 @@ From System Manager, you can view the performance graph. |  |  |  |
 Adding new nodes to the cluster should be nondisruptive. +
 Volume moves should happen automatically and be nondisruptive. +
 Performance should scale up linearly. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
-
 
 [[node-failure-behavior]]
 === Node failure behavior
@@ -1126,16 +995,8 @@ This test's goal is to not only show that failovers and givebacks are capable of
 
 *Note:* Failover here will be generated by node panic, which will automatically perform a call home to generate a case (provided ASUP is enabled). We will send a test ASUP prior to that to inform support that the cluster is under maintenance.
 
-
-.Test ) Node failure behavior
-
-
 [cols="1,1,1,1,1"]
 |===
-| Section | Details
-| Test 12 | Tester: |  | Date: |
-| Test requirements: | No specific requirements. +
-Benchmarks or performance workloads are active. |  |  |
 | Test procedure: +
 Log into the cluster via the cluster management LIF. +
 Verify benchmarks or performance workloads are running during these tests. +
@@ -1259,14 +1120,9 @@ Volumes should move across nodes to balance performance in between 17-22 minutes
 Performance should not see a noticeable decrease once volumes are moved. +
 Givebacks should rebalance volumes and performance back to the initial state. +
 Volumes will not necessarily return back to the same nodes they originated on. |  |  |  |
-| Test results: |  |  |  |
-| Test summary: |  |  |  |
-| Comments: |  |  |  |
 |===
 
-
 *Note:* Optional tests 13-16 (FlexCache, S3, Snapshots/SnapMirror, NDU) are linked from xref:test-plans.adoc[Test Plans Overview].
-
 
 [[optional-new-feature-tests]]
 === OPTIONAL: New feature tests

@@ -16,13 +16,8 @@ This optional test plan covers S3 protocol configuration and testing on NetApp A
 ONTAP provides S3 as a protocol for data access, as well as the ability to present datasets as both NAS and S3 in the same volume. This functionality is valuable to use cases looking to move to object for their applications, but still have legacy file shares in their environment. Providing a way to present data to any protocol in the same volume removes the requirement to copy large amounts of data to new locations.
 This optional test plan covers configuration of S3 for use with the datasets created for performance benchmarking above.
 
-.Test ) OPTIONAL: S3 in ONTAP
-
 [cols="1,4",width="100%"]
 |===
-| Section | Details
-| Test 14 | Tester: ________________  Date: ________________
-| Test requirements: | No specific requirements.
 2+a| *Test procedure:*
 
 . Enable S3 on the SVM
@@ -162,15 +157,11 @@ img_0001_of_2395.tfrecord  img_0480_of_2395.tfrecord  img_0959_of_2395.tfrecord 
 -rw-r----- 1 root root 0 May 22  2025 /mnt/s3_bucket/testfile
 ----
 
-
 2+a| *Expected outcome(s):*
 
 * A volume will be able to be presented to both NAS and object clients.
 * The same data is accessible to both NAS and object clients without needing to move.
 
-| Test results: |
-| Test summary: |
-| Comments: |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

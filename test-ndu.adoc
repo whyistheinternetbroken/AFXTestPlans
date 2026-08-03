@@ -15,13 +15,8 @@ This optional test validates the non-disruptive upgrade process for NetApp AFX.
 
 The upgrade process for NetApp AFX is identical to that of unified ONTAP. This test plan is designed to show some of the differences between how HA failovers and volume rebalancing function in NetApp AFX. The upgrade process can be done via CLI or by using the GUI by navigating to Cluster -> Overview -> Version.
 
-.Test ) OPTIONAL: Non-Disruptive ONTAP Upgrade
-
 [cols="1,4",width="100%"]
 |===
-| Section | Details
-| Test 16 | Tester: ________________  Date: ________________
-| Test requirements: | No specific requirements.
 2+a| *Test procedure:*
 
 . Download the latest ONTAP image from the NetApp website. Place the image.tgz file on a webserver. Do not use TinyWeb as it has a 2GB limit. Validate the current version of ONTAP
@@ -203,14 +198,10 @@ Node: AFX-04
 NetApp Release [ONTAP_version_info]: Sun Jun 22 01:02:29 EDT 2025   <1>
 ----
 
-
 2+a| *Expected outcome(s):*
 
 * ONTAP Cluster will be updated with new version of ONTAP.
 
-| Test results: |
-| Test summary: |
-| Comments: |
 |===
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

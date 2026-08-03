@@ -18,8 +18,6 @@ This test's goal is to not only show that failovers and givebacks are capable of
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 12 - Node failure behavior*
-
 a| *Test procedure:*
 
 . Log into the cluster via the cluster management LIF. Verify benchmarks or performance workloads are running during these tests.

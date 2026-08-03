@@ -15,8 +15,6 @@ The first test plan here is to validate the cluster heath, configuration, etc.
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 1 - Validate the cluster setup*
-
 a| *Test procedure – GUI:*
 
 . Log into the System Manager GUI via https://[clus_mgmt_IP] The system dashboard will show errors, warnings, capacity information, and a high-level overview of the storage hardware.

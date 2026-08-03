@@ -16,8 +16,6 @@ Additionally, we can also show how NetApp AFX can replicate to a unified ONTAP s
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 4 - Data migration (optional)*
-
 a|
 *Contents:*
 

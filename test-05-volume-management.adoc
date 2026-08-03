@@ -15,8 +15,6 @@ NetApp AFX makes some changes to how volumes are created and managed. This test 
 
 [cols="<1",width="100%"]
 |===
-<| *Test plan 5 - Volume management*
-
 a| *Test procedure:*
 
 . Use the volume create script in xref:scripts.adoc#nas-performance-benchmark-scripts-benchmarkingontap-repo[Benchmarking/ONTAP volume scripts] to create a large number of volumes on the cluster. Review the location of the constituent volumes of the FlexGroup volumes. Note the balance of volume counts per node. Volume counts should be relatively evenly distributed (+/- 2).
