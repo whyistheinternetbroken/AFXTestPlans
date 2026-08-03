@@ -19,7 +19,9 @@ Snapshots and SnapMirror are integral to a complete data protection story for ON
 |===
 2+a| *Test procedure:*
 
-. Snapshot steps Verify benchmarks or performance workloads are running during these tests. In most cases, you won’t be able to see any sort of impact show up on the performance graphs in System Manager, so you would be best served to view the impact from the command line.
+*Snapshot steps*
+
+. Verify benchmarks or performance workloads are running during these tests. In most cases, you won’t be able to see any sort of impact show up on the performance graphs in System Manager, so you would be best served to view the impact from the command line.
 
 . From the NetApp AFX cluster CLI, kick off the performance statistics
 +
