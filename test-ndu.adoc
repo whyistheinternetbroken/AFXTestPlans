@@ -20,12 +20,13 @@ The upgrade process for NetApp AFX is identical to that of unified ONTAP. This t
 2+a| *Test procedure:*
 
 . Retrieve the ONTAP image
-
-* Download the latest ONTAP image from the NetApp website. 
-* Place the image.tgz file on a webserver. (Do not use TinyWeb as it has a 2GB limit.) 
++
+--
+* Download the latest ONTAP image from the NetApp website.
+* Place the image.tgz file on a webserver. (Do not use TinyWeb as it has a 2GB limit.)
 * Validate the current version of ONTAP
 
-*Note:* The AFX reinit script has an option to install ONTAP using its own webserver.
+*Note:* The link:https://github.com/whyistheinternetbroken/AFX/tree/main/[AFX reinit script] has an option to install ONTAP using its own webserver.
 
 [source,console]
 ----
@@ -41,9 +42,10 @@ NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1>
 Node: AFX-03
 NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1>
 
-Node: AFX-03
+Node: AFX-04
 NetApp Release [ONTAP_version_info]: Mon Jun 16 00:59:28 EDT 2025   <1>
 ----
+--
 
 . Delete the existing ONTAP image.
 +
@@ -54,13 +56,14 @@ Package Delete Operation Completed Successfully
 ----
 
 . Execute the upload and upgrade of ONTAP
-*Note:* Alternately, use the AFX reinit script's upgrade option.
-
++
+*Note:* Alternately, use the upgrade option in the link:https://github.com/whyistheinternetbroken/AFX/tree/main/[AFX reinit script].
++
 *Example:*
 +
 [source,console]
 ----
-AFX::> cluster image package get -urlÂ http://<webserver>/image.tgz
+AFX::> cluster image package get -url http://<webserver>/image.tgz
 Package download completed.
 Package processing completed.
 
@@ -133,7 +136,6 @@ AFX-04               in-progress       Installing ONTAP software image.
 ----
 
 . Validate the new version of ONTAP
-
 +
 [source,console]
 ----
