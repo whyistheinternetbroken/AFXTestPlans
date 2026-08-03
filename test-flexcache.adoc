@@ -91,19 +91,19 @@ drwxr-xr-x 9 root root 4096 May 18 02:05 storage
 
 . FlexCache volumes can also be pre-populated if you know what data you need cached to reduce the initial latency hit on first read. In System Manager, on the FlexCache volume, click More and select “Prepopulate folders”
 +
-image::images/test-flexcache-image-11.png[width=50%,link=images/test-flexcache-image-11.png]
+image::images/test-flexcache-image-11.png[width=20%,link=images/test-flexcache-image-11.png]
 
 . Then, click “+Add” in the window to select the folder to populate. For instance, if you want to run a training job on Resnet50 data, specify the folder path with that data in it and click save.
 +
 image::images/test-flexcache-image-12.png[width=50%,link=images/test-flexcache-image-12.png]
 +
-image::images/test-flexcache-image-13.png[width=50%,link=images/test-flexcache-image-13.png]
+image::images/test-flexcache-image-13.png[width=20%,link=images/test-flexcache-image-13.png]
 
 . As this happens, you will see the “Cache miss” graph get activity and the Capacity increase in real time in the System Manager view for the cache volume.
 +
-image::images/test-flexcache-image-14.png[width=50%,link=images/test-flexcache-image-14.png]
+image::images/test-flexcache-image-14.png[width=20%,link=images/test-flexcache-image-14.png]
 +
-image::images/test-flexcache-image-15.png[width=50%,link=images/test-flexcache-image-15.png]
+image::images/test-flexcache-image-15.png[width=20%,link=images/test-flexcache-image-15.png]
 
 . The Resnet50 training folder in this test is ~320GB in size. The view in System Manager shows that capacity used after the pre-populate. Pre-populate can take some time to complete. The ~320GB test below took around 25 minutes to pre-populate data. Your data path will vary based on the data you have populated.
 +
