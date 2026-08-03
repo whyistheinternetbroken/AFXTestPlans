@@ -8,7 +8,7 @@
 
 xref:appendix.adoc[← Back to Appendix]
 
-ONTAP REST API examples for authentication, FlexGroup volume creation, deletion, network interfaces, and NFS server configuration.
+ONTAP REST API examples for authentication, FlexGroup volume creation, deletion, network interfaces, SnapMirror, NFS server configuration, and export policy rules.
 
 
 [[rest-api-examples-for-testing]]
@@ -20,9 +20,9 @@ The examples include:
 
 * <<create-flexgroup-volume,Creating>> and <<delete-volumes,deleting>> FlexGroup volumes.
 * <<data-interfaces,Creating and deleting a network interface>>.
-* Create and initialize a SnapMirror relationship.
+* <<create-and-initialize-a-snapmirror-relationship,Create and initialize a SnapMirror relationship>>.
 * <<show-nfs-server-configuration,Show NFS server configuration>>.
-* Create an export policy rule.
+* <<create-an-export-policy-rule,Create an export policy rule>>.
 
 REST API documentation is available by accessing the System Manager link for the system below:
 
@@ -157,6 +157,44 @@ curl -k -X DELETE "https://[CLUS_MGMT_IP]/api/network/ip/interfaces/[UUID]" \
 ----
 
 
+[[create-and-initialize-a-snapmirror-relationship]]
+=== Create and initialize a SnapMirror relationship
+
+Create a SnapMirror relationship (destination SVM and volume must already exist, and the SVMs must be peered):
+
+[source,console]
+----
+curl -k -X POST
+"https://[CLUS_MGMT_IP]/api/snapmirror/relationships?return_timeout=0&return_records=true" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT AUTH_TOKEN]" \
+-H  "Content-Type: application/json" \
+-d "{  \"source\": {    \"path\": \"svm1:vol1\"  },  \"destination\": {    \"path\": \"svm1:vol1_dst\"  }}"
+----
+
+Retrieve the relationship UUID:
+
+[source,console]
+----
+curl -k -X GET
+"https://[CLUS_MGMT_IP]/api/snapmirror/relationships?fields=uuid,source.path,destination.path,state&return_records=true&return_timeout=15" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT_AUTH_TOKEN]"
+----
+
+Initialize the SnapMirror relationship (starts the baseline transfer):
+
+[source,console]
+----
+curl -k -X POST
+"https://[CLUS_MGMT_IP]/api/snapmirror/relationships/[UUID]/transfers?return_timeout=0" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT AUTH_TOKEN]" \
+-H  "Content-Type: application/json" \
+-d "{}"
+----
+
+
 [[show-nfs-server-configuration]]
 === Show NFS server configuration
 
@@ -166,6 +204,32 @@ curl -k -X DELETE "https://[CLUS_MGMT_IP]/api/network/ip/interfaces/[UUID]" \
 curl -k -X GET "https://[CLUS_MGMT_IP]/api/protocols/nfs/services?fields=*&max_records=100&return_records=true&return_timeout=15" \
 -H  "accept: application/json" \
 -H  "authorization: Basic [INSERT AUTH_TOKEN]"
+----
+
+
+[[create-an-export-policy-rule]]
+=== Create an export policy rule
+
+First, retrieve the export policy ID:
+
+[source,console]
+----
+curl -k -X GET
+"https://[CLUS_MGMT_IP]/api/protocols/nfs/export-policies?fields=name,id,svm.name&return_records=true&return_timeout=15" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT_AUTH_TOKEN]"
+----
+
+Then, create an export policy rule (replace `[POLICY_ID]` and `[CLIENT_IP]`):
+
+[source,console]
+----
+curl -k -X POST
+"https://[CLUS_MGMT_IP]/api/protocols/nfs/export-policies/[POLICY_ID]/rules?return_records=true" \
+-H  "accept: application/json" \
+-H  "authorization: Basic [INSERT AUTH_TOKEN]" \
+-H  "Content-Type: application/json" \
+-d "{  \"clients\": [    {      \"match\": \"[CLIENT_IP]\"    }  ],  \"ro_rule\": [    \"any\"  ],  \"rw_rule\": [    \"any\"  ],  \"superuser\": [    \"any\"  ],  \"anonymous_user\": \"0\",  \"chown_mode\": \"unrestricted\",  \"ntfs_unix_security\": \"ignore\"}"
 ----
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]

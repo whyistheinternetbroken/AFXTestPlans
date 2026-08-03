@@ -28,7 +28,7 @@ The following appendices provide supplemental reference information for this tes
 | rsize/wsize tuning, close-to-open consistency (CTO/NOCTO), nconnect, and NFS readahead settings
 
 | xref:appendix-rest-api.adoc[REST API Examples]
-| ONTAP REST API examples: authentication, FlexGroup creation, deletion, network interfaces, NFS server config
+| ONTAP REST API examples: authentication, FlexGroup creation, deletion, network interfaces, SnapMirror, NFS server config, export policy rules
 
 | xref:appendix-storage-benchmark.adoc[Storage Benchmark Testing]
 | SPEC SFS 2020 and DLIO/MLcommons benchmark guides
