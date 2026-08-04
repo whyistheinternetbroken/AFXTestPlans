@@ -17,7 +17,8 @@ ONTAP can be configured with multiple network interfaces for management, data ac
 |===
 a| *Test procedure:*
 
-. Log into the System Manager GUI via https://[clus_mgmt_IP] Navigate to Network -> Overview. Click the “+ Add” button under Network interfaces.
+. Log into the System Manager GUI via `https://[clus_mgmt_IP]` 
+. Navigate to Network -> Overview. Click the “+ Add” button under Network interfaces.
 +
 image::images/test-03-image-01.png[width=50%,link=images/test-03-image-01.png]
 
