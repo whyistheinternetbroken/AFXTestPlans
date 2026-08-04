@@ -60,7 +60,7 @@ AFX::*> statistics lif show -vserver [SVM1]
 [[pnfs-counters----nfsv4_1_diag-diag-priv]]
 === pNFS counters -- nfsv4_1_diag (diag priv)
 
-.Object: `nfsv4_1_diag`
+*Object: `nfsv4_1_diag`*
 [cols="2,3",options="header"]
 |===
 | Counter | Description
@@ -262,7 +262,7 @@ AFX::*> statistics lif show -vserver [SVM1]
 [[pnfs-counters----nfsv4_1-advanced-priv]]
 === pNFS counters -- nfsv4_1 (advanced priv)
 
-.Object: `nfsv4_1`
+*Object: `nfsv4_1`*
 [cols="2,3",options="header"]
 |===
 | Counter | Description
