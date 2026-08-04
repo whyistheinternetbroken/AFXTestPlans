@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Export the AFX test plan AsciiDoc book to a single PDF.
-# Usage: ./scripts/export-pdf.sh [outdir] [outfile]
+# Usage: ./scripts/ExportPDF/export-pdf.sh [outdir] [outfile]
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 
 OUT_DIR="${1:-exports}"

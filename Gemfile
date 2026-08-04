@@ -2,7 +2,7 @@
 #   bundle install
 #   bundle exec asciidoctor-pdf book.adoc -D exports -o AFX-Test-Plan-ONTAP-9.19.1.pdf
 #
-# Or use scripts/export-pdf.ps1 / scripts/export-pdf.sh (gem or Docker).
+# Or use scripts/ExportPDF/export-pdf.ps1 / scripts/ExportPDF/export-pdf.sh (gem or Docker).
 
 source "https://rubygems.org"
 

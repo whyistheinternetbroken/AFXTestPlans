@@ -24,7 +24,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "../..")
 Set-Location $RepoRoot
 
 $Book = Join-Path $RepoRoot "book.adoc"

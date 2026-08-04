@@ -20,14 +20,14 @@ Windows (PowerShell):
 
 [source,powershell]
 ----
-.\scripts\export-pdf.ps1
+.\scripts\ExportPDF\export-pdf.ps1
 ----
 
 Linux / macOS:
 
 [source,shell]
 ----
-./scripts/export-pdf.sh
+./scripts/ExportPDF/export-pdf.sh
 ----
 
 Default output:
@@ -38,7 +38,7 @@ Optional arguments (PowerShell):
 
 [source,powershell]
 ----
-.\scripts\export-pdf.ps1 -OutDir exports -OutFile AFX-Test-Plan-customer.pdf
+.\scripts\ExportPDF\export-pdf.ps1 -OutDir exports -OutFile AFX-Test-Plan-customer.pdf
 ----
 
 The master include file is xref:book.adoc[`book.adoc`]. Do not hand-edit customer PDFs from individual `TestPlan/*.adoc` pages unless you intentionally want a subset.
