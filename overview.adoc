@@ -64,6 +64,7 @@ NetApp documentation for NetApp AFX can be found here:
 
 * link:https://docs.netapp.com/us-en/ontap-afx/[NetApp AFX general documentation]
 * link:https://docs.netapp.com/us-en/ontap-technical-reports/afx/afx-learn-about.html[NetApp AFX technical reports]
+* xref:additional-references.adoc[Additional references] (Optional)
 
 [[licensing-requirements]]
 == Licensing requirements
