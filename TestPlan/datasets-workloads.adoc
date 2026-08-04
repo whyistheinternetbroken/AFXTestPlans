@@ -52,9 +52,13 @@ From an application/solution perspective, relevant workloads include:
 ==== If you are currently using ONTAP
 
 If ONTAP is currently running your production workloads, this test plan will use SnapMirror to efficiently and quickly replicate volumes to NetApp AFX (see xref:test-04-data-migration.adoc[Test 4: Data migration]).
+
 Some considerations:
+
 * SnapMirror *_from_* unified ONTAP to NetApp AFX can be performed with any unified ONTAP version within 2 major releases (ie, ONTAP 9.16.1 -> 9.18.1).
+
 * SnapMirror *_to_* unified ONTAP from NetApp AFX is only supported on unified ONTAP running ONTAP 9.16.1 when replicating FlexGroup volumes. FlexVol volumes can still use the 2 version compatibility rule.
+
 * Alternatively, it is also possible to copy subsets of data using NAS protocol-based tools such as XCP, robocopy, etc. Those methods will not be covered in the scope of this test plan.
 
 [[if-you-are-not-currently-using-ontap]]
