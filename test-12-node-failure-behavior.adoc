@@ -99,7 +99,7 @@ AFX::*> vol move show -vserver svm1 -instance
 AFX::> event log show
 ----
 
-. Verify if performance has changed for currently running workload (throughput, CPU utilization, IOPS, etc.) and if operations have experienced noticeable disruption. Use the performance monitoring steps in the Performance monitoring test plan above.
+. Verify if performance has changed for currently running workload (throughput, CPU utilization, IOPS, etc.) and if operations have experienced noticeable disruption. Use the performance monitoring steps in xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring].
 
 . Boot the node by logging into the service processor and access the system console.
 +
@@ -154,7 +154,7 @@ AFX-03         true     Connected to AFX-03
 ----
 
 
-. During giveback, verify if performance has changed for currently running workload (throughput, CPU utilization, IOPS, etc.) and if operations have experienced noticeable disruption. Operations using stateful NAS (such as SMB and NFSv4.x) will experience some disruption due to locking exchange. Use the steps in the performance monitoring test plan.
+. During giveback, verify if performance has changed for currently running workload (throughput, CPU utilization, IOPS, etc.) and if operations have experienced noticeable disruption. Operations using stateful NAS (such as SMB and NFSv4.x) will experience some disruption due to locking exchange. Use the steps in xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring].
 
 . Check the home status of the network interfaces.
 +

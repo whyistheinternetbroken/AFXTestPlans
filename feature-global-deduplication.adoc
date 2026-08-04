@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:test-plans.adoc[Ã¢â€ Â Back to Test Plans]
+xref:test-plans.adoc[← Back to Test Plans]
 
 Global deduplication is new in ONTAP 9.19.1 and deduplicates data across all nodes using a single shared filesystem namespace.
 
@@ -71,8 +71,8 @@ This test attempts to show the following.
 * How global deduplication impacts performance
 * The space savings realized with global deduplication vs. traditional node and volume based
 * How to view statistics for global deduplication operations
-The test plan uses the benchmarking utility called  to generate load and to create a dataset that can be deduplicated. This test plan can be performed in conjunction with the dynamic storage efficiency test plan seen later in this document.
-You can access the test plan here:
+The test plan uses the benchmarking utility xref:vdbench-global-dedupe.adoc[VDBench] to generate load and to create a dataset that can be deduplicated. This test plan can be performed in conjunction with the xref:feature-dynamic-storage-efficiency.adoc[Dynamic Storage Efficiency feature test].
+You can access the test plan here: xref:vdbench-global-dedupe.adoc[VDBench Test Plan: NFS Storage Performance Testing].
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===

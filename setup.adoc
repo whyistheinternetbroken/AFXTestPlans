@@ -16,9 +16,9 @@ This section covers hardware requirements, client configurations, networking, an
 [[setup-required]]
 === Setup required
 
-Hardware installation and initial configuration documentation links can be found in the "Documentation requirements" section. This test plan assumes that the initial setup and configuration has already been performed.
+Hardware installation and initial configuration documentation links can be found in xref:overview.adoc#documentation-requirements[Documentation requirements]. This test plan assumes that the initial setup and configuration has already been performed.
 
-*Note:* It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and FabricPool. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at: link:https://github.com/whyistheinternetbroken/AFX[https://github.com/whyistheinternetbroken/AFX]
+*Note:* It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and xref:feature-fabricpool.adoc[FabricPool]. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at: xref:scripts.adoc#netapp-afx-reinitialization-script[NetApp AFX reinitialization script] (link:https://github.com/whyistheinternetbroken/AFX[GitHub]).
 
 
 [[initial-state-of-the-test-environment]]
@@ -156,7 +156,7 @@ sudo sysctl -p /etc/sysctl.d/90-netapp-afx-benchmark.conf
 All data network interfaces in an ONTAP SVM should be routable to all clients for best results in this test plan. The IP address count needed are as follows:
 
 * Four (4) _intercluster_ interface IP addresses
-** One per node required; to be used for SnapMirror(R) and FlexCache operations (unless not testing these features)
+** One per node required; to be used for xref:test-04-data-migration.adoc[SnapMirror] and xref:test-flexcache.adoc[FlexCache] operations (unless not testing these features)
 * At least eight (8) data interface IP addresses (two per node)
 ** pNFS supports up to sixteen (16) data IP interfaces per node
 ** Can be TCP or RDMA capable

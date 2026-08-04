@@ -146,7 +146,7 @@ AFX::*> vol show -fields node,size,constituent-count -is-constituent true -node 
 
 13. Eventually, volumes should be distributed evenly across all nodes. Check back every 5 minutes or so. If disks are unavailable to one of the nodes (i.e., bad switch config, bad cabling, card issues), then nodes will not add properly. If the node does not have two healthy cluster LIFs (i.e., a cluster port is down), the node will not add properly.
 
-14. Add/configure new network interfaces for your SVM on a per-node basis to add performance to the workload. Add at least one per node for NFSv3 and at least two per node if using NFSv4.x.
+14. Add/configure new network interfaces for your SVM on a per-node basis to add performance to the workload. Add at least one per node for NFSv3 and at least two per node if using NFSv4.x. See xref:test-03-create-network-interfaces.adoc[Test 3: Create network interfaces] for detailed LIF creation steps (CLI, System Manager, or scripts).
 +
 [source,console]
 ----

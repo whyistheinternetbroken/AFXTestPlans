@@ -96,7 +96,7 @@ In general, snapshots in ONTAP are not detrimental to overall system performance
 [[mount-options]]
 == Mount options
 
-Mount options, in general, are variable depending on use cases. This section attempts to show a general use case mount option list that was used in our internal performance testing. If the NFS server is configured properly (see above) then you won't need to specify NFS versions or wsize/rsize options.
+Mount options, in general, are variable depending on use cases. This section attempts to show a general use case mount option list that was used in our internal performance testing. If the NFS server is configured properly (see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration]) then you won't need to specify NFS versions or wsize/rsize options.
 Base options (applies to all clients/scenaros):
 
 [source,console]
@@ -138,13 +138,13 @@ Some workloads might benefit from special mount options during benchmark tests. 
 | `acdirmax` | Sets the maximum time (seconds) the client caches attributes for a directory. Default is typically 60s. | Stable directory structures that rarely change — raising this reduces GETATTR calls (e.g., large static directory trees, archival storage).
 | `clientaddr` | Specifies the client IP address to advertise to the NFS server for callback communication (NFSv4/v4.1+). The server uses this address to send delegation recalls and other callbacks. | Multi-homed clients or environments with complex networking (e.g., clients with multiple NICs, VPN/overlay networks, or NAT) where the auto-detected address may be incorrect.
 | `nconnect` | Creates multiple TCP connections (up to the specified count) to the NFS server for a single mount, allowing parallel I/O over separate connections. | High-throughput, I/O-intensive workloads that are bottlenecked by a single TCP stream (e.g., large file transfers, HPC/scientific computing, video editing, database backups, big data analytics). Particularly beneficial on high-bandwidth networks (10 GbE+).
-| `krb5,krb5i,krb5p` | Specifies what Kerberos security flavor to use with the mount. Requires Kerberos configuration to work properly. See TR-4616 NFS Kerberos with Active Directory for details. | Securing NFS mounts; has a negative impact on performance.
+| `krb5,krb5i,krb5p` | Specifies what Kerberos security flavor to use with the mount. Requires Kerberos configuration to work properly. See link:https://www.netapp.com/media/19384-tr-4616.pdf[TR-4616: NFS Kerberos in ONTAP with Active Directory] for details. | Securing NFS mounts; has a negative impact on performance.
 |===
 
 [[client-configuration]]
 == Client configuration
 
-The client configuration used for our internal benchmarking is covered in the Clients section at the beginning of this document. The following contains some additional configuration considerations. This list is not considered exhaustive and will be modified over time to accommodate additional use cases/scenarios.
+The client configuration used for our internal benchmarking is covered in xref:setup.adoc#clients[Setup: Clients]. The following contains some additional configuration considerations. This list is not considered exhaustive and will be modified over time to accommodate additional use cases/scenarios.
 
 [[nfs-readahead]]
 === NFS readahead
@@ -153,7 +153,7 @@ From: https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-lin
 
 _NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystems rsize._
 _RHEL 8.3 and Ubuntu 18.04 introduced changes that might negatively impact client sequential read performance. Unlike earlier releases, these distributions set read-ahead to a default of 128 KiB regardless of the rsize mount option used. Upgrading from releases with the larger read-ahead value to releases with the 128-KiB default experienced decreases in sequential read performance. However, read-ahead values may be tuned upward both dynamically and persistently. For example, testing with SAS GRID found the 15,360 KiB read value optimal compared to 3,840 KiB, 960 KiB, and 128 KiB. Not enough tests have been run beyond 15,360 KiB to determine positive or negative impact._
-For steps on how to view/set NFS readahead values, see:
+For steps on how to view/set NFS readahead values, see xref:appendix-client-tuning.adoc#managing-readahead-values-on-clients[Client Tuning: Managing readahead values].
 
 [[network-configuration]]
 == Network configuration
@@ -183,7 +183,7 @@ The following section covers some general networking guidance for client and sto
 [[ontap-feature-considerations]]
 == ONTAP feature considerations
 
-The following covers specific ONTAP feature configuration modifications that are not covered in the sections above.
+The following covers specific ONTAP feature configuration modifications that are not covered in <<nfs-export-policy-configuration>>, <<volume-configuration>>, <<mount-options>>, <<client-configuration>>, or <<network-configuration>>.
 
 [[disable-storage-efficiencies]]
 === Disable storage efficiencies

@@ -15,7 +15,7 @@ NFS, pNFS, and session trunking statistics counters with command examples and ou
 [[statistics-counters]]
 == Statistics counters
 
-This section lists relevant statistics counters for some of the sections listed above.
+This section lists relevant statistics counters for xref:appendix-nfs-considerations.adoc#pnfs-and-session-trunking-validation[pNFS and session trunking validation] and xref:feature-aggressive-readahead.adoc[Aggressive Readahead].
 
 [[glossary-of-nfs-operation-types-found-in-ontap-statistics]]
 === Glossary of NFS operation types found in ONTAP statistics

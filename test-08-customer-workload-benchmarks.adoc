@@ -50,9 +50,9 @@ image::images/test-08-image-05.png[width=25%,link=images/test-08-image-05.png]
 
 . Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter* *Recommended NFS versions and mount options are found in the xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS considerations in the Appendix].*
 
-. Generate datasets. For detailed steps on how to run the benchmarks, see the appendix of this document.
+. Generate datasets. For detailed steps on how to run the benchmarks, see xref:appendix-spec-sfs.adoc[SPEC SFS 2020] and xref:appendix-mlcommons.adoc[MLCommons / MLPerf Storage].
 
-. Run benchmarks on datasets. While benchmarks are running, move on to the Performance Monitoring test plan.
+. Run benchmarks on datasets. While benchmarks are running, move on to xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring].
 
 a| *Expected outcome(s):*
 

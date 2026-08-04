@@ -93,7 +93,7 @@ The following table shows the NFS operations involved in the SPECSFS 2020 EDA_BA
 [[definition-of-relevant-operations-in-spec-sfs-2020]]
 === Definition of relevant operations in SPEC SFS 2020
 
-The following section defines the operations mentioned in the frontend and backend workload sections above.
+The following section defines the operations mentioned in <<frontend-eda-workload-breakdown----specsfs-2020>> and <<backend-eda-workload-breakdown>>.
 
 [cols="1,1",options="header"]
 |===

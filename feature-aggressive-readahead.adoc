@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:test-plans.adoc[Ã¢â€ Â Back to Test Plans]
+xref:test-plans.adoc[← Back to Test Plans]
 
 Aggressive readahead optimizes sequential file read performance for media streaming, HPC, and other read-intensive workloads.
 
@@ -34,7 +34,7 @@ Shared buffer cache -- Aggressive read ahead uses the same buffer cache as other
 Underlying storage performance -- If files cannot be read quickly enough (for example, on HDD-based FAS systems), cached data may be evicted before the client read occurs, negating the benefits of read ahead.
 Access pattern requirements -- If the workload's read pattern is not sequential, or if files in a directory are not named in an increasing sequential order, the cross_file_sequential_read aggressive read ahead mode will not provide meaningful benefits.
 
-*Note:* The following section covers statistics monitoring for aggressive readahead. Some introductory content repeats the configuration section above for context. Both sections were present in the original source document and are preserved here.
+*Note:* The following section covers statistics monitoring for aggressive readahead. Some introductory content repeats <<aggressive-readahead>> for context. Both sections were present in the original source document and are preserved here.
 
 
 [[aggressive-readahead-statistics-and-monitoring]]

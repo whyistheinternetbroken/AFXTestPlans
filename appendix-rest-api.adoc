@@ -24,16 +24,16 @@ The examples include:
 * <<show-nfs-server-configuration,Show NFS server configuration>>.
 * <<create-an-export-policy-rule,Create an export policy rule>>.
 
-REST API documentation is available by accessing the System Manager link for the system below:
+REST API documentation is available by accessing the System Manager link for the system:
 
 `https://[clus_mgmt_ip]/docs/api`
 
-If you prefer to use Ansible playbooks, you can generate sample YAML files in System Manager via the "Save to Ansible playbook" button, found on some System Manager functions (see below).
+If you prefer to use Ansible playbooks, you can generate sample YAML files in System Manager via the "Save to Ansible playbook" button, found on some System Manager functions.
 
 [[generate-an-auth_token]]
 === Generate an AUTH_TOKEN
 
-Auth tokens authenticate a user to the ONTAP cluster when using the REST API. This token is required to run the scripts below. The token is a Base64-encoded string of `username:password`. Substitute the password provided by the account team for `<password>`.
+Auth tokens authenticate a user to the ONTAP cluster when using the REST API. This token is required to run the curl examples in <<create-flexgroup-volume>>, <<delete-volumes>>, <<data-interfaces>>, and the other sections that follow. The token is a Base64-encoded string of `username:password`. Substitute the password provided by the account team for `<password>`.
 
 ==== Generate an AUTH_TOKEN using the CLI (Linux)
 
@@ -44,7 +44,7 @@ Auth tokens authenticate a user to the ONTAP cluster when using the REST API. Th
 ----
 echo -n admin:<password> | base64
 ----
-. Copy the Base64 output. Use that value as `[INSERT AUTH_TOKEN]` in the curl examples below.
+. Copy the Base64 output. Use that value as `[INSERT AUTH_TOKEN]` in the curl examples in <<create-flexgroup-volume>> and the following sections.
 
 ==== Generate an AUTH_TOKEN using the CLI (Windows)
 
@@ -55,7 +55,7 @@ echo -n admin:<password> | base64
 ----
 [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("admin:<password>"))
 ----
-. Copy the Base64 output. Use that value as `[INSERT AUTH_TOKEN]` in the curl examples below.
+. Copy the Base64 output. Use that value as `[INSERT AUTH_TOKEN]` in the curl examples in <<create-flexgroup-volume>> and the following sections.
 
 ==== Generate an AUTH_TOKEN from the REST API documentation UI
 

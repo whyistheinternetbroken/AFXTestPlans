@@ -12,10 +12,11 @@ xref:test-plans.adoc[← Back to Test Plans]
 == Performance monitoring
 
 The goal of this test is to illustrate the performance monitoring capabilities of NetApp AFX and how it can integrate into current performance monitoring tools used by unified ONTAP and how understanding ONTAP performance should have little to no learning curve from unified ONTAP.
-NetApp System Manager can be used for basic performance monitoring and is covered in the test below.
+NetApp System Manager can be used for basic performance monitoring and is covered in <<performance-monitoring-procedure,the following procedure>>.
 NetApp Harvest can be used to monitor performance at a more advanced level:
 link:https://github.com/NetApp/harvest[NetApp Harvest - GitHub]
 
+[[performance-monitoring-procedure]]
 [cols="<1",width="100%"]
 |===
 a| *Test procedure:*

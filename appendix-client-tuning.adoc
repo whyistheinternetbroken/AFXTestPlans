@@ -88,7 +88,7 @@ Close-to-open consistency (the `cto` mount option) ensures that no matter the st
 
 Suggested workloads for `cto`: multi-client shared datasets where file creates, deletes, and content updates must be visible promptly to other clients (shared home directories, collaborative development environments, and mixed read/write/metadata EDA jobs).
 
-* When a directory is crawled (`ls`, `ls -l` for example) a certain set of RPCs (remote procedure calls) are issued, depending on the number of files in the directory. The NFS server shares its view of the filesystem. As long as cto is used by all NFS clients accessing a given NFS export, all clients see the same list of files and directories therein. The freshness of the attributes of the files in the directory is still controlled by the attribute cache timers (see above), so directory listings are not guaranteed to show newly created files instantly unless those timers have expired or the client otherwise revalidates.
+* When a directory is crawled (`ls`, `ls -l` for example) a certain set of RPCs (remote procedure calls) are issued, depending on the number of files in the directory. The NFS server shares its view of the filesystem. As long as cto is used by all NFS clients accessing a given NFS export, all clients see the same list of files and directories therein. The freshness of the attributes of the files in the directory is still controlled by the attribute cache timers (see <<how-attribute-cache-timers-work>>), so directory listings are not guaranteed to show newly created files instantly unless those timers have expired or the client otherwise revalidates.
 * When a file is opened, the content of the file is guaranteed fresh from the perspective of the NFS server. If there's a race condition where the content hasn't finished flushing from Machine 1 when a file is opened on Machine 2, Machine 2 only receives the data present on the server at the time of the open. In this case, Machine 2 doesn't retrieve more data from the file until the acreg timer is reached, and Machine 2 checks its cache coherency from the server again. This scenario can be observed using a `tail -f` of a file from Machine 2 when the file is still being written to from Machine 1.
 
 [[no-close-to-open-nocto-consistency]]
@@ -226,6 +226,7 @@ To display read-ahead for a mounted NFS filesystem manually, do the following.
 # cat /sys/class/bdi/{devnumber}/read_ahead_kb
 ----
 
+[[readahead-view-example]]
 *Example:*
 
 [source,console]
@@ -236,7 +237,7 @@ To display read-ahead for a mounted NFS filesystem manually, do the following.
 128
 ----
 
-If NFS session trunking is in use, there may be multiple devices attached to the same path. In that case, the same command above will show all of those devices.
+If NFS session trunking is in use, there may be multiple devices attached to the same path. In that case, the same command in <<readahead-view-example>> will show all of those devices.
 
 [source,console]
 ----
@@ -283,7 +284,7 @@ SUBSYSTEM=="bdi", ACTION=="add", PROGRAM="<absolute_path>/awk -v bdi=$kernel 'BE
 sudo udevadm control --reload
 ----
 
-*Note:* The `udev` example above is adapted from link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-nfs-read-ahead[Microsoft's Azure NetApp Files NFS read-ahead guidance], using `15360` to match the 15,360 KiB recommendation used elsewhere in this section.
+*Note:* The `udev` example in <<persistently-setting-readahead>> is adapted from link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-nfs-read-ahead[Microsoft's Azure NetApp Files NFS read-ahead guidance], using `15360` to match the 15,360 KiB recommendation used elsewhere in this section.
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===

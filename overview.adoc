@@ -42,18 +42,18 @@ This disaggregated architecture offers a way to present an asymmetric number of 
 [[new-ontap-features-to-focus-on]]
 == New ONTAP features to focus on
 
-Each ONTAP release delivers new features to improve overall performance, stability, usability, etc. This test plan is intended to be ever-evolving and include new features to test and try out. You can find version-specific feature tests in the "OPTIONAL: New feature tests" test plan.
+Each ONTAP release delivers new features to improve overall performance, stability, usability, etc. This test plan is intended to be ever-evolving and include new features to test and try out. You can find version-specific feature tests in xref:test-plans.adoc#new-feature-tests-ontap-9191[Test Plans: New Feature Tests (ONTAP 9.19.1)].
 New features in this release of ONTAP:
 
 [cols="1,1"]
 |===
 | ONTAP 9.19.1GA feature | Full or limited support
-| FabricPool tiering | limited/dark content until 9.19.1P2
+| xref:feature-fabricpool.adoc[FabricPool tiering] | limited/dark content until 9.19.1P2
 | Larger Storage Availability Zone | Full
-| Aggressive readahead | Full
-| Global deduplication | Full
+| xref:feature-aggressive-readahead.adoc[Aggressive readahead] | Full
+| xref:feature-global-deduplication.adoc[Global deduplication] | Full
 | 32 node support | limited
-| Dynamic storage efficiency | Full
+| xref:feature-dynamic-storage-efficiency.adoc[Dynamic storage efficiency] | Full
 |===
 
 

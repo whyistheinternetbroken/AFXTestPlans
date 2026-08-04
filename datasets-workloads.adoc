@@ -51,17 +51,17 @@ From an application/solution perspective, relevant workloads include:
 [[if-you-are-currently-using-ontap]]
 ==== If you are currently using ONTAP
 
-If ONTAP is currently running your production workloads, this test plan will use SnapMirror to efficiently and quickly replicate volumes to NetApp AFX.
+If ONTAP is currently running your production workloads, this test plan will use SnapMirror to efficiently and quickly replicate volumes to NetApp AFX (see xref:test-04-data-migration.adoc[Test 4: Data migration]).
 Some considerations:
 * SnapMirror *_from_* unified ONTAP to NetApp AFX can be performed with any unified ONTAP version within 2 major releases (ie, ONTAP 9.16.1 -> 9.18.1).
 * SnapMirror *_to_* unified ONTAP from NetApp AFX is only supported on unified ONTAP running ONTAP 9.16.1 when replicating FlexGroup volumes. FlexVol volumes can still use the 2 version compatibility rule.
-* Alternatively, it is also possible to copy subsets of data using NAS protocol-based tools such as XCP, robocopy, etc. Those methods will not be covered in the scope of this document.
+* Alternatively, it is also possible to copy subsets of data using NAS protocol-based tools such as XCP, robocopy, etc. Those methods will not be covered in the scope of this test plan.
 
 [[if-you-are-not-currently-using-ontap]]
 ==== If you are not currently using ONTAP
 
-If ONTAP is not currently being used within your environment, then a NAS protocol-level copy of datasets to NetApp AFX or initial data generation (ie, via storage benchmarking tools) will be needed to run portions of this test plan. Those methods will not be covered in the scope of this document.
-An alternative method of leveraging industry standard benchmarks for the workload are provided as an optional test plan in this document.
+If ONTAP is not currently being used within your environment, then a NAS protocol-level copy of datasets to NetApp AFX or initial data generation (ie, via storage benchmarking tools) will be needed to run portions of this test plan. Those methods will not be covered in the scope of this test plan.
+An alternative method of leveraging industry standard benchmarks for the workload is provided as xref:test-08-customer-workload-benchmarks.adoc[Test 8: Customer workload benchmarks].
 
 [[supported-data-protocols]]
 === Supported data protocols
@@ -86,7 +86,7 @@ a|
 * File / object multiprotocol (present an existing NAS volume as an S3 bucket)
 |===
 
-*Note:* As mentioned previously, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
+*Note:* As noted in <<supported-data-protocols,Supported data protocols>>, this test plan currently focuses mainly on NFS and object workloads. Future versions of this test plan may include SMB, dual protocol, etc.
 
 
 [[recommended-nas-protocol-features]]
@@ -122,7 +122,8 @@ To create a FlexGroup volume in the AFX command line:
 ----
 
 Volume creation automation scripts are available at:
-link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volumes[Benchmarking/ONTAP/volumes]
+xref:scripts.adoc#volume-creation-and-deletion-scripts[Volume creation and deletion scripts]
+(link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volumes[Benchmarking/ONTAP/volumes]).
 
 To create a FlexGroup volume in System Manager:
 
@@ -131,7 +132,8 @@ To create a FlexGroup volume in System Manager:
 * Select "High throughput" to create a FlexGroup
 
 To leverage REST API, see:
-link:https://docs.netapp.com/us-en/ontap-afx/rest/api-reference.html[REST API Reference]
+xref:appendix-rest-api.adoc[REST API Examples]
+and the link:https://docs.netapp.com/us-en/ontap-afx/rest/api-reference.html[REST API Reference].
 
 [[s3-specific-features]]
 === S3 specific features
@@ -185,7 +187,7 @@ By default, the maximum files value is determined by the volume size (one inode 
 [underline]#*Remediation/prevention*# +
 * Create volumes at a large enough size to support the maximum files allowed. (>7.8TB for FlexVol, 7.8 * 10 * nodes for FlexGroup) +
 * Set `-files-set-maximum true` at volume creation +
-* Monitor for inode allocation for the volume  +
+* Monitor for inode allocation for the volume (see xref:scripts.adoc#maximum-files-monitor[Maximum files monitor])  +
 * Consider setting quotas on the volume to alert when an inode allocation value has been reached +
 * Delete files if the limit is reached
 | Maximum files per directory (maxdirsize) | 320MB (default) +
@@ -205,8 +207,7 @@ It is a best practice to keep the file counts in single directories lower than t
 * Use the `tcp` mount option value to avoid UDP mount requests for NFSv3 +
 * If using nconnect, remember your total mount connections allowed will be 100,000/nconnect value +
 * Leverage DNS load balancing or some other round robin mechanism to balance mounts across nodes in the cluster
-| NFSv4.x session slots | 2000 (180 default) | Too high or low of a value here can negatively impact performance in ways that are hard to track down. Generally speaking, too low will create a sort of NFS flow control of incoming connections, while too high may impact CPU utilization. For details, see: +
-https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-concurrency-session-slots  +
+| NFSv4.x session slots | 2000 (180 default) | Too high or low of a value here can negatively impact performance in ways that are hard to track down. Generally speaking, too low will create a sort of NFS flow control of incoming connections, while too high may impact CPU utilization. For details, see link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-concurrency-session-slots[Linux concurrency and NFSv4.x session slots]. +
  +
 Session slots are the number of supported in-flight requests in a single NFSv4.x session. By default, ONTAP supports 180 session slots, but in-house performance testing has shown that lowering this value to 64 is optimal. +
  +
@@ -219,7 +220,7 @@ By default, modern NFS clients allow dynamic control of NFS slot tables by way o
 This can impact both NFSv3 and NFSv4.x. +
  +
 [underline]#*Remediation/prevention*# +
-* Modify your sunrpc slot tables value on your NFS clients to no more than 128 (preferably 64) for NFSv3 (see NetApp ONTAP NFS Best Practices for more information on page 122) +
+* Modify your sunrpc slot tables value on your NFS clients to no more than 128 (preferably 64) for NFSv3 (see link:https://www.netapp.com/media/10720-tr-4067.pdf[TR-4067: NFS best practice and implementation guide for ONTAP]) +
 * Modify the session slot value for NFSv4.x on the ONTAP NFS server +
 * Monitor for nblade.execsOverLimit
 |===

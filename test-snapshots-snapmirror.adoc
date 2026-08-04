@@ -112,7 +112,7 @@ nfs-ops     recv     sent
 2074   1.66MB    373MB
 ----
 
-. From the NetApp AFX GUI, update the SnapMirror relationship you created in the Data Migration section while the job is running Navigate to Protection -> Replication on the NetApp AFX GUI
+. From the NetApp AFX GUI, update the SnapMirror relationship you created in xref:test-04-data-migration.adoc[Test 4: Data migration] while the job is running. Navigate to Protection -> Replication on the NetApp AFX GUI
 
 2+a| *Expected outcome(s):*
 

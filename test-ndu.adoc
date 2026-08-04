@@ -26,7 +26,7 @@ The upgrade process for NetApp AFX is identical to that of unified ONTAP. This t
 * Place the image.tgz file on a webserver. (Do not use TinyWeb as it has a 2GB limit.)
 * Validate the current version of ONTAP
 
-*Note:* The link:https://github.com/whyistheinternetbroken/AFX/tree/main/[AFX reinit script] has an option to install ONTAP using its own webserver.
+*Note:* The link:https://github.com/whyistheinternetbroken/AFX/tree/main/[AFX reinit script] (also listed in xref:scripts.adoc#netapp-afx-reinitialization-script[Scripts]) has an option to install ONTAP using its own webserver.
 
 [source,console]
 ----
@@ -57,7 +57,7 @@ Package Delete Operation Completed Successfully
 
 . Execute the upload and upgrade of ONTAP
 +
-*Note:* Alternately, use the upgrade option in the link:https://github.com/whyistheinternetbroken/AFX/tree/main/[AFX reinit script].
+*Note:* Alternately, use the upgrade option in the link:https://github.com/whyistheinternetbroken/AFX/tree/main/[AFX reinit script] (see xref:scripts.adoc#netapp-afx-reinitialization-script[Scripts]).
 +
 *Example:*
 +

@@ -14,8 +14,8 @@ The following sections outline the testing NetApp encourages customers to comple
 [[test-plans]]
 == Test plans
 
-The following sections outline the testing NetApp encourages customers complete as part of this test plan. A notes section is included for your own use, but it would be invaluable to NetApp if following these tests, those notes were passed on as feedback about NetApp AFX or the test plan itself. To submit feedback, email .
-Test scenarios that are executed outside of these guidelines are fine and it is still of high value to provide the results of such tests. As such, in the document we have provided a blank test plan template in Appendix B which should be filled in for such tests containing all steps that were executed, results that were expected and that were achieved as well as collected data.
+The following sections outline the testing NetApp encourages customers complete as part of this test plan. A notes section is included for your own use, but it would be invaluable to NetApp if following these tests, those notes were passed on as feedback about NetApp AFX or the test plan itself. To submit feedback, email mailto:parisi@netapp.com[parisi@netapp.com].
+Test scenarios that are executed outside of these guidelines are fine and it is still of high value to provide the results of such tests. Capture those custom scenarios in the Comments section of the closest relevant test, or send the steps, expected results, achieved results, and collected data to mailto:parisi@netapp.com[parisi@netapp.com].
 All tests have a 'Comments' section. It is appreciated if any comments -- even those not directly related to the executed tests -- are provided as either part of the tests or separately.
 
 *Note:* Images in these test plans may differ from your actual lab environment. For questions, please reach out to your account team.
@@ -99,6 +99,7 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 | xref:test-ndu.adoc[NDU Test Plan]
 |===
 
+[[new-feature-tests-ontap-9191]]
 == New Feature Tests (ONTAP 9.19.1)
 
 [cols="1,3,1"]

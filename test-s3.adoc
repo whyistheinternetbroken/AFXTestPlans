@@ -14,7 +14,7 @@ This optional test plan covers S3 protocol configuration and testing on NetApp A
 == OPTIONAL: S3 in ONTAP
 
 ONTAP provides S3 as a protocol for data access, as well as the ability to present datasets as both NAS and S3 in the same volume. This functionality is valuable to use cases looking to move to object for their applications, but still have legacy file shares in their environment. Providing a way to present data to any protocol in the same volume removes the requirement to copy large amounts of data to new locations.
-This optional test plan covers configuration of S3 for use with the datasets created for performance benchmarking above.
+This optional test plan covers configuration of S3 for use with the datasets created for performance benchmarking (see xref:test-07-customer-workload-real-data.adoc[Test 7: Customer workload — real data] and xref:test-08-customer-workload-benchmarks.adoc[Test 8: Customer workload benchmarks]).
 
 [cols="1,4",width="100%"]
 |===

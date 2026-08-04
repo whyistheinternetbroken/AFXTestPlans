@@ -12,7 +12,7 @@ xref:test-plans.adoc[← Back to Test Plans]
 == API testing/seamless support for customer automation
 
 NetApp AFX is intended to provide a seamless ONTAP experience. Included in that is API parity between unified and NetApp AFX so that legacy automation suites using REST API calls to ONTAP will be plug-and-play into NetApp AFX.
-If no current API-based automation suites are in use, then some basic REST API calls are provided to test functionality. See the appendix for examples.
+If no current API-based automation suites are in use, then some basic REST API calls are provided to test functionality. See xref:appendix-rest-api.adoc[REST API Examples] for examples.
 
 [cols="<1",width="100%"]
 |===
@@ -20,9 +20,9 @@ a| *Test procedure:*
 
 . Test your REST API calls against unified ONTAP.
 
-. If you are not already using standard automation REST calls against unified ONTAP, then leverage the example calls in the appendix of this document.
+. If you are not already using standard automation REST calls against unified ONTAP, then leverage the example calls in xref:appendix-rest-api.adoc[REST API Examples].
 
-. Test your REST API calls against NetApp AFX. If you are not already using standard automation REST calls against NetApp AFX, then leverage the example calls in the appendix of this document.
+. Test your REST API calls against NetApp AFX. If you are not already using standard automation REST calls against NetApp AFX, then leverage the example calls in xref:appendix-rest-api.adoc[REST API Examples].
 
 a| *Expected outcome(s):*
 

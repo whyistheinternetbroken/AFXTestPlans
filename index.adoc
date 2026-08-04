@@ -51,6 +51,7 @@ This test plan is split into focused AsciiDoc files linked from this index. Use 
 ==== New Feature Tests (ONTAP 9.19.1)
 
 * xref:feature-global-deduplication.adoc[Global Deduplication]
+** xref:vdbench-global-dedupe.adoc[VDBench Test Plan: NFS Storage Performance Testing]
 * xref:feature-dynamic-storage-efficiency.adoc[Dynamic Storage Efficiency]
 * xref:feature-aggressive-readahead.adoc[Aggressive Readahead]
 * xref:feature-fabricpool.adoc[FabricPool Tiering]

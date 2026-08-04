@@ -55,7 +55,7 @@ AI/ML training and inference workloads with NFSv4.1
 
 *Note:* A mount command will need to be issued for each individual network interface to ensure session trunking is in use with Ubuntu.
 
-Rather than relying on individual mount commands, use the /etc/fstab file to configure the mount commands and then run them all at once with mount -a. See "using fstab" below.
+Rather than relying on individual mount commands, use the /etc/fstab file to configure the mount commands and then run them all at once with mount -a. See <<using-fstab,using fstab>>.
 
 [[rhel-9x-and-later]]
 ==== RHEL 9.x and later
@@ -119,7 +119,7 @@ Below are some examples of auto.master and auto.misc file configurations.
 [[nfs-64-bit-file-ids]]
 === NFS 64-bit file IDs
 
-FlexGroup volumes allow up to 400 billion files, provided 64-bit file IDs are enabled. While these should be enabled as part of the initial setup and configuration, ensure they are enabled in the environment in the first test plan.
+FlexGroup volumes allow up to 400 billion files, provided 64-bit file IDs are enabled. While these should be enabled as part of the initial setup and configuration, ensure they are enabled in the environment during xref:test-01-validate-cluster-setup.adoc[Test 1: Validate cluster setup].
 To enable them:
 
 [source,console]
@@ -151,9 +151,10 @@ AFX::> network connections active show -service nfs
 
 *pNFS and NFSv4.1 session trunking calls validation*
 
-To validate if pNFS and/or session trunking are active, use the below to look for incrementing values for pNFS/trunking counters.
+[[pnfs-and-nfsv41-session-trunking-calls-validation]]
+To validate if pNFS and/or session trunking are active, use the following commands to look for incrementing values for pNFS/trunking counters.
 
-*Note:* For a list of pNFS and session trunking specific counters (and examples) see the Appendix.
+*Note:* For a list of pNFS and session trunking specific counters (and examples) see xref:appendix-statistics-counters.adoc#statistics-counters[Statistics Counters].
 
 
 [source,console]

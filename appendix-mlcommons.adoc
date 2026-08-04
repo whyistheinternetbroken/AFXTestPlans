@@ -67,7 +67,7 @@ For general NFS guidance, see xref:appendix-nfs-considerations.adoc[NFS Consider
 | Workload | Recommended NFS version | Recommended mount options / notes
 | Training (sequential read-heavy) | NFSv4.1 with pNFS and session trunking | Ubuntu 22+: `vers=4.1,tcp,hard,intr,nocto,actimeo=3600,max_connect=8,rsize=1048576,wsize=1048576`. RHEL 9.x+: use `trunkdiscovery` instead of `max_connect=8`. `nocto` and long `actimeo` suit static training datasets.
 | Checkpointing (sequential write + restore reads + SETATTR) | NFSv4.1 with pNFS and session trunking | Same base as training (`vers=4.1,tcp,hard,intr,max_connect=8` or `trunkdiscovery`, `rsize=1048576,wsize=1048576`). Prefer *without* `nocto` (or use a shorter `actimeo`) so attribute updates during checkpoint write/restore are not overly stale. Ensure the checkpoint folder is on shared NFS so all hosts can read what peers wrote.
-| VectorDB (random read/write + metadata) | NFSv3 *or* NFSv4.1 | NFSv3: `vers=3,tcp,hard,intr,nconnect=8,rsize=1048576,wsize=1048576` often works well for metadata-heavy / random patterns. NFSv4.1: keep trunking (`max_connect` / `trunkdiscovery`) but avoid aggressive `nocto`/`actimeo` unless you validate query correctness. Point Milvus Docker volumes at the NFS mount (see vectorDB steps below).
+| VectorDB (random read/write + metadata) | NFSv3 *or* NFSv4.1 | NFSv3: `vers=3,tcp,hard,intr,nconnect=8,rsize=1048576,wsize=1048576` often works well for metadata-heavy / random patterns. NFSv4.1: keep trunking (`max_connect` / `trunkdiscovery`) but avoid aggressive `nocto`/`actimeo` unless you validate query correctness. Point Milvus Docker volumes at the NFS mount (see <<vectordb-on-nfs>>).
 |===
 
 *Note:* Always use `hard` mounts for benchmarks. Soft mounts can mask storage issues with application-level timeouts.
@@ -315,8 +315,9 @@ For this test plan, use U-Net3D (closed) plus ResNet50 and CosmoFlow via `whatif
 [[generating-datasizes]]
 ==== Generating datasizes
 
-Dataset size is calculated with `mlpstorage … training … datasize` and depends on accelerator type/count and client host memory. Examples below (illustrative output from earlier lab runs; re-run locally for current numbers).
+Dataset size is calculated with `mlpstorage … training … datasize` and depends on accelerator type/count and client host memory. Examples in <<training-datasize-examples>> (illustrative output from earlier lab runs; re-run locally for current numbers).
 
+[[training-datasize-examples]]
 *U-Net3D (closed)*
 
 [source,console]

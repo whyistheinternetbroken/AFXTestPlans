@@ -122,7 +122,7 @@ AFX::> set diag
 AFX::*> debug smdb table atm_kick run
 ----
 
-. HA failover testing in a later part of this test plan will cover volume rebalancing there as well. If you need to delete volumes/clean up volumes, you can leverage the volume delete script in the Scripts section.
+. HA failover testing in xref:test-12-node-failure-behavior.adoc[Test 12: Node failure behavior] will cover volume rebalancing there as well. If you need to delete volumes/clean up volumes, you can leverage the volume delete script in xref:scripts.adoc#volume-creation-and-deletion-scripts[Volume creation and deletion scripts].
 
 a| *Expected outcome(s):*
 

@@ -153,7 +153,7 @@ Click the “+ Add” button under Network interfaces. +
 Select “data” for the interface type and select the desired options, specify a name, home node, etc. +
  +
 Repeat the above step for each node. Create at least 2 data interfaces per node to provide paths for NFS session trunking. +
-Alternately, use the LIF creation script found in the Appendix of this document. |  |  |  |
+Alternately, use the LIF creation script in xref:scripts.adoc#lif-creation-and-cleanup-scripts[LIF creation and cleanup scripts]. |  |  |  |
 | Expected outcome(s): +
 Two or more data interfaces are created per node. |  |  |  |
 |===
@@ -338,7 +338,7 @@ NetApp AFX makes some changes to how volumes are created and managed. This test 
 [cols="1,1,1,1,1"]
 |===
 | Test procedure: +
-Use the script found in the appendix to create a large number of volumes on the cluster. +
+Use the script in xref:scripts.adoc#volume-creation-and-deletion-scripts[Volume creation and deletion scripts] to create a large number of volumes on the cluster. +
 Review the location of the constituent volumes of the FlexGroup volumes. Note the balance of volume counts per node. Volume counts should be relatively evenly distributed (+/- 2). +
 AFX::> vol show -volume name* -is-constituent true -fields size -node [node-name] +
 Example: +
@@ -399,8 +399,8 @@ To manually start the rebalance, a diag level command is used (and is not recomm
 AFX::> set diag +
 AFX::*> debug smdb table atm_kick run +
  +
-HA failover testing in a later part of this test plan will cover volume rebalancing there as well. +
-If you need to delete volumes/clean up volumes, you can leverage the volume delete script in the Scripts section. |  |  |  |
+HA failover testing in xref:test-12-node-failure-behavior.adoc[Test 12: Node failure behavior] will cover volume rebalancing there as well. +
+If you need to delete volumes/clean up volumes, you can leverage the volume delete script in xref:scripts.adoc#volume-creation-and-deletion-scripts[Volume creation and deletion scripts]. |  |  |  |
 | Expected outcome(s): +
 Volume counts will be balanced across nodes. +
 Volume counts will rebalance when uneven. |  |  |  |
@@ -410,17 +410,17 @@ Volume counts will rebalance when uneven. |  |  |  |
 === API testing/seamless support for customer automation
 
 NetApp AFX is intended to provide a seamless ONTAP experience. Included in that is API parity between unified and NetApp AFX so that legacy automation suites using REST API calls to ONTAP will be plug-and-play into NetApp AFX.
-If no current API-based automation suites are in use, then some basic REST API calls are provided to test functionality. See the appendix for examples.
+If no current API-based automation suites are in use, then some basic REST API calls are provided to test functionality. See xref:appendix-rest-api.adoc[REST API Examples] for examples.
 
 [cols="1,1,1,1,1"]
 |===
 | Test procedure: +
 Test your REST API calls against unified ONTAP. +
  +
-If you are not already using standard automation REST calls against unified ONTAP, then leverage the example calls in the appendix of this document. +
+If you are not already using standard automation REST calls against unified ONTAP, then leverage the example calls in xref:appendix-rest-api.adoc[REST API Examples]. +
  +
 Test your REST API calls against NetApp AFX. +
-If you are not already using standard automation REST calls against NetApp AFX, then leverage the example calls in the appendix of this document. |  |  |  |
+If you are not already using standard automation REST calls against NetApp AFX, then leverage the example calls in xref:appendix-rest-api.adoc[REST API Examples]. |  |  |  |
 | Expected outcome(s): +
 REST API calls used with unified ONTAP are tested. +
 The same REST API calls are tested against NetApp AFX and are successful, with the exception of SAN-related and aggregate-related calls. |  |  |  |
@@ -503,7 +503,7 @@ In general, snapshots in ONTAP are not detrimental to overall system performance
 [[mount-options]]
 === Mount options
 
-Mount options, in general, are variable depending on use cases. This section attempts to show a general use case mount option list that was used in our internal performance testing. If the NFS server is configured properly (see above) then you won't need to specify NFS versions or wsize/rsize options.
+Mount options, in general, are variable depending on use cases. This section attempts to show a general use case mount option list that was used in our internal performance testing. If the NFS server is configured properly (see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration]) then you won't need to specify NFS versions or wsize/rsize options.
 Base options (applies to all clients/scenaros):
 
 [source,console]
@@ -544,13 +544,13 @@ Some workloads might benefit from special mount options during benchmark tests. 
 | acdirmax | Sets the maximum time (seconds) the client caches attributes for a directory. Default is typically 60s. | Stable directory structures that rarely change — raising this reduces GETATTR calls (e.g., large static directory trees, archival storage).
 | clientaddr | Specifies the client IP address to advertise to the NFS server for callback communication (NFSv4/v4.1+). The server uses this address to send delegation recalls and other callbacks. | Multi-homed clients or environments with complex networking (e.g., clients with multiple NICs, VPN/overlay networks, or NAT) where the auto-detected address may be incorrect.
 | nconnect | Creates multiple TCP connections (up to the specified count) to the NFS server for a single mount, allowing parallel I/O over separate connections. | High-throughput, I/O-intensive workloads that are bottlenecked by a single TCP stream (e.g., large file transfers, HPC/scientific computing, video editing, database backups, big data analytics). Particularly beneficial on high-bandwidth networks (10 GbE+).
-| krb5* | Specifies what Kerberos security flavor to use with the mount. Requires Kerberos configuration to work properly. See TR-4616 NFS Kerberos with Active Directory for details. | Securing NFS mounts; has a negative impact on performance.
+| krb5* | Specifies what Kerberos security flavor to use with the mount. Requires Kerberos configuration to work properly. See link:https://www.netapp.com/media/19384-tr-4616.pdf[TR-4616: NFS Kerberos in ONTAP with Active Directory] for details. | Securing NFS mounts; has a negative impact on performance.
 |===
 
 [[client-configuration]]
 === Client configuration
 
-The client configuration used for our internal benchmarking is covered in the Clients section at the beginning of this document. The following contains some additional configuration considerations. This list is not considered exhaustive and will be modified over time to accommodate additional use cases/scenarios.
+The client configuration used for our internal benchmarking is covered in xref:setup.adoc#clients[Setup: Clients]. The following contains some additional configuration considerations. This list is not considered exhaustive and will be modified over time to accommodate additional use cases/scenarios.
 
 [[nfs-readahead]]
 ==== NFS readahead
@@ -558,7 +558,7 @@ The client configuration used for our internal benchmarking is covered in the Cl
 From:
 _NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystems rsize._
 _RHEL 8.3 and Ubuntu 18.04 introduced changes that might negatively impact client sequential read performance. Unlike earlier releases, these distributions set read-ahead to a default of 128 KiB regardless of the rsize mount option used. Upgrading from releases with the larger read-ahead value to releases with the 128-KiB default experienced decreases in sequential read performance. However, read-ahead values may be tuned upward both dynamically and persistently. For example, testing with SAS GRID found the 15,360 KiB read value optimal compared to 3,840 KiB, 960 KiB, and 128 KiB. Not enough tests have been run beyond 15,360 KiB to determine positive or negative impact._
-For steps on how to view/set NFS readahead values, see:
+For steps on how to view/set NFS readahead values, see xref:appendix-client-tuning.adoc#managing-readahead-values-on-clients[Client Tuning: Managing readahead values].
 
 [[network-configuration]]
 === Network configuration
@@ -588,7 +588,7 @@ The following section covers some general networking guidance for client and sto
 [[ontap-feature-considerations]]
 === ONTAP feature considerations
 
-The following covers specific ONTAP feature configuration modifications that are not covered in the sections above.
+The following covers specific ONTAP feature configuration modifications that are not covered in <<nfs-export-policy-configuration>>, <<volume-configuration>>, <<mount-options>>, <<client-configuration>>, or <<network-configuration>>.
 
 [[disable-storage-efficiencies]]
 ==== Disable storage efficiencies
@@ -611,7 +611,7 @@ aggr efficiency wise-tsse modify -aggregate data* -enable-workload-informed-tsse
 
 The goal of these workload tests is to show that real data workloads can be ported over to NetApp AFX seamlessly and can potentially provide performance benefits over unified ONTAP -- particularly when growing the compute side of the cluster.
 
-*Note:* For NFS considerations, see the Appendix in this document.
+*Note:* For NFS considerations, see xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS Considerations].
 
 [cols="1,1,1,1,1"]
 |===
@@ -623,8 +623,8 @@ Find the export path of your data volume in System Manager. +
  +
 Mount the volume using NFS.  +
 Optionally, include the mount path in /etc/fstab or automounter* +
-*Recommended NFS versions and mount options are found in the NFS considerations above. +
-Run designated workloads against existing datasets that have been migrated over from unified ONTAP. While benchmarks are running, move on to Test 5) Performance Monitoring. +
+*Recommended NFS versions and mount options are found in xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS Considerations]. +
+Run designated workloads against existing datasets that have been migrated over from unified ONTAP. While benchmarks are running, move on to xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring]. +
 Test real-world data using everyday workloads. As workloads are running, test the limits of NetApp AFX by adding more clients or more jobs to the workload to push the limits of scale. |  |  |  |
 | Expected outcome(s): +
 Workloads should not need additional configuration or changes to run properly using NetApp AFX.  +
@@ -635,8 +635,8 @@ Performance should be as good or better than unified ONTAP. |  |  |  |
 === Customer workload testing -- Performance benchmarks
 
 In lieu of - or in addition to -- testing real data workloads, storage benchmark tests can also be run against the NetApp AFX cluster to display some of the potential performance.
-For EDA workloads, we can leverage SPEC SFS 2020 EDA for benchmarking. This benchmark can also be used for general testing of small random IO (including high metadata) and larger sequential IO.
-For AI/ML workloads, we will leverage MLPerf Storage (MLCommons), which can also act as a throughput-specific benchmark.
+For EDA workloads, we can leverage xref:appendix-spec-sfs.adoc[SPEC SFS 2020] EDA for benchmarking. This benchmark can also be used for general testing of small random IO (including high metadata) and larger sequential IO.
+For AI/ML workloads, we will leverage xref:appendix-mlcommons.adoc[MLPerf Storage (MLCommons)], which can also act as a throughput-specific benchmark.
 For details on installing, configuring, and running these benchmarks, see xref:appendix-spec-sfs.adoc[SPEC SFS 2020] and xref:appendix-mlcommons.adoc[MLCommons / MLPerf Storage].
 
 [cols="1,1,1,1,1"]
@@ -660,12 +660,12 @@ Find the export path of your data volume in System Manager. +
  +
 Mount the volume using NFS.  +
 Optionally, include the mount path in /etc/fstab or automounter* +
-*Recommended NFS versions and mount options are found in the NFS considerations in the Appendix of this document.. +
+*Recommended NFS versions and mount options are found in xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS Considerations]. +
  +
 Generate datasets. +
-For detailed steps on how to run the benchmarks, see the appendix of this document. +
+For detailed steps on how to run the benchmarks, see xref:appendix-spec-sfs.adoc[SPEC SFS 2020] and xref:appendix-mlcommons.adoc[MLCommons / MLPerf Storage]. +
  +
-Run benchmarks on datasets. While benchmarks are running, move on to the Performance Monitoring test plan. |  |  |  |
+Run benchmarks on datasets. While benchmarks are running, move on to xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring]. |  |  |  |
 | Expected outcome(s): +
 Benchmarks should show the performance capabilities of this system. |  |  |  |
 |===
@@ -674,10 +674,11 @@ Benchmarks should show the performance capabilities of this system. |  |  |  |
 === Performance monitoring
 
 The goal of this test is to illustrate the performance monitoring capabilities of NetApp AFX and how it can integrate into current performance monitoring tools used by unified ONTAP and how understanding ONTAP performance should have little to no learning curve from unified ONTAP.
-NetApp System Manager can be used for basic performance monitoring and is covered in the test below.
+NetApp System Manager can be used for basic performance monitoring and is covered in <<performance-monitoring-procedure,the following procedure>>.
 NetApp Harvest can be used to monitor performance at a more advanced level:
-NetApp Harvest - GitHub
+link:https://github.com/NetApp/harvest[NetApp Harvest - GitHub]
 
+[[performance-monitoring-procedure]]
 [cols="1,1,1,1,1"]
 |===
 | Test procedure: +
@@ -931,7 +932,7 @@ From here, access the System Manager window via the cluster management IP. Navig
 At the bottom of the page, you should see a section called “Not part of this cluster” and your new nodes below that. Click “+ Add” to add the node to the cluster.  +
 An odd number of nodes cannot be added to a cluster. +
 If the nodes are discovered before the cluster interconnect IP addresses are changed, then you will need to re-discover the nodes by exiting the window and navigating back. +
-If the GUI addition does not work, try the CLI command cluster add-node instead If issues persist, utilize contact NetApp support or reach out to [email]. +
+If the GUI addition does not work, try the CLI command cluster add-node instead. If issues persist, contact NetApp support or reach out to mailto:parisi@netapp.com[parisi@netapp.com]. +
  +
  +
 Use the “Add nodes” screen to fill in your information. Management IP addresses can be added manually or by using a subnet. +
@@ -1047,7 +1048,7 @@ Check the EMS messages to see if the volumes have moved. +
 AFX::> event log show +
  +
 Verify if performance has changed for currently running workload (throughput, CPU utilization, IOPS, etc.) and if operations have experienced noticeable disruption.  +
-Use the performance monitoring steps in the Performance monitoring test plan above. +
+Use the performance monitoring steps in xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring]. +
  +
 Boot the node by logging into the service processor and access the system console. +
 SP-CLI> system console +
@@ -1094,7 +1095,7 @@ AFX-04 +
 4 entries were displayed. +
  +
 During giveback, verify if performance has changed for currently running workload (throughput, CPU utilization, IOPS, etc.) and if operations have experienced noticeable disruption. Operations using stateful NAS (such as SMB and NFSv4.x) will experience some disruption due to locking exchange.  +
-Use the steps in the performance monitoring test plan. +
+Use the steps in xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring]. +
  +
 Check the home status of the network interfaces.  +
 AFX::> net int show -is-home false +
@@ -1128,11 +1129,11 @@ Volumes will not necessarily return back to the same nodes they originated on. |
 === OPTIONAL: New feature tests
 
 NetApp AFX includes some new features in the ONTAP 9.19.1 release that can be tested as part of this plan, including:
-* Global deduplication
-* Dynamic storage efficiency
-* Aggressive readahead
-* FabricPool (cold data tiering; ONTAP 9.19.1P2 and later)
-This section covers configuration details and how to test some of the functionality at a high level.
+* xref:feature-global-deduplication.adoc[Global deduplication]
+* xref:feature-dynamic-storage-efficiency.adoc[Dynamic storage efficiency]
+* xref:feature-aggressive-readahead.adoc[Aggressive readahead]
+* xref:feature-fabricpool.adoc[FabricPool] (cold data tiering; ONTAP 9.19.1P2 and later)
+This section covers configuration details and how to test some of the functionality at a high level. See also xref:test-plans.adoc#new-feature-tests-ontap-9191[New Feature Tests (ONTAP 9.19.1)].
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
