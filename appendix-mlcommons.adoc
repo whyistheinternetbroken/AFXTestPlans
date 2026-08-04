@@ -1,0 +1,306 @@
+= Appendix: MLCommons / MLPerf Storage
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:appendix.adoc[← Back to Appendix]
+
+Guides for the MLPerf Storage (MLCommons) benchmark using DLIO: installation, CLI, training workloads, datasize examples, and NFS operation observations.
+
+
+[[dliomlcommons]]
+== DLIO / MLCommons (MLPerf Storage)
+
+We will be using the MLPerf Storage benchmark from MLCommons, which leverages DLIO (from Argonne National Labs) to emulate AI training I/O without requiring GPUs.
+
+* Source repository: https://github.com/mlcommons/storage
+* Benchmark overview: https://mlcommons.org/benchmarks/storage/
+* Quick start: https://github.com/mlcommons/storage/blob/main/docs/QUICK_START.md
+
+*Note:* Installation and configuration steps in the upstream README are validated against *Ubuntu 24.04* with *Python 3.12.3*. RHEL 9.x may work but is not the primary validated client OS.
+
+*Note:* MLCommons updates the suite regularly (current package major.minor is *v3.0*). Their repository and rules are the single source of truth if this appendix and upstream docs diverge.
+
+
+[[about-mlcommons]]
+=== About MLPerf Storage
+
+MLPerf Storage characterizes how fast a storage system can supply training (and related) data when a model is being trained or checkpointed. As of the current v3.0 tooling, the suite covers:
+
+* Training I/O (DLIO-emulated accelerators)
+* Checkpointing (Llama3 scales)
+* Vector database search (Milvus / RAG-style)
+* KV-cache offload (LLM inference context cache)
+
+MLPerf Storage emulates accelerators for the training workloads with DLIO. DLIO uses standard AI frameworks (PyTorch, TensorFlow, NumPy, and so on) to load data from storage to memory at the same intensity as a given accelerator.
+
+*This emulation means that submitters do not need to use hardware accelerators (for example, GPUs, TPUs, and other ASICs) when running MLPerf Storage training.* Upstream installs the CPU-only version of PyTorch; GPUs are not required and are not used.
+
+Instead, the benchmark replaces training on the accelerator for a single batch of data with a `sleep()` call. The sleep interval depends on the batch size and accelerator type and has been measured on systems running the real training workload. The rest of the data ingestion pipeline (data loading, caching, checkpointing) is unchanged.
+
+There are two main advantages to accelerator emulation:
+
+. You can test different storage systems against different emulated accelerators (for example, NVIDIA A100, H100, or B200) by changing batch size and sleep parameters / `--accelerator-type`.
+. You can put a high load on the storage system by increasing the number of emulated accelerators, without purchasing or renting a large AI compute cluster.
+
+Submission modes in the v3.0 CLI:
+
+* `closed` — apples-to-apples; almost no tuning allowed
+* `open` — documented tuning allowed
+* `whatif` — exploration only; not valid for submission (exposes additional models/parameters)
+
+
+[[installation-and-setup]]
+=== Installation and setup
+
+Run these steps on *every* client host that will participate. Pick one host as the launcher; configure passwordless SSH from the launcher to all other clients. Code and data paths must be identical on every host.
+
+. Install `uv` (required package manager used by the benchmark):
+
+[source,console]
+----
+curl -LsSf https://astral.sh/uv/install.sh | sh
+----
+
+. Install the MPI runtime (required for distributed runs), for example on Ubuntu:
+
+[source,console]
+----
+sudo apt install libopenmpi-dev openmpi-common
+----
+
+. Clone the repository:
+
+[source,console]
+----
+git clone https://github.com/mlcommons/storage.git
+cd storage
+----
+
+. Optionally run the helper setup script, then activate the environment:
+
+[source,console]
+----
+./setup_env.sh
+source .venv/bin/activate
+----
+
+. Verify the install:
+
+[source,console]
+----
+mlpstorage --help
+mlpstorage version
+----
+
+The `mlpstorage` entry point runs via `uv`, which creates/updates `.venv` and installs dependencies (including DLIO) from the project lockfile.
+
+When the launcher runs as root, add `--allow-run-as-root` to any `datasize`, `datagen`, or `run` command that uses MPI.
+
+
+[[cli-structure]]
+=== CLI structure (v3.0)
+
+General form:
+
+[source,console]
+----
+mlpstorage <closed|open|whatif> <training|checkpointing|vectordb|kvcache> \
+  <model|algorithm> <datasize|datagen|run|configview> [file|object] [OPTIONS]
+----
+
+* Use `file` for POSIX/NFS (and similar) backends.
+* Use `object` for S3-compatible object storage (see upstream object-storage guides).
+* `datasize` does not take a `file`/`object` selector.
+
+Example CLOSED U-Net3D flow on NFS/`file`:
+
+[source,console]
+----
+# 1. Size the dataset
+mlpstorage closed training unet3d datasize \
+  --num-accelerators 2 --accelerator-type h100 \
+  --client-host-memory-in-gb 64
+
+# 2. Generate the synthetic dataset
+mlpstorage closed training unet3d datagen file \
+  --num-processes 4 \
+  --data-dir /mnt/afx/mlperf/unet3d/data \
+  --results-dir /mnt/afx/mlperf/results
+
+# 3. Run the benchmark
+mlpstorage closed training unet3d run file \
+  --num-accelerators 2 --accelerator-type h100 \
+  --client-host-memory-in-gb 64 \
+  --data-dir /mnt/afx/mlperf/unet3d/data \
+  --results-dir /mnt/afx/mlperf/results
+----
+
+For full help: `mlpstorage --help_all` or append `--help` at any subcommand level.
+
+
+[[about-vectordb-search-in-mlcommons-benchmark]]
+=== About vectorDB search in MLPerf Storage
+
+The VectorDB benchmark measures storage behavior for vector similarity search (commonly used in RAG and recommendation systems). Upstream supports Milvus indexing algorithms such as DISKANN, HNSW, and AISAQ (plus additional algorithms in `open`/`whatif`).
+
+*Note:* Because vectorDB coverage is still evolving in the suite, this EAP does not cover vectorDB search benchmarks. See https://github.com/mlcommons/storage/tree/main/vdb_benchmark[vdb_benchmark] if you choose to explore it.
+
+
+[[about-checkpointing-in-mlcommons-benchmark]]
+=== About checkpointing in MLPerf Storage
+
+Checkpointing reduces lost progress when training fails. Typical I/O profile:
+
+* Sequential writes for saving checkpoint information
+* Random reads for restoring from checkpoints
+* Metadata operations (mostly SETATTR)
+
+Upstream checkpointing emulates Llama3 scales (`llama3-8b`, `llama3-70b`, `llama3-405b`, `llama3-1t`).
+
+*Note:* This EAP does not cover checkpointing benchmarks. See https://github.com/mlcommons/storage/blob/main/checkpointing/README.md[checkpointing/README.md] for upstream guidance.
+
+
+[[about-training-in-mlcommons-benchmark]]
+=== About training in MLPerf Storage
+
+Training I/O is the primary focus for this EAP. AI/ML training is typically a heavily sequential read workload on a static dataset and requires high throughput.
+
+In the current v3.0 CLI:
+
+* *Closed / open:* `unet3d`, `retinanet`
+* *Whatif (not submittable):* `cosmoflow`, `resnet50`, `dlrm`, `flux` (in addition to the closed models)
+
+For this test plan, continue to use U-Net3D (closed) plus ResNet50 and CosmoFlow via `whatif` when you want the same training-ingest shapes previously used in earlier EAP runs. RetinaNet is also available for closed-division exploration.
+
+[[generating-datasizes]]
+==== Generating datasizes
+
+Dataset size is calculated with `mlpstorage … training … datasize` and depends on accelerator type/count and client host memory. Examples below (illustrative output from earlier lab runs; re-run locally for current numbers).
+
+*U-Net3D (closed)*
+
+[source,console]
+----
+# mlpstorage closed training unet3d datasize \
+#   --num-accelerators 4 --accelerator-type a100 \
+#   --client-host-memory-in-gb 64
+Setting attr from max_accelerators to 4
+2025-05-21 13:54:48|STATUS: Benchmark results directory: /tmp/mlperf_storage_results/training/unet3d/datasize/20250521_135448
+2025-05-21 13:54:48|STATUS: Instantiated the Training Benchmark...
+2025-05-21 13:54:48|RESULT: Minimum file count dictated by 500 step requirement of given accelerator count and batch size.
+2025-05-21 13:54:48|RESULT: Number of training files: 14000
+2025-05-21 13:54:48|RESULT: Number of training subfolders: 0
+2025-05-21 13:54:48|RESULT: Total disk space required for training: 1911.45 GB
+----
+
+*ResNet50 (whatif)*
+
+[source,console]
+----
+# mlpstorage whatif training resnet50 datasize \
+#   --num-accelerators 4 --accelerator-type a100 \
+#   --client-host-memory-in-gb 64
+Setting attr from max_accelerators to 4
+2025-05-21 14:06:18|STATUS: Benchmark results directory: /tmp/mlperf_storage_results/training/resnet50/datasize/20250521_140618
+2025-05-21 14:06:18|STATUS: Instantiated the Training Benchmark...
+2025-05-21 14:06:18|RESULT: Minimum file count dictated by dataset size to memory size ratio.
+2025-05-21 14:06:18|RESULT: Number of training files: 4790
+2025-05-21 14:06:18|RESULT: Number of training subfolders: 0
+2025-05-21 14:06:18|RESULT: Total disk space required for training: 639.89 GB
+----
+
+*CosmoFlow (whatif)*
+
+[source,console]
+----
+# mlpstorage whatif training cosmoflow datasize \
+#   --num-accelerators 4 --accelerator-type a100 \
+#   --client-host-memory-in-gb 64
+Setting attr from max_accelerators to 4
+2025-05-21 14:09:25|STATUS: Benchmark results directory: /tmp/mlperf_storage_results/training/cosmoflow/datasize/20250521_140925
+2025-05-21 14:09:25|STATUS: Instantiated the Training Benchmark...
+2025-05-21 14:09:25|RESULT: Minimum file count dictated by dataset size to memory size ratio.
+2025-05-21 14:09:25|RESULT: Number of training files: 242954
+2025-05-21 14:09:25|RESULT: Number of training subfolders: 0
+2025-05-21 14:09:25|RESULT: Total disk space required for training: 640.00 GB
+----
+
+
+[[about-u-net3d]]
+==== About U-Net3D
+
+The U-Net3D model simulates medical image segmentation (for example, 3D imaging). Default sample size is approximately 146 MB per file (one sample per file; NumPy / TensorFlow / PyTorch readers), defined in the U-Net3D GPU YAML configs under `configs/`.
+
+[[about-resnet50]]
+==== About ResNet50
+
+ResNet50 is used for image classification and related computer vision tasks. Individual samples are on the order of ~100–150 KB (ImageNet-like), but the workload typically packs many samples per TFRecord file, so *on-disk files are much larger* (often on the order of ~100 MB). Do not confuse per-sample size with average file size when sizing capacity or interpreting NFS histograms.
+
+[[about-cosmoflow]]
+==== About CosmoFlow
+
+CosmoFlow models cosmology parameter prediction from N-body simulation data. Default average sample/file size is approximately 2.8 MB (one sample per TFRecord file), defined in the CosmoFlow GPU YAML configs.
+
+[[about-retinanet]]
+==== About RetinaNet
+
+RetinaNet is a closed/open training model in v3.0 (object detection-style ingest). Use it for closed-division runs when you want an officially submittable workload beyond U-Net3D. See upstream `training/README.md` and `docs/QUICK_START.md` for RetinaNet datagen/run examples.
+
+
+[[nfs-operation-breakdown-for-model-runs]]
+==== NFS operation breakdown for model runs
+
+The following table shows a breakdown of the NFS operations observed during training runs of each model in internal testing. Use it to help decide how to configure storage and clients for these benchmark runs.
+
+These were generated using default NFS mount options and a 1 MB `rsize`.
+
+[cols="1,1,1,1",options="header"]
+|===
+| | U-Net3D | ResNet50 | CosmoFlow
+| Number of files trained | 12000 | 2395 | 242954
+| ACCESS | <1% |  | 5%
+| CLOSE | <1% |  | 5%
+| COMPOUND | 90% | 98% | 31%
+| CREATE | <1% |  |
+| GETATTR | <1% |  | 8%
+| GETDEVICEINFO (pNFS) | <1% |  |
+| OPEN | <1% |  | 5%
+| PUTFH | 4% | <1% | 25%
+| READ | 89% | 98% | 17%
+| SEQUENCE | 4% | <1% | 25%
+|===
+
+
+[[read-size-histogram]]
+==== READ size histogram
+
+The following table shows the incoming block sizes observed for each training workload test on a 1 MB mount using default mount options. Average file sizes here are *on-disk file* sizes observed in that lab run (not necessarily per-sample sizes).
+
+[cols="1,1,1,1",options="header"]
+|===
+| | U-Net3D | ResNet50 | CosmoFlow
+| Number of files trained | 12000 | 2395 | 242954
+| Average file size | ~140MB | ~136MB | ~2.7MB
+| <= 512B | 1636 |  |
+| <= 1KB | 1794 | - | 4
+| <= 2KB | 3478 | - | 12
+| <= 4KB | 951114 | 147209 | 18581
+| <= 8KB | 5915 | 8813 | 1889
+| <= 32KB | 687 | - |
+| <= 64KB | 1428 | 13 | -
+| <= 128KB | 2915 | 6506810 | -
+| <= 256KB | 7151 | 3259423 | -
+| <= 512KB | 14997 | - | 20
+| <= 1MB | 8270819 | - | 3643426
+|===
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:appendix-spec-sfs.adoc[< Previous]
+>| xref:appendix-statistics-counters.adoc[Next >]
+|===
+// navigation-links:end

@@ -344,7 +344,7 @@ trunking
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:appendix-storage-benchmark.adoc[< Previous]
+| xref:appendix-mlcommons.adoc[< Previous]
 >| xref:scripts.adoc[Next >]
 |===
 // navigation-links:end

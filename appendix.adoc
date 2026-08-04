@@ -30,8 +30,11 @@ The following appendices provide supplemental reference information for this tes
 | xref:appendix-rest-api.adoc[REST API Examples]
 | ONTAP REST API examples: authentication, FlexGroup creation, deletion, network interfaces, SnapMirror, NFS server config, export policy rules
 
-| xref:appendix-storage-benchmark.adoc[Storage Benchmark Testing]
-| SPEC SFS 2020 and DLIO/MLcommons benchmark guides
+| xref:appendix-spec-sfs.adoc[SPEC SFS 2020]
+| SPECstorage Solution 2020 EDA frontend/backend workload profiles and operation definitions
+
+| xref:appendix-mlcommons.adoc[MLCommons / MLPerf Storage]
+| MLPerf Storage (DLIO) install, CLI, training workloads, datasize examples, NFS observations
 
 | xref:appendix-statistics-counters.adoc[Statistics Counters]
 | NFS, pNFS, and session trunking statistics counters with command examples

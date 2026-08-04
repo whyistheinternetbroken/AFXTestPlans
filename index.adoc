@@ -62,7 +62,8 @@ This test plan is split into focused AsciiDoc files linked from this index. Use 
 ** xref:appendix-nfs-considerations.adoc[NFS Considerations]
 ** xref:appendix-client-tuning.adoc[Client Tuning]
 ** xref:appendix-rest-api.adoc[REST API Examples]
-** xref:appendix-storage-benchmark.adoc[Storage Benchmark Testing]
+** xref:appendix-spec-sfs.adoc[SPEC SFS 2020]
+** xref:appendix-mlcommons.adoc[MLCommons / MLPerf Storage]
 ** xref:appendix-statistics-counters.adoc[Statistics Counters]
 ** xref:scripts.adoc[Scripts]
 

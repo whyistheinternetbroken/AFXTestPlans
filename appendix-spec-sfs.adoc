@@ -1,0 +1,122 @@
+= Appendix: SPEC SFS 2020 / SPECstorage Solution 2020
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:appendix.adoc[← Back to Appendix]
+
+SPECstorage Solution 2020 (commonly called SPEC SFS 2020) EDA workload profiles: frontend and backend NFS operation distributions, and operation definitions.
+
+
+[[spec-sfs-2020]]
+== SPEC SFS 2020
+
+We will be using the SPECstorage Solution 2020 benchmark to simulate EDA frontend, backend, and blended workloads. The test profiles use the workload profiles found in the link:https://www.spec.org/storage2020/[SPECstorage Solution 2020] documentation, as well as details on how to set up and configure the benchmark.
+
+The official EDA workload is a blend of two component workloads:
+
+* *EDA_FRONTEND* — metadata-intensive; many small files (frontend design flow).
+* *EDA_BACKEND* — sequential read/write intensive; larger assembly files (backend design flow).
+
+In the blended workload, the process ratio is maintained at 3 frontend processes for every 2 backend processes as load increases.
+
+*Note:* See also xref:appendix-eda-terminology.adoc[EDA Terminology] for definitions of frontend, backend, and blended workloads used in this test plan.
+
+
+[[frontend-eda-workload-breakdown----specsfs-2020]]
+=== Frontend EDA workload breakdown -- SPECSFS 2020
+
+The following table shows the NFS operations involved in the SPECSFS 2020 EDA_FRONTEND workload. Percentages match the SPECstorage Solution 2020 / SPEC SFS 2014 SP2 EDA_FRONTEND file operation distribution.
+
+.NFS operation distribution (EDA_FRONTEND)
+[cols="1,1,1,1",options="header"]
+|===
+| Operation type | % | Operation type | %
+| read | 0 | read file | 7
+| mmap read | 0 | random read | 8
+| write | 0 | write file | 10
+| mmap write | 0 | random write | 15
+| rmw | 0 | append | 0
+| mkdir | 1 | rmdir | 0
+| readdir | 0 | create | 2
+| unlink | 1 | unlink2 | 1
+| stat | 39 | access | 15
+| rename | 0 | copyfile | 0
+| lock | 0 | chmod | 1
+| statfs | 0 | pathconf | 0
+|===
+
+
+*Note:* Due to the metadata-heavy nature of frontend EDA workloads, it is recommended to use NFSv3. See xref:appendix-nfs-considerations.adoc[NFS Considerations].
+
+
+[[backend-eda-workload-breakdown]]
+=== Backend EDA workload breakdown
+
+The following table shows the NFS operations involved in the SPECSFS 2020 EDA_BACKEND workload. Percentages match the SPECstorage Solution 2020 / SPEC SFS 2014 SP2 EDA_BACKEND file operation distribution.
+
+.NFS operation distribution (EDA_BACKEND)
+[cols="1,1,1,1",options="header"]
+|===
+| Operation type | % | Operation type | %
+| read | 50 | read file | 0
+| mmap read | 0 | random read | 0
+| write | 50 | write file | 0
+| mmap write | 0 | random write | 0
+| rmw | 0 | append | 0
+| mkdir | 0 | rmdir | 0
+| readdir | 0 | create | 0
+| unlink | 0 | unlink2 | 0
+| stat | 0 | access | 0
+| rename | 0 | copyfile | 0
+| lock | 0 | chmod | 0
+| statfs | 0 | pathconf | 0
+|===
+
+
+*Note:* Since backend EDA workloads are read/write heavy with very little metadata, it is worth using NFSv4.1 with pNFS and session trunking. See xref:appendix-nfs-considerations.adoc[NFS Considerations] and xref:appendix-client-tuning.adoc[Client Tuning].
+
+
+[[definition-of-relevant-operations-in-spec-sfs-2020]]
+=== Definition of relevant operations in SPEC SFS 2020
+
+The following section defines the operations mentioned in the frontend and backend workload sections above.
+
+[cols="1,1",options="header"]
+|===
+| Operation type | What it does
+| read | Sequential reads to an already open file.
+| read file | Open, read, close file. End-to-end read.
+| mmap read | Memory map read.
+| random read | Random read (SPEC: rand read).
+| write | Sequential write to an already open file.
+| write file | Open, write, close. End-to-end write.
+| mmap write | Memory map write.
+| random write | Random write (SPEC: rand write).
+| rmw | Read/modify/write.
+| append | Add data to end of existing file.
+| mkdir | Make directory.
+| rmdir | Remove directory.
+| readdir | List contents of directory. (Includes readdir+ operations)
+| create | Create file metadata operation; checks if file exists, allocates a new inode.
+| unlink | Deletes a file.
+| unlink2 | 2nd unlink on a different file.
+| stat | Retrieves the attributes of a file or directory, such as size, permissions, owner, and timestamps. (ie, du and ls)
+| access | Checks the access permissions for a file or directory to determine if the client has the necessary permissions (read, write, execute).
+| rename | Rename a file or folder.
+| copyfile | Copies a file from one to another.
+| lock | Locks a file (SPEC: locking).
+| chmod | Change the permissions of a file or folder.
+| statfs | Retrieve information about the overall file system. (ie, df)
+| pathconf | Retrieves configuration information about a file or directory, such as maximum filename length, maximum path length, and other file system limits.
+|===
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:appendix-rest-api.adoc[< Previous]
+>| xref:appendix-mlcommons.adoc[Next >]
+|===
+// navigation-links:end

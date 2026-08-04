@@ -10,16 +10,16 @@
 [[additional-references]]
 == Additional references
 
-v
-SPEC SFS 2020 user guide
-NFS Best practice guide for ONTAP
-TR-4616 NFS Kerberos with Active Directory
-TR-4835 How to Configure LDAP in ONTAP
-EDA Best practice guide for ONTAP
-FlexGroup volume best practices
-ONTAP S3 best practice guide
-NetApp AFF A90 Storage System Reference Design Guide - NVIDIA HGX
-MLcommons
+* link:https://www.spec.org/storage2020/[SPECstorage Solution 2020 / SPEC SFS 2020]
+* NFS Best practice guide for ONTAP
+* TR-4616 NFS Kerberos with Active Directory
+* TR-4835 How to Configure LDAP in ONTAP
+* EDA Best practice guide for ONTAP
+* FlexGroup volume best practices
+* ONTAP S3 best practice guide
+* NetApp AFF A90 Storage System Reference Design Guide - NVIDIA HGX
+* link:https://mlcommons.org/benchmarks/storage/[MLPerf Storage (MLCommons)]
+* link:https://github.com/mlcommons/storage[MLPerf Storage GitHub repository]
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
