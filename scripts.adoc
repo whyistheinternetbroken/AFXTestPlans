@@ -14,36 +14,22 @@ Scripts to support volume management, LIF management, cluster reinitialization, 
 [[scripts]]
 == Scripts
 
-The following section contains scripts that can be used with these test plans.
+The following scripts can be used with these test plans. Volume and LIF scripts live in the link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP[Benchmarking/ONTAP] repository.
 
 [[volume-creation-and-deletion-scripts]]
-=== Volume creation and deletion scripts
-
-The following scripts can be used to create/delete data volumes.
+* link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volumes[Volume creation and deletion scripts] — create and delete data volumes.
 
 [[lif-creation-and-cleanup-scripts]]
-=== LIF creation and cleanup scripts
-
-The following scripts can be used to create/delete network interfaces.
+* link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/networking[LIF creation and cleanup scripts] — create and delete network interfaces.
 
 [[netapp-afx-reinitialization-script]]
-=== NetApp AFX reinitialization script
-
-If you need to re-initialize a cluster during this test plan, the following script can help with that.
-Be sure to review the README file. Reach out to  for any questions or improvements.
+* link:https://github.com/whyistheinternetbroken/AFX[NetApp AFX reinitialization script] — re-initialize a cluster during this test plan. Review the README before use.
 
 [[maximum-files-monitor]]
-=== Maximum files monitor
-
-This script can be run as a scheduled job and will monitor a volume for its inode usage.
+* link:https://github.com/whyistheinternetbroken/maxfile-increase[Maximum files monitor] — run as a scheduled job to monitor a volume for inode usage.
 
 [[nas-performance-benchmark-scripts-benchmarkingontap-repo]]
-=== NAS Performance Benchmark Scripts (Benchmarking/ONTAP repo)
-
-A collection of NAS-specific benchmark and automation scripts is maintained in the Benchmarking/ONTAP repository on GitHub. This includes scripts for volume and LIF management referenced throughout this test plan.
-link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP[https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP]
-* link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volumes[Volume creation and deletion scripts]
-* link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/networking[LIF creation and cleanup scripts]
+* link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP[NAS performance benchmark scripts (Benchmarking/ONTAP)] — NAS-specific benchmark and automation scripts referenced throughout this test plan, including the volume and LIF scripts above.
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
