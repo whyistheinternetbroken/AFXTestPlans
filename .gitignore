@@ -1,1 +1,5 @@
 AFX Test Plan - ONTAP 9.19.1.docx
+exports/
+*.pdf
+.bundle/
+vendor/bundle/

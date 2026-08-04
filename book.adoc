@@ -1,0 +1,85 @@
+= NetApp AFX Test Plan -- ONTAP 9.19.1
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: rouge
+:pdf-page-size: Letter
+:title-page:
+:description: NetApp AFX Test Plan for ONTAP 9.19.1 (PDF export)
+
+// Master document for PDF export. Pages remain standalone under TestPlan/; this file only aggregates them.
+// Build with: scripts/export-pdf.ps1  (or scripts/export-pdf.sh)
+
+include::TestPlan/overview.adoc[]
+
+include::TestPlan/setup.adoc[]
+
+include::TestPlan/datasets-workloads.adoc[]
+
+include::TestPlan/test-plans.adoc[]
+
+include::TestPlan/performance-test-plan.adoc[]
+
+include::TestPlan/test-01-validate-cluster-setup.adoc[]
+
+include::TestPlan/test-02-enable-autosupport.adoc[]
+
+include::TestPlan/test-03-create-network-interfaces.adoc[]
+
+include::TestPlan/test-04-data-migration.adoc[]
+
+include::TestPlan/test-05-volume-management.adoc[]
+
+include::TestPlan/test-06-api-testing.adoc[]
+
+include::TestPlan/test-07-08-performance-testing-considerations.adoc[]
+
+include::TestPlan/test-07-customer-workload-real-data.adoc[]
+
+include::TestPlan/test-08-customer-workload-benchmarks.adoc[]
+
+include::TestPlan/test-09-performance-monitoring.adoc[]
+
+include::TestPlan/test-10-capacity-management.adoc[]
+
+include::TestPlan/test-11-compute-scaling.adoc[]
+
+include::TestPlan/test-12-node-failure-behavior.adoc[]
+
+include::TestPlan/test-flexcache.adoc[]
+
+include::TestPlan/test-s3.adoc[]
+
+include::TestPlan/test-snapshots-snapmirror.adoc[]
+
+include::TestPlan/test-ndu.adoc[]
+
+include::TestPlan/feature-global-deduplication.adoc[]
+
+include::TestPlan/vdbench-global-dedupe.adoc[]
+
+include::TestPlan/feature-dynamic-storage-efficiency.adoc[]
+
+include::TestPlan/feature-aggressive-readahead.adoc[]
+
+include::TestPlan/feature-fabricpool.adoc[]
+
+include::TestPlan/appendix.adoc[]
+
+include::TestPlan/appendix-nfs-considerations.adoc[]
+
+include::TestPlan/appendix-client-tuning.adoc[]
+
+include::TestPlan/appendix-rest-api.adoc[]
+
+include::TestPlan/appendix-spec-sfs.adoc[]
+
+include::TestPlan/appendix-mlcommons.adoc[]
+
+include::TestPlan/appendix-statistics-counters.adoc[]
+
+include::TestPlan/scripts.adoc[]
+
+include::TestPlan/additional-references.adoc[]
