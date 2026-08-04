@@ -58,7 +58,6 @@ This test plan is split into focused AsciiDoc files linked from this index. Use 
 === Appendix
 
 * xref:appendix.adoc[Appendix Overview]
-** xref:appendix-eda-terminology.adoc[EDA Terminology]
 ** xref:appendix-nfs-considerations.adoc[NFS Considerations]
 ** xref:appendix-client-tuning.adoc[Client Tuning]
 ** xref:appendix-rest-api.adoc[REST API Examples]

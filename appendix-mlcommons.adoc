@@ -8,7 +8,7 @@
 
 xref:appendix.adoc[← Back to Appendix]
 
-Guides for the MLPerf Storage (MLCommons) benchmark using DLIO: installation, CLI, training workloads, datasize examples, and NFS operation observations.
+Guides for the MLPerf Storage (MLCommons) benchmark using DLIO: installation, CLI, NFS recommendations, training, checkpointing, vectorDB, datasize examples, and NFS operation observations.
 
 
 [[dliomlcommons]]
@@ -51,6 +51,26 @@ Submission modes in the v3.0 CLI:
 * `closed` — apples-to-apples; almost no tuning allowed
 * `open` — documented tuning allowed
 * `whatif` — exploration only; not valid for submission (exposes additional models/parameters)
+
+This test plan covers training, checkpointing, and vectorDB benchmarks against NetApp AFX over NFS (`file` backend). KV-cache is optional and not required for the core test plan scenarios.
+
+
+[[nfs-recommendations-for-mlperf]]
+=== NFS version and mount option recommendations
+
+Mount FlexGroup (or other data) volumes from NetApp AFX on every client that participates. Prefer dedicated mount points per workload family so training, checkpoints, and vectorDB data do not share the same directory tree.
+
+For general NFS guidance, see xref:appendix-nfs-considerations.adoc[NFS Considerations] and xref:appendix-client-tuning.adoc[Client Tuning]. Workload-specific recommendations for this test plan:
+
+[cols="1,2,3",options="header"]
+|===
+| Workload | Recommended NFS version | Recommended mount options / notes
+| Training (sequential read-heavy) | NFSv4.1 with pNFS and session trunking | Ubuntu 22+: `vers=4.1,tcp,hard,intr,nocto,actimeo=3600,max_connect=8,rsize=1048576,wsize=1048576`. RHEL 9.x+: use `trunkdiscovery` instead of `max_connect=8`. `nocto` and long `actimeo` suit static training datasets.
+| Checkpointing (sequential write + restore reads + SETATTR) | NFSv4.1 with pNFS and session trunking | Same base as training (`vers=4.1,tcp,hard,intr,max_connect=8` or `trunkdiscovery`, `rsize=1048576,wsize=1048576`). Prefer *without* `nocto` (or use a shorter `actimeo`) so attribute updates during checkpoint write/restore are not overly stale. Ensure the checkpoint folder is on shared NFS so all hosts can read what peers wrote.
+| VectorDB (random read/write + metadata) | NFSv3 *or* NFSv4.1 | NFSv3: `vers=3,tcp,hard,intr,nconnect=8,rsize=1048576,wsize=1048576` often works well for metadata-heavy / random patterns. NFSv4.1: keep trunking (`max_connect` / `trunkdiscovery`) but avoid aggressive `nocto`/`actimeo` unless you validate query correctness. Point Milvus Docker volumes at the NFS mount (see vectorDB steps below).
+|===
+
+*Note:* Always use `hard` mounts for benchmarks. Soft mounts can mask storage issues with application-level timeouts.
 
 
 [[installation-and-setup]]
@@ -142,14 +162,6 @@ mlpstorage closed training unet3d run file \
 For full help: `mlpstorage --help_all` or append `--help` at any subcommand level.
 
 
-[[about-vectordb-search-in-mlcommons-benchmark]]
-=== About vectorDB search in MLPerf Storage
-
-The VectorDB benchmark measures storage behavior for vector similarity search (commonly used in RAG and recommendation systems). Upstream supports Milvus indexing algorithms such as DISKANN, HNSW, and AISAQ (plus additional algorithms in `open`/`whatif`).
-
-*Note:* Because vectorDB coverage is still evolving in the suite, this EAP does not cover vectorDB search benchmarks. See https://github.com/mlcommons/storage/tree/main/vdb_benchmark[vdb_benchmark] if you choose to explore it.
-
-
 [[about-checkpointing-in-mlcommons-benchmark]]
 === About checkpointing in MLPerf Storage
 
@@ -159,22 +171,146 @@ Checkpointing reduces lost progress when training fails. Typical I/O profile:
 * Random reads for restoring from checkpoints
 * Metadata operations (mostly SETATTR)
 
-Upstream checkpointing emulates Llama3 scales (`llama3-8b`, `llama3-70b`, `llama3-405b`, `llama3-1t`).
+Upstream checkpointing emulates Llama3 scales (`llama3-8b`, `llama3-70b`, `llama3-405b`, `llama3-1t`). Checkpoint sizes range from about 105 GB (8B) to about 18 TB (1T). For CLOSED runs, process counts are fixed (8 / 64 / 512 / 1024 respectively).
 
-*Note:* This EAP does not cover checkpointing benchmarks. See https://github.com/mlcommons/storage/blob/main/checkpointing/README.md[checkpointing/README.md] for upstream guidance.
+For shared NFS on NetApp AFX, use *default* (multi-host shared storage) mode, not *subset* (node-local storage).
+
+Upstream reference: https://github.com/mlcommons/storage/blob/main/checkpointing/README.md[checkpointing/README.md]
+
+[[checkpointing-on-nfs]]
+==== Checkpointing on NFS — test plan steps
+
+. Mount an AFX volume for checkpoints on all participating clients (see <<nfs-recommendations-for-mlperf>>). Example mount point: `/mnt/afx/mlperf/checkpoints`.
+. From the launcher, size the workload if desired:
+
+[source,console]
+----
+mlpstorage closed checkpointing llama3-8b datasize \
+  --client-host-memory-in-gb 512 \
+  --num-processes 8
+----
+
+. Run write-only checkpoints to NFS (`file`), then clear client page cache if required, then run read-only recovery.
++
+If checkpoint size per client is less than about 3× client DRAM, clear caches between write and read so recovery reads come from storage rather than client cache:
++
+[source,console]
+----
+# Write 10 checkpoints (no reads)
+mlpstorage closed checkpointing llama3-8b run file \
+  --client-host-memory-in-gb 512 \
+  --num-processes 8 \
+  --checkpoint-folder /mnt/afx/mlperf/checkpoints \
+  --results-dir /mnt/afx/mlperf/results \
+  --num-checkpoints-read=0
+
+# On each client (requires root), drop caches when needed
+echo 3 > /proc/sys/vm/drop_caches
+
+# Read/recover the same 10 checkpoints (no writes)
+mlpstorage closed checkpointing llama3-8b run file \
+  --client-host-memory-in-gb 512 \
+  --num-processes 8 \
+  --checkpoint-folder /mnt/afx/mlperf/checkpoints \
+  --results-dir /mnt/afx/mlperf/results \
+  --num-checkpoints-write=0
+----
++
+Alternatively, a single invocation can write then read without an explicit cache clear (useful for a smoke test only):
++
+[source,console]
+----
+mlpstorage closed checkpointing llama3-8b run file \
+  --client-host-memory-in-gb 512 \
+  --num-processes 8 \
+  --checkpoint-folder /mnt/afx/mlperf/checkpoints \
+  --results-dir /mnt/afx/mlperf/results
+----
+
+. For larger models (`llama3-70b`, `llama3-405b`, `llama3-1t`), increase `--num-processes` and `--hosts` to match CLOSED process counts, and ensure aggregate client memory and NFS capacity can hold the checkpoint footprint.
+. Confirm results under `--results-dir` and that write and read phases completed against the NFS path.
+
+
+[[about-vectordb-search-in-mlcommons-benchmark]]
+=== About vectorDB search in MLPerf Storage
+
+The VectorDB benchmark measures storage behavior for vector similarity search (commonly used in RAG and recommendation systems). The I/O profile is generally random reads and writes plus metadata. Upstream supports Milvus indexing algorithms such as DISKANN, HNSW, and AISAQ (plus additional algorithms in `open`/`whatif`).
+
+For this test plan, run VectorDB with Milvus data directories on NFS (`file` backend) so AFX is under test.
+
+Upstream reference: https://github.com/mlcommons/storage/tree/main/vdb_benchmark[vdb_benchmark]
+
+[[vectordb-on-nfs]]
+==== VectorDB on NFS — test plan steps
+
+. Install VectorDB extras on the client that will run Milvus / `mlpstorage`:
+
+[source,console]
+----
+cd storage
+uv sync --extra vectordb
+uv pip install -e ./vdb_benchmark
+mlpstorage open vectordb --help
+----
+
+. Mount an AFX volume for VectorDB data, for example `/mnt/afx/mlperf/vdb` (see <<nfs-recommendations-for-mlperf>>).
+. Configure the standalone Milvus stack to store Docker volumes on that NFS path:
++
+[source,console]
+----
+cp vdb_benchmark/stacks/milvus/standalone/minio/.env.example \
+   vdb_benchmark/stacks/milvus/standalone/minio/.env
+----
++
+Set `DOCKER_VOLUME_DIRECTORY=/mnt/afx/mlperf/vdb` (or your NFS mount) in the `.env` file so Milvus/MinIO/etcd volumes land on AFX.
+. Start Milvus and verify health:
++
+[source,console]
+----
+docker compose -f vdb_benchmark/stacks/milvus/standalone/minio/docker-compose.yml up -d
+docker ps -a
+----
++
+Containers `milvus-etcd`, `milvus-minio`, and `milvus-standalone` should be healthy. Default endpoint: `127.0.0.1:19530`.
+. Estimate storage for the chosen index (example: DISKANN):
++
+[source,console]
+----
+mlpstorage open vectordb datasize \
+  --vdb-index DISKANN
+----
+. Load vectors (`datagen`) using the `file` backend:
++
+[source,console]
+----
+mlpstorage open vectordb datagen file \
+  --vdb-index DISKANN \
+  --results-dir /mnt/afx/mlperf/results
+----
+. Run the search benchmark:
++
+[source,console]
+----
+mlpstorage open vectordb run file \
+  --vdb-index DISKANN \
+  --results-dir /mnt/afx/mlperf/results
+----
+. Review results under `--results-dir`. For closed-division or other indexes (`HNSW`, `AISAQ`), change the mode/`--vdb-index` accordingly. Use `mlpstorage open vectordb run --help` for current options.
+
+*Note:* VectorDB requires Docker Compose and a healthy Milvus instance for `datagen` and `run`. `datasize` can run without Milvus.
 
 
 [[about-training-in-mlcommons-benchmark]]
 === About training in MLPerf Storage
 
-Training I/O is the primary focus for this EAP. AI/ML training is typically a heavily sequential read workload on a static dataset and requires high throughput.
+Training I/O is a primary focus for this test plan. AI/ML training is typically a heavily sequential read workload on a static dataset and requires high throughput.
 
 In the current v3.0 CLI:
 
 * *Closed / open:* `unet3d`, `retinanet`
 * *Whatif (not submittable):* `cosmoflow`, `resnet50`, `dlrm`, `flux` (in addition to the closed models)
 
-For this test plan, continue to use U-Net3D (closed) plus ResNet50 and CosmoFlow via `whatif` when you want the same training-ingest shapes previously used in earlier EAP runs. RetinaNet is also available for closed-division exploration.
+For this test plan, use U-Net3D (closed) plus ResNet50 and CosmoFlow via `whatif` when you want those training-ingest shapes. RetinaNet is also available for closed-division exploration.
 
 [[generating-datasizes]]
 ==== Generating datasizes

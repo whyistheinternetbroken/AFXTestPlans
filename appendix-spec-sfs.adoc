@@ -8,7 +8,19 @@
 
 xref:appendix.adoc[← Back to Appendix]
 
-SPECstorage Solution 2020 (commonly called SPEC SFS 2020) EDA workload profiles: frontend and backend NFS operation distributions, and operation definitions.
+SPECstorage Solution 2020 (commonly called SPEC SFS 2020) EDA workload profiles: frontend, backend, and blended terminology; NFS operation distributions; and operation definitions.
+
+
+[[about-eda-frontend-backend-and-blended-terminology]]
+== About EDA frontend, backend, and blended terminology
+
+The EDA terms used in this document for workloads (frontend, backend, blended) refer to the workloads documented in SPECstorage Solution 2020. Specifically:
+
+* *Frontend* — large number of small files, higher metadata
+* *Backend* — lower number of large files, 50/50 read/write (sequential)
+* *Blended* — a mix of both frontend and backend workloads
+
+See https://www.spec.org/storage2020/ for details.
 
 
 [[spec-sfs-2020]]
@@ -22,8 +34,6 @@ The official EDA workload is a blend of two component workloads:
 * *EDA_BACKEND* — sequential read/write intensive; larger assembly files (backend design flow).
 
 In the blended workload, the process ratio is maintained at 3 frontend processes for every 2 backend processes as load increases.
-
-*Note:* See also xref:appendix-eda-terminology.adoc[EDA Terminology] for definitions of frontend, backend, and blended workloads used in this test plan.
 
 
 [[frontend-eda-workload-breakdown----specsfs-2020]]
