@@ -14,7 +14,7 @@ Scripts to support volume management, LIF management, cluster reinitialization, 
 [[scripts]]
 == Scripts
 
-The following scripts can be used with these test plans. Volume and LIF scripts live in the link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP[Benchmarking/ONTAP] repository.
+The following scripts can be used with these test plans. 
 
 [[volume-creation-and-deletion-scripts]]
 * link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP/volumes[Volume creation and deletion scripts] — create and delete data volumes.
