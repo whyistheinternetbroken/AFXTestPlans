@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Export the AFX test plan AsciiDoc book to a single PDF.
-# Usage: ./scripts/ExportPDF/export-pdf.sh [outdir] [outfile]
+# Usage: ./Scripts/ExportPDF/export-pdf.sh [outdir] [outfile]
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -8,10 +8,10 @@ cd "$ROOT"
 
 OUT_DIR="${1:-exports}"
 OUT_FILE="${2:-AFX-Test-Plan-ONTAP-9.19.1.pdf}"
-BOOK="book.adoc"
+BOOK="Scripts/ExportPDF/book.adoc"
 
 if [[ ! -f "$BOOK" ]]; then
-  echo "Missing $BOOK at repo root" >&2
+  echo "Missing $BOOK" >&2
   exit 1
 fi
 
@@ -47,7 +47,7 @@ Install one of:
   gem install asciidoctor-pdf rouge
   Docker (image: asciidoctor/docker-asciidoctor)
 
-See PDF-EXPORT.adoc for details.
+See Scripts/ExportPDF/PDF-EXPORT.adoc for details.
 EOF
   exit 1
 fi

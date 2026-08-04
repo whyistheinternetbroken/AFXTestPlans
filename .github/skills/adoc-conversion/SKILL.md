@@ -28,6 +28,8 @@ Convert a DOCX document into a multi-file AsciiDoc set with consistent navigatio
 4. Create landing pages:
    - `README.adoc` at the repo root as the GitHub landing page / top-level navigation
    - Place all other AsciiDoc pages and the `images/` folder under `TestPlan/`
+   - Keep repo root lean: prefer only `README.adoc`, `TestPlan/`, and `Scripts/` (plus unavoidable `.github` / `.gitignore`)
+   - PDF export tooling lives under `Scripts/ExportPDF/` (`book.adoc`, export scripts, `PDF-EXPORT.adoc`, `Gemfile`)
    - `TestPlan/test-plans.adoc` linking individual tests
    - `TestPlan/appendix.adoc` linking one level below appendix headings
 5. Keep each test as its own file when requested; keep feature tests one file per feature.

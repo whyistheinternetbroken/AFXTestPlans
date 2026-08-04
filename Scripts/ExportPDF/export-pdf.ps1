@@ -3,7 +3,7 @@
   Export the AFX test plan AsciiDoc book to a single PDF.
 
 .DESCRIPTION
-  Builds book.adoc with asciidoctor-pdf (local gem or Docker).
+  Builds Scripts/ExportPDF/book.adoc with asciidoctor-pdf (local gem or Docker).
   Run from anywhere; the script resolves the repository root.
 
 .PARAMETER OutDir
@@ -27,18 +27,15 @@ $ErrorActionPreference = "Stop"
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "../..")
 Set-Location $RepoRoot
 
-$Book = Join-Path $RepoRoot "book.adoc"
+$BookRel = "Scripts/ExportPDF/book.adoc"
+$Book = Join-Path $RepoRoot $BookRel
 if (-not (Test-Path $Book)) {
-    throw "Missing book.adoc at repo root: $Book"
+    throw "Missing book master: $Book"
 }
 
 $OutPath = Join-Path $RepoRoot $OutDir
 New-Item -ItemType Directory -Force -Path $OutPath | Out-Null
 $PdfPath = Join-Path $OutPath $OutFile
-
-function Test-Command([string]$Name) {
-    return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
-}
 
 $AsciidoctorPdf = Get-Command "asciidoctor-pdf" -ErrorAction SilentlyContinue
 $Docker = Get-Command "docker" -ErrorAction SilentlyContinue
@@ -56,6 +53,7 @@ if (-not $UseDocker -and $AsciidoctorPdf) {
 elseif ($Docker) {
     Write-Host "Using Docker image asciidoctor/docker-asciidoctor..."
     $RelOutDir = $OutDir -replace '\\', '/'
+    $BookDocker = $BookRel -replace '\\', '/'
     docker run --rm `
         -v "${RepoRoot}:/documents" `
         -w /documents `
@@ -66,7 +64,7 @@ elseif ($Docker) {
         -a allow-uri-read `
         -D $RelOutDir `
         -o $OutFile `
-        book.adoc
+        $BookDocker
 }
 else {
     throw @"
@@ -76,7 +74,7 @@ Install one of:
   gem install asciidoctor-pdf rouge
   Docker Desktop (image: asciidoctor/docker-asciidoctor)
 
-See PDF-EXPORT.adoc for details.
+See Scripts/ExportPDF/PDF-EXPORT.adoc for details.
 "@
 }
 

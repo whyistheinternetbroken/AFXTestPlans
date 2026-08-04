@@ -12,7 +12,7 @@ Pick one:
 * **Ruby gems (local):** Ruby 3.x, then `gem install asciidoctor-pdf rouge`
 * **Docker:** Docker Desktop with pull access to `asciidoctor/docker-asciidoctor`
 
-Images resolve from `TestPlan/images/` via the included pages. Build from the **repository root**.
+Images resolve from `TestPlan/images/` via the included pages. Run the export script from anywhere; it builds from the **repository root**.
 
 == Export
 
@@ -20,14 +20,14 @@ Windows (PowerShell):
 
 [source,powershell]
 ----
-.\scripts\ExportPDF\export-pdf.ps1
+.\Scripts\ExportPDF\export-pdf.ps1
 ----
 
 Linux / macOS:
 
 [source,shell]
 ----
-./scripts/ExportPDF/export-pdf.sh
+./Scripts/ExportPDF/export-pdf.sh
 ----
 
 Default output:
@@ -38,10 +38,19 @@ Optional arguments (PowerShell):
 
 [source,powershell]
 ----
-.\scripts\ExportPDF\export-pdf.ps1 -OutDir exports -OutFile AFX-Test-Plan-customer.pdf
+.\Scripts\ExportPDF\export-pdf.ps1 -OutDir exports -OutFile AFX-Test-Plan-customer.pdf
 ----
 
-The master include file is xref:book.adoc[`book.adoc`]. Do not hand-edit customer PDFs from individual `TestPlan/*.adoc` pages unless you intentionally want a subset.
+The master include file is `book.adoc` in this folder (`Scripts/ExportPDF/`). Do not hand-edit customer PDFs from individual `TestPlan/*.adoc` pages unless you intentionally want a subset.
+
+Optional Bundler install from this folder:
+
+[source,shell]
+----
+cd Scripts/ExportPDF
+bundle install
+bundle exec asciidoctor-pdf book.adoc -D ../../exports -o AFX-Test-Plan-ONTAP-9.19.1.pdf
+----
 
 == Sharing guidance
 

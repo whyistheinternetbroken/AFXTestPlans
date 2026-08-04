@@ -3,3 +3,4 @@ exports/
 *.pdf
 .bundle/
 vendor/bundle/
+.cursor/
