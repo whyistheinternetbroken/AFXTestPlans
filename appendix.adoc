@@ -39,9 +39,6 @@ The following appendices provide supplemental reference information for this tes
 | xref:scripts.adoc[Scripts]
 | Volume, LIF, reinitialization, and NAS benchmark scripts
 
-| xref:blank-test-template.adoc[Blank Test Template]
-| Blank test template for custom test cases
-
 | xref:additional-references.adoc[Additional References]
 | Links to NetApp technical reports and external documentation
 |===

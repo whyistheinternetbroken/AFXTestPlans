@@ -34,6 +34,6 @@ The following scripts can be used with these test plans.
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:appendix-statistics-counters.adoc[< Previous]
->| xref:blank-test-template.adoc[Next >]
+>| xref:additional-references.adoc[Next >]
 |===
 // navigation-links:end

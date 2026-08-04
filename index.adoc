@@ -68,7 +68,6 @@ This test plan is split into focused AsciiDoc files linked from this index. Use 
 
 === Reference
 
-* xref:blank-test-template.adoc[Blank Test Template]
 * xref:additional-references.adoc[Additional References]
 
 == Consolidation and Cross-Link Notes

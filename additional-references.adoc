@@ -11,19 +11,22 @@
 == Additional references
 
 * link:https://www.spec.org/storage2020/[SPECstorage Solution 2020 / SPEC SFS 2020]
-* NFS Best practice guide for ONTAP
-* TR-4616 NFS Kerberos with Active Directory
-* TR-4835 How to Configure LDAP in ONTAP
-* EDA Best practice guide for ONTAP
-* FlexGroup volume best practices
-* ONTAP S3 best practice guide
-* NetApp AFF A90 Storage System Reference Design Guide - NVIDIA HGX
+* link:https://www.netapp.com/media/10720-tr-4067.pdf[TR-4067: NFS best practice and implementation guide for ONTAP]
+* link:https://www.netapp.com/media/19384-tr-4616.pdf[TR-4616: NFS Kerberos in ONTAP with Active Directory]
+* link:https://www.netapp.com/media/19423-tr-4835.pdf[TR-4835: How to Configure LDAP in ONTAP]
+* link:https://www.netapp.com/media/19368-tr-4617.pdf[TR-4617: Electronic Design Automation—Best Practices in ONTAP]
+* link:https://www.netapp.com/media/12385-tr4571pdf.pdf[TR-4571: NetApp ONTAP FlexGroup volumes best practices and implementation guide]
+* link:https://docs.netapp.com/us-en/ontap/s3-config/[ONTAP S3 configuration and best practices] (includes content formerly in TR-4814)
+* link:https://www.netapp.com/media/136382-nva-1182-a90-ncp-ra.pdf[NVA-1182: NetApp AFF A90 Storage System Reference Architecture for NVIDIA Cloud Partners (HGX)]
+* link:https://www.netapp.com/media/125003-nva-1175-design-superpod-a90.pdf[NVA-1175: NVIDIA DGX SuperPOD with NetApp AFF A90 Storage Systems (Design)]
+* link:https://docs.netapp.com/us-en/netapp-solutions-ai/infra/ai-dgx-superpod-nva1175-design.html[NetApp AFF A90 with NVIDIA DGX SuperPOD — design overview (docs.netapp.com)]
+* link:https://docs.netapp.com/us-en/netapp-solutions-ai/infra/ai-dgx-superpod-nva1175-deploy.html[NetApp AFF A90 with NVIDIA DGX SuperPOD — deployment guide (docs.netapp.com)]
 * link:https://mlcommons.org/benchmarks/storage/[MLPerf Storage (MLCommons)]
 * link:https://github.com/mlcommons/storage[MLPerf Storage GitHub repository]
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:blank-test-template.adoc[< Previous]
->| xref:index.adoc[Next >]
+| xref:scripts.adoc[< Previous]
+>| xref:index.adoc[Back to beginning]
 |===
 // navigation-links:end
