@@ -27,6 +27,6 @@
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:scripts.adoc[< Previous]
->| xref:index.adoc[Back to beginning]
+>| xref:../README.adoc[Back to beginning]
 |===
 // navigation-links:end

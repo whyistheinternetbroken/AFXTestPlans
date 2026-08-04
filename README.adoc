@@ -1,0 +1,80 @@
+= NetApp AFX Test Plan -- ONTAP 9.19.1
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+:description: NetApp AFX Test Plan for ONTAP 9.19.1
+
+== How to Use This Document
+
+This test plan is split into focused AsciiDoc files under `TestPlan/`, linked from this README. Use the navigation below to jump to the section you need.
+
+=== Introduction
+
+* xref:TestPlan/overview.adoc[Overview and Introduction] -- Feedback, support contacts, new ONTAP 9.19.1 features, documentation, and licensing
+
+=== Setup
+
+* xref:TestPlan/setup.adoc[Recommended Setup and Prerequisites] -- Hardware, client configuration, networking, NFS server configuration
+* xref:TestPlan/datasets-workloads.adoc[Datasets, Workloads, and ONTAP Limits] -- Workload types, protocols, volume recommendations, ONTAP limits
+
+=== Test Plans
+
+* xref:TestPlan/test-plans.adoc[Test Plans Overview] -- Full test listing with links to Tests 1-16
+
+==== Core Performance Tests
+
+* xref:TestPlan/performance-test-plan.adoc[Performance Test Plan] -- Configuration reference (NFS export policy, volume setup, mount options, networking, ONTAP features)
+* xref:TestPlan/test-01-validate-cluster-setup.adoc[Test 1: Validate cluster setup]
+* xref:TestPlan/test-02-enable-autosupport.adoc[Test 2: Enable AutoSupport]
+* xref:TestPlan/test-03-create-network-interfaces.adoc[Test 3: Create network interfaces]
+* xref:TestPlan/test-04-data-migration.adoc[Test 4: Data migration]
+* xref:TestPlan/test-05-volume-management.adoc[Test 5: Volume management]
+* xref:TestPlan/test-06-api-testing.adoc[Test 6: API testing]
+* xref:TestPlan/test-07-08-performance-testing-considerations.adoc[Performance testing considerations (Tests 7 and 8)]
+* xref:TestPlan/test-07-customer-workload-real-data.adoc[Test 7: Customer workload -- real data]
+* xref:TestPlan/test-08-customer-workload-benchmarks.adoc[Test 8: Customer workload -- benchmarks]
+* xref:TestPlan/test-09-performance-monitoring.adoc[Test 9: Performance monitoring]
+* xref:TestPlan/test-10-capacity-management.adoc[Test 10: Capacity management]
+* xref:TestPlan/test-11-compute-scaling.adoc[Test 11: Node additions]
+* xref:TestPlan/test-12-node-failure-behavior.adoc[Test 12: Node failure behavior]
+
+==== Optional Functional Tests
+
+* xref:TestPlan/test-flexcache.adoc[Test 13: FlexCache]
+* xref:TestPlan/test-s3.adoc[Test 14: S3 in ONTAP]
+* xref:TestPlan/test-snapshots-snapmirror.adoc[Test 15: Snapshots and SnapMirror]
+* xref:TestPlan/test-ndu.adoc[Test 16: Non-Disruptive Upgrade]
+
+==== New Feature Tests (ONTAP 9.19.1)
+
+* xref:TestPlan/feature-global-deduplication.adoc[Global Deduplication]
+** xref:TestPlan/vdbench-global-dedupe.adoc[VDBench Test Plan: NFS Storage Performance Testing]
+* xref:TestPlan/feature-dynamic-storage-efficiency.adoc[Dynamic Storage Efficiency]
+* xref:TestPlan/feature-aggressive-readahead.adoc[Aggressive Readahead]
+* xref:TestPlan/feature-fabricpool.adoc[FabricPool Tiering]
+
+=== Appendix
+
+* xref:TestPlan/appendix.adoc[Appendix Overview]
+** xref:TestPlan/appendix-nfs-considerations.adoc[NFS Considerations]
+** xref:TestPlan/appendix-client-tuning.adoc[Client Tuning]
+** xref:TestPlan/appendix-rest-api.adoc[REST API Examples]
+** xref:TestPlan/appendix-spec-sfs.adoc[SPEC SFS 2020]
+** xref:TestPlan/appendix-mlcommons.adoc[MLCommons / MLPerf Storage]
+** xref:TestPlan/appendix-statistics-counters.adoc[Statistics Counters]
+** xref:TestPlan/scripts.adoc[Scripts]
+
+=== Reference
+
+* xref:TestPlan/additional-references.adoc[Additional References]
+
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:TestPlan/additional-references.adoc[< Previous]
+>| xref:TestPlan/overview.adoc[Next >]
+|===
+// navigation-links:end

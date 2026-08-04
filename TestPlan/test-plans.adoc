@@ -1,4 +1,4 @@
-﻿= Test Plans
+= Test Plans
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:index.adoc[<- Back to Index]
+xref:../README.adoc[<- Back to Index]
 
 The following sections outline the testing NetApp encourages customers to complete as part of this test plan.
 

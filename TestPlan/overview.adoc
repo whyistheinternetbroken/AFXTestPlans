@@ -1,4 +1,4 @@
-﻿= NetApp AFX Test Plan: Overview and Introduction
+= NetApp AFX Test Plan: Overview and Introduction
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -73,7 +73,7 @@ No special licenses are needed for NetApp AFX. It uses the same ONTAP licensing 
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:index.adoc[< Previous]
+| xref:../README.adoc[< Previous]
 >| xref:setup.adoc[Next >]
 |===
 // navigation-links:end
