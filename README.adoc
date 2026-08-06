@@ -13,6 +13,10 @@ This test plan is split into focused AsciiDoc files under `TestPlan/`, linked fr
 
 For a single PDF suitable for request-basis customer sharing (Box / OneDrive / SharePoint), see xref:Scripts/ExportPDF/PDF-EXPORT.adoc[PDF export] and run `Scripts/ExportPDF/export-pdf.ps1` (or `Scripts/ExportPDF/export-pdf.sh`).
 
+== Feedback ==
+
+Submit as issues in this GitHub or email parisi@netapp.com.
+
 === Introduction
 
 * xref:TestPlan/overview.adoc[Overview and Introduction] -- Feedback, support contacts, new ONTAP 9.19.1 features, documentation, and licensing
