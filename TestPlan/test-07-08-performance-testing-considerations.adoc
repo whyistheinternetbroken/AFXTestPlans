@@ -181,7 +181,7 @@ The following section covers some general networking guidance for client and sto
 * sunrpc.rdma_slot_table_entries set to 200
 
 [[ontap-feature-considerations]]
-== ONTAP feature considerations
+== Additional ONTAP feature considerations
 
 The following covers specific ONTAP feature configuration modifications that are not covered in <<nfs-export-policy-configuration>>, <<volume-configuration>>, <<mount-options>>, <<client-configuration>>, or <<network-configuration>>.
 
