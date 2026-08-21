@@ -28,7 +28,6 @@ For a single PDF suitable for request-basis customer sharing (Box / OneDrive / S
 
 ==== Core Performance Tests
 
-* xref:TestPlan/performance-test-plan.adoc[Performance Test Plan] -- Configuration reference (NFS export policy, volume setup, mount options, networking, ONTAP features)
 * xref:TestPlan/test-01-validate-cluster-setup.adoc[Test 1: Validate cluster setup]
 * xref:TestPlan/test-02-enable-autosupport.adoc[Test 2: Enable AutoSupport]
 * xref:TestPlan/test-03-create-network-interfaces.adoc[Test 3: Create network interfaces]

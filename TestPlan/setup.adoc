@@ -211,7 +211,7 @@ Domain = user-domain.company.com
 [[benchmark-cli-configuration]]
 ===== Benchmark CLI configuration
 
-The following shows the NFS CLI command used for internal performance benchmark runs (consolidated from the performance test plan). For full test context, see xref:performance-test-plan.adoc[Performance Test Plan].
+The following shows the NFS CLI command used for internal performance benchmark runs. For full test context, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations (Tests 7 and 8)].
 
 A script that connects to the cluster via SSH and applies this configuration is available at:
 link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/ONTAP/NAS/configure-nfs-server.sh[ONTAP/NAS/configure-nfs-server.sh]

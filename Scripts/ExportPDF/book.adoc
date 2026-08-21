@@ -20,8 +20,6 @@ include::../../TestPlan/datasets-workloads.adoc[]
 
 include::../../TestPlan/test-plans.adoc[]
 
-include::../../TestPlan/performance-test-plan.adoc[]
-
 include::../../TestPlan/test-01-validate-cluster-setup.adoc[]
 
 include::../../TestPlan/test-02-enable-autosupport.adoc[]
