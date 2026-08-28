@@ -176,15 +176,28 @@ For an official submission, follow the current upstream `Rules.md`, generate the
 [[mlcommons-client-sizing-and-ramp]]
 === Client, process, and accelerator sizing
 
-The emulated accelerator count determines the requested data rate; `--num-processes` determines dataset-generation parallelism and, where supported, worker concurrency. Do not scale only one value and assume the clients can feed it.
+The emulated accelerator count (`--num-accelerators`) is the concurrent training job size for a `run`. `--num-processes` is the concurrent worker count for `datagen` and for checkpointing. Do not scale only one value and assume the clients can feed it.
 
-. Begin with one client and the smallest valid accelerator/process count.
-. Increase emulated accelerators or workers in a controlled sequence such as 1, 2, 4, 8, and 16.
+Start with 1–2 concurrent jobs per client. Ramp accelerators/processes and client count independently (1, 2, 4, 8, then 16). Do not begin a first-pass lab run with more workers on one host than that host has usable cores.
+
+[cols="1,2,2"]
+|===
+| Workload | Starting jobs per run | How to ramp
+| Training `datagen` | `--num-processes 2` on one client | 2 → 4 → 8 processes, then add clients rather than exceeding about 8–16 processes per host
+| Training `run` (exploratory) | `--num-accelerators 2` on one client | 2 → 4 → 8 → 16 accelerators; add `--hosts` when one client’s CPU, RAM, or NIC saturates. A practical first multi-client point is 2 accelerators per client (for example 8 accelerators across 4 hosts)
+| Training `run` (closed) | Smallest valid closed accelerator count that still fits client RAM | Keep the closed mapping; scale by adding hosts instead of inventing extra processes
+| Checkpointing (closed) | Fixed: 8 / 64 / 512 / 1024 processes for llama3-8b / 70b / 405b / 1t | Spread those processes across hosts (`--hosts`) so each client runs a share; do not reduce the closed process count
+| Checkpointing (whatif/open) | 2 processes on one client when the rules allow | 2 → 4 → 8, then add hosts
+| VectorDB | One Milvus instance and the default worker count from `datasize`/`run --help` | Increase query/index concurrency only after a single-host run is stable; add NFS clients independently of the Milvus container host
+|===
+
+. Begin with one client and the smallest valid accelerator/process count in the table.
+. Increase jobs in a controlled sequence such as 1, 2, 4, 8, and 16.
 . Add clients independently when a client approaches CPU, RAM, NIC, or NFS-RPC saturation.
 . Stop when aggregate throughput plateaus, latency rises materially, the achieved sample rate misses the benchmark target, or a client becomes the bottleneck.
 . Repeat the useful upper points at least three times with unchanged configuration.
 
-Every client must have identical code and mount paths. Reserve memory for the OS, NFS page cache, framework workers, and MPI. Run the matching `datasize` command again whenever accelerator count/type or declared host memory changes.
+Every client must have identical code and mount paths. Reserve memory for the OS, NFS page cache, framework workers, and MPI. Run the matching `datasize` command again whenever accelerator count/type, process count, or declared host memory changes.
 
 For a distributed training run, pass the participating hosts from the launcher:
 

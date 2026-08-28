@@ -32,6 +32,7 @@ a| *Test procedure:*
 . Configure exports, ONTAP NFS options, clients, and mounts with xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference].
 . Validate protocol, transfer size, pNFS/trunking or nconnect, client paths, free space, and write access before generating data.
 . Follow the selected execution guide: xref:appendix-spec-sfs.adoc[SPEC SFS], xref:appendix-mlcommons.adoc[MLCommons], or xref:appendix-synthetic-benchmarks.adoc[Synthetic Benchmarks].
+. Start with 1–2 concurrent jobs per client (SPEC: 1 JOB per load generator; MLCommons: 2 accelerators or datagen processes; elbencho/fio: `-t`/`numjobs=2`; mdtest: 1 rank per client). Ramp jobs and client count independently through 1, 2, 4, 8, then 16. Stop when aggregate throughput/IOPS plateaus, latency rises materially, or a client saturates. See the concurrency sections in each guide for workload-specific starting points.
 . Run a smoke test, then ramp load while monitoring clients and ONTAP. Change one variable at a time and repeat each final point.
 . Capture results and configuration metadata. Use xref:test-09-performance-monitoring.adoc[Test 9] for dashboards and xref:benchmark-configuration-reference.adoc#statistics-capture-commands[Statistics capture] for CLI samples.
 

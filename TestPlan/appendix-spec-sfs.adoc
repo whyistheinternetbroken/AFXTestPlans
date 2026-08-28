@@ -66,6 +66,8 @@ The official rules give these approximate resources for each unit of business lo
 
 Keep client CPU below sustained saturation and leave RAM for the operating system, NFS cache, and benchmark processes. If one client reaches its NIC limit, add load generators rather than only increasing load on that host.
 
+Each `LOAD` unit is one concurrent business-metric job (for EDA, one JOB). SM2020 assigns jobs in order from `CLIENT_MOUNTPOINTS`. Jobs per client equal how often that client appears in the list, plus wrap-around after the list is exhausted. EDA_BLENDED keeps 3 frontend processes for every 2 backend processes as those jobs scale.
+
 [[spec-installation-and-preflight]]
 === Installation and preflight
 
@@ -104,13 +106,35 @@ python3 SM2020 -r sfs_rc -s eda_baseline_256k
 ----
 
 [[spec-concurrency-method]]
-=== Concurrency and load-ramp method
+=== Concurrency and jobs per run
 
-. Run a low-load smoke test to confirm orchestration, mounts, free space, and result collection.
-. Establish a baseline with the same number of load generators and mount points planned for the full run.
-. Increase `LOAD` in even steps. Monitor client CPU/RAM/NIC utilization and ONTAP throughput, IOPS, latency, and protocol counters.
-. Stop increasing load when throughput no longer scales, response time rises materially, clients saturate, or capacity/inode limits approach the planned guardrail.
-. Repeat the final useful points at least three times for engineering comparisons. Use the official number and spacing of points for a disclosable run.
+Start with 1 job per client, then increase jobs per client and client count independently. Do not begin a first-pass lab run with more than 1–2 jobs on a single load generator.
+
+[cols="1,2,2"]
+|===
+| Phase | Jobs / `LOAD` | Purpose
+| Smoke | `LOAD=1` (one job on the first `CLIENT_MOUNTPOINTS` entry) | Confirm SSH, mounts, free space, and result files
+| Baseline | `LOAD` = number of load generators (1 job per client) | Establish a comparable starting point
+| Jobs-per-client ramp | 2, 4, then 8 jobs per client (`LOAD` = clients × jobs per client) | Find per-client concurrency before adding hardware
+| Client ramp | Keep jobs per client fixed; add load generators | Continue scaling after a client CPU, RAM, or NIC saturates
+| Exploratory curve | Even `LOAD` / `INCR_LOAD` steps; 3–5 points is enough | Map the useful range; repeat the last useful point three times
+| Publishable curve | At least 10 uniformly spaced points | Follow the current SPEC run rules; `NUM_RUNS` here is load points, not repeats
+|===
+
+Recommended first `sfs_rc` values with four load generators:
+
+[source,config]
+----
+LOAD=4
+INCR_LOAD=4
+NUM_RUNS=5
+----
+
+That starts at 1 job per client and steps to 8, 12, 16, and 20 concurrent jobs. After a client saturates, add generators instead of raising jobs per client further. List each client once in `CLIENT_MOUNTPOINTS` for the 1-job-per-client start; repeating a client on extra mount paths is how you place a second job on that host.
+
+. Run the smoke test (`LOAD=1`) before any ramp.
+. Monitor client CPU/RAM/NIC utilization and ONTAP throughput, IOPS, latency, and protocol counters at every point.
+. Stop increasing jobs when aggregate throughput no longer scales, response time rises materially, clients saturate, or capacity/inode limits approach the planned guardrail.
 . Change one variable per comparison: protocol, transfer size, trunking/nconnect, client count, or ONTAP feature.
 
 Use NFSv3 for metadata-heavy EDA frontend exploration and compare NFSv4.1 with pNFS/session trunking for backend throughput. Treat protocol comparisons as separate result sets and retain all `sfs_rc`, logs, summaries, mount output, and ONTAP samples.

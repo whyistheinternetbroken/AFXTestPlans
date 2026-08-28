@@ -41,6 +41,24 @@ Authoritative sources:
 . Stop increasing concurrency when aggregate throughput/IOPS plateaus, latency rises materially, clients saturate, or capacity/inode guardrails are reached.
 . Change one variable per comparison. Use xref:benchmark-configuration-reference.adoc#statistics-capture-commands[Statistics capture] for each measured interval.
 
+[[synthetic-concurrency]]
+=== Jobs per run
+
+Treat threads (`-t`), fio `numjobs`, mdtest ranks (`-np`), and elbencho service hosts as separate knobs. Start at 1–2 jobs per client. Do not raise queue depth, threads, and client count in the same step.
+
+[cols="1,2,2"]
+|===
+| Recipe | Starting jobs per client | Ramp
+| Sequential throughput (elbencho `-t` or fio `numjobs`) | 2 threads/jobs, `iodepth` 8 | Threads/jobs 2 → 4 → 8 → 16; keep `iodepth` fixed until threads plateau, then raise `iodepth` 8 → 16. Add clients at 2 jobs each before pushing one host past 8–16 jobs
+| Random 1MB throughput | 2 threads, `iodepth` 8 | Same thread ramp as sequential
+| Random 4K/8K IOPS | 2 threads, `iodepth` 16 | Threads 2 → 4 → 8; then `iodepth` 16 → 32 if the client still has CPU/NIC headroom
+| elbencho metadata | 2 threads; start with modest `-n`/`-N` (for example 4 dirs × 256 files per thread) | Threads 2 → 4 → 8; keep file count per thread fixed while ramping threads, then increase `-N` only if metadata rate still scales
+| mdtest | `-np` = number of clients (1 rank per client); `-n` 1000 items per rank | Ranks 1 per client → 2 → 4 per client; then raise `-n`. Total files = ranks × `-n`
+| Shared file (elbencho `--hosts` or fio ranges) | 4 clients × 2 threads | Add clients at 2 threads each; then 4 threads per client. Keep ranges non-overlapping
+|===
+
+Record `clients × jobs × iodepth` (or ranks × items) with every result. Size clients from CPU, RAM, and NIC bandwidth versus the target aggregate load; these starting points are not pass/fail scores.
+
 For warm runs, deliberately retain cache state and perform a documented warm-up. For cold runs, use a site-approved cache-reset method and document it; do not claim a cold run solely because the benchmark process restarted.
 
 [[elbencho-recipes]]
@@ -145,7 +163,7 @@ mpirun --hostfile [HOSTFILE] -np [RANKS] mdtest \
   -w 3901 -e 3901 -r
 ----
 
-`-u` creates a unique working directory per rank, `-F` tests files only, and `-i 3` repeats the iteration. The small write/read phase confirms access; use elbencho or fio for sustained data throughput.
+`-u` creates a unique working directory per rank, `-F` tests files only, and `-i 3` repeats the iteration. Start with `-np` equal to the client count and `-n 1000`. The small write/read phase confirms access; use elbencho or fio for sustained data throughput.
 
 [[mdtest-directory-metadata]]
 === Directory create, stat, and remove
