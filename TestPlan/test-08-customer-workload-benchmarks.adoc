@@ -57,6 +57,25 @@ A 16MB `bs` is **not** a standard throughput corner for this plan. Use 1MB seque
 
 Details: xref:appendix-nfs-considerations.adoc#block-sizes-over-1mb[NFS: Sizes larger than 1MB].
 
+[[overwrites-and-deletes]]
+==== Overwrites and deletes during benchmark tests
+
+First-write, overwrite, and delete are different storage paths. Treat them as separate measurements unless the application really mixes them.
+
+* *First write (append / fill).* Creating new files or appending into empty files allocates new blocks. This is the usual peak sequential-write corner.
+* *Overwrite.* Writing over existing data also frees the old blocks. Sequential overwrite throughput is typically lower and write latency higher than a first-write of the same size and concurrency. Random writes to a pre-created file set are overwrites. Do not fold a fill and an overwrite into one unlabeled "sequential write" interval.
+* *Delete.* Unlink/remove walks file metadata and frees blocks in the background. Concurrent deletes can reduce write throughput and raise write latency (delete interference). Measure peak write with the dataset retained; measure delete rate on its own; combine them only when that mix is the question (EDA scratch/frontend, rotating checkpoints).
+
+How to run it:
+
+. Pre-create the dataset for overwrite and random-write tests. Keep the same files across overwrite comparisons.
+. After a fill, start the overwrite iteration as a new measured phase. Do not average fill and overwrite together.
+. Do not enable elbencho file/directory delete (`-F`/`-D`), mdtest unlink, or `rm` in the same window as a peak write unless you are testing interference. Cleanup belongs after the measured run.
+. Wait until reclaim finishes, or switch to a fresh directory/volume, before the next fill. Snapshot policy is `none` on the benchmark FlexGroup because create/overwrite/delete churn otherwise grows snapshot used space; see xref:test-07-08-performance-testing-considerations.adoc#why-snapshots-are-disabled[Why snapshots are disabled].
+. SPEC SFS EDA_FRONTEND and similar mixed workloads already include create, overwrite, and unlink. Report those as application curves, not as four-corners sequential write.
+
+Synthetic recipes: xref:appendix-synthetic-benchmarks.adoc#synthetic-overwrites-and-deletes[Synthetic: Overwrites and deletes]. Latency effects: xref:appendix-nfs-considerations.adoc#latency-tweaks[How benchmark tweaks affect latency].
+
 Throughput (bytes/s) ≈ IOPS × I/O size. Use 4K/8K when you care about IOPS and per-op latency; use 256K/1MB when you care about GB/s. Average latency rises with concurrency; stop a ramp when p99 or average latency climbs materially and throughput flattens. How jobs, `nconnect`/trunking, direct I/O, readahead, and other knobs move latency is in xref:appendix-nfs-considerations.adoc#throughput-iops-latency[Throughput, IOPS, and latency] and xref:appendix-nfs-considerations.adoc#latency-tweaks[How benchmark tweaks affect latency].
 
 [cols="<1",width="100%"]

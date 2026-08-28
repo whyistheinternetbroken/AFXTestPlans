@@ -40,6 +40,7 @@ Authoritative sources:
 . Start with 1–2 workers per client. Ramp threads/jobs and clients independently, for example 1, 2, 4, 8, then 16.
 . Stop increasing concurrency when aggregate throughput/IOPS plateaus, latency rises materially, clients saturate, or capacity/inode guardrails are reached.
 . Change one variable per comparison. Use xref:benchmark-configuration-reference.adoc#statistics-capture-commands[Statistics capture] for each measured interval.
+. Keep first-write, overwrite, and delete in separate measured phases unless the mix is the objective. See <<synthetic-overwrites-and-deletes>>.
 
 [[synthetic-concurrency]]
 === Jobs per run
@@ -95,6 +96,15 @@ The recipes below use 1MB for sequential throughput and 4K/8K for random IOPS so
 Raising `-t`, `numjobs`, or `iodepth` increases outstanding I/O. Throughput/IOPS should rise until a plateau; latency, especially p99, will rise before or at that plateau. Keep `ramp_time` (fio) or a warm-up so startup is not counted as latency. Direct I/O (`--direct` / `direct=1`) raises observed latency versus a warm buffered run because it skips client cache. Enable elbencho `--latpercent` or fio latency output on every measured run. Full tweak list: xref:appendix-nfs-considerations.adoc#latency-tweaks[How benchmark tweaks affect latency].
 
 For warm runs, deliberately retain cache state and perform a documented warm-up. For cold runs, use a site-approved cache-reset method and document it; do not claim a cold run solely because the benchmark process restarted.
+
+[[synthetic-overwrites-and-deletes]]
+==== Overwrites and deletes
+
+A write into a new or empty file is a first write. A write over existing data is an overwrite and must free the previous blocks, so GB/s is usually lower and write latency higher than the fill of the same `bs` and concurrency. Random `-w` on pre-created files is an overwrite.
+
+Do not delete during a measured write unless you are testing that interference. Elbencho `-F`/`-D`, mdtest unlink, and filesystem `rm` belong in a cleanup phase after the result is captured. Wait for space and inode reclaim, or use a new directory, before the next fill. Overwrite comparisons reuse the same pre-created files.
+
+Application-level summary: xref:test-08-customer-workload-benchmarks.adoc#overwrites-and-deletes[Test 8: Overwrites and deletes].
 
 [[elbencho-recipes]]
 == elbencho

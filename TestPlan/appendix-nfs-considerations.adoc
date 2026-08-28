@@ -227,6 +227,8 @@ Change one variable at a time. Capture average, p99, IOPS, and throughput at eac
 | RDMA | Higher throughput, fewer CPU cycles per byte | Lower per-op latency when the fabric is healthy. Mis-set PFC/DSCP raises latency sharply
 | Storage efficiency off (benchmark-only) | Can raise raw write throughput for uncompressible data | Can lower write-path CPU latency. Do not compare to a production efficiency-on baseline without labeling it
 | `--workflow data` / even FlexGroup placement | More even constituent use; better aggregate GB/s in some tests | Possible extra remote-placement latency versus default locality
+| Overwrite vs first write (same `bs`, concurrency) | Sequential overwrite GB/s typically lower than fill | Write latency typically higher; the extra work is freeing the previous blocks. Label fill and overwrite separately
+| Concurrent deletes during write | Peak write GB/s can drop (delete interference) | Write and metadata latency rise while unlink/free work runs. Isolate delete unless the mix is the test
 |===
 
 Record block size, mount transfer size, concurrency, cache condition, and both client and ONTAP latency. A result that quotes only GB/s or only IOPS is incomplete.

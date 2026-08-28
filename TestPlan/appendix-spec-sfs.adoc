@@ -146,7 +146,7 @@ SPEC SFS does not use a single `bs`. Each workload issues a mix of transfer size
 
 How the EDA profiles relate to application I/O:
 
-* *EDA_FRONTEND* — many small files and metadata (stat/access/create). Data transfers are often small to mid-size; IOPS and RPC rate matter more than a 1MB sequential `bs`. This resembles compile, library, and interactive EDA frontend tools.
+* *EDA_FRONTEND* — many small files and metadata (stat/access/create). Data transfers are often small to mid-size; IOPS and RPC rate matter more than a 1MB sequential `bs`. This resembles compile, library, and interactive EDA frontend tools. The mix includes create, overwrite, and unlink in the same interval; do not compare it to an isolated sequential first-write. See xref:test-08-customer-workload-benchmarks.adoc#overwrites-and-deletes[Test 8: Overwrites and deletes].
 * *EDA_BACKEND* — 50/50 sequential read/write of larger assembly-style files. Sequential 64K–1MB behavior dominates; this is the profile that benefits from larger NFS transfers, pNFS, and session trunking.
 * *EDA_BLENDED* — both, with 3 frontend processes per 2 backend processes, so the wire mix includes small metadata I/O and large sequential I/O in the same run.
 * Other SPECstorage 2020 workloads (SWBUILD, AI_IMAGE, GENOMICS, VDA) likewise mix small metadata with larger sequential transfers; VDA and AI_IMAGE are the more throughput-oriented profiles.
