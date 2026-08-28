@@ -7,31 +7,6 @@
 :doctype: book
 :description: NetApp AFX Test Plan for ONTAP 9.19.1
 
-== How to Use This Document
+GitHub shows this file at the repository root. The test plan starts at xref:TestPlan/overview.adoc[Overview].
 
-This test plan is split into focused AsciiDoc files under `TestPlan/`, linked from this README. Use the navigation below to jump to the section you need.
-
-For a single PDF suitable for request-basis customer sharing (Box / OneDrive / SharePoint), see xref:Scripts/ExportPDF/PDF-EXPORT.adoc[PDF export] and run `Scripts/ExportPDF/export-pdf.ps1` (or `Scripts/ExportPDF/export-pdf.sh`).
-
-== Feedback ==
-
-Send test-plan feedback, results, and questions to mailto:ng-afx-testplans@netapp.com[ng-afx-testplans@netapp.com].
-
-== Document map
-
-* xref:TestPlan/overview.adoc[Overview] -- purpose, support, release features, documentation, and licensing
-* xref:TestPlan/setup.adoc[Setup] -- lab prerequisites and initial configuration
-* xref:TestPlan/general-guidance.adoc[General guidance] -- short client, network, ONTAP, and benchmark reminders with links to the detailed pages
-* xref:TestPlan/appendix-nfs-considerations.adoc[NFS considerations] and xref:TestPlan/benchmark-configuration-reference.adoc[benchmark configuration reference] -- protocol and benchmark foundations
-* xref:TestPlan/datasets-workloads.adoc[Datasets and workloads] -- workload selection, volume guidance, and ONTAP limits
-* xref:TestPlan/test-plans.adoc[Test plan index] -- core, optional, and feature test links, including xref:TestPlan/test-04-data-migration.adoc[Test 4: Data migration (optional)]
-* xref:TestPlan/appendix.adoc[Appendix index] -- benchmark, API, statistics, and script references
-* xref:TestPlan/additional-references.adoc[Additional references] -- authoritative NetApp and benchmark documentation
-
-// navigation-links:start
-[cols="1,1",frame=none,grid=none]
-|===
-| xref:TestPlan/additional-references.adoc[< Previous]
->| xref:TestPlan/overview.adoc[Next >]
-|===
-// navigation-links:end
+Send feedback to mailto:ng-afx-testplans@netapp.com[ng-afx-testplans@netapp.com]. For a single PDF, see xref:Scripts/ExportPDF/PDF-EXPORT.adoc[PDF export].
