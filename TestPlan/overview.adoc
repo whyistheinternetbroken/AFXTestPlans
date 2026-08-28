@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-This section covers document overview, support contacts, new ONTAP 9.19.1 features, documentation requirements, and licensing information.
+This section covers document overview, version history, table of contents, support contacts, new ONTAP 9.19.1 features, documentation requirements, and licensing information.
 
 
 [[providing-feedback]]
@@ -25,10 +25,174 @@ Using the general NetApp support avenues is the preferred method of reporting an
 === Document version information
 
 
-[cols="1,1,1"]
+[cols="1,1,2"]
 |===
 | Version | Date | Summary
 | 1.0 | July 2026 | Initial release
+| 1.1 | August 2026 | Consolidated NFS/client guidance, added copy-ready benchmark configuration and statistics commands, expanded SPEC SFS and MLCommons workflows, and added elbencho/mdtest/fio recipes
+|===
+
+[[table-of-contents]]
+=== Table of contents
+
+Read the test plan in this order. Start with setup and NFS/benchmark configuration before running Tests 1–8.
+
+[cols="1,3"]
+|===
+| Section | Description
+
+| xref:../README.adoc[README]
+| Document map and feedback
+
+| xref:overview.adoc[Overview]
+| Purpose, version history, support, 9.19.1 features, documentation, and licensing
+
+| xref:setup.adoc[Setup]
+| Hardware, clients, networking, and NFS server prerequisites
+
+| xref:appendix-nfs-considerations.adoc[NFS considerations]
+| Protocol selection, mount options, nconnect vs session trunking, transfer sizes, and client tuning
+
+| xref:benchmark-configuration-reference.adoc[Benchmark configuration reference]
+| Copy-ready client, mount, ONTAP, verification, and statistics commands
+
+| xref:datasets-workloads.adoc[Datasets and workloads]
+| Workload types, volume recommendations, and ONTAP limits
+
+| xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations]
+| Rationale for benchmark-only NFS, volume, and efficiency settings
+
+| xref:test-plans.adoc[Test plans]
+| Index of core, optional, and feature tests
+|===
+
+==== Core tests
+
+[cols="1,3"]
+|===
+| Test | Description
+
+| xref:test-01-validate-cluster-setup.adoc[Test 1: Validate cluster setup]
+| Cluster health, node configuration, disk and network state
+
+| xref:test-02-enable-autosupport.adoc[Test 2: Enable AutoSupport]
+| Log collection and automatic case creation
+
+| xref:test-03-create-network-interfaces.adoc[Test 3: Create network interfaces]
+| Data, management, and intercluster LIFs
+
+| xref:test-04-data-migration.adoc[Test 4: Data migration (optional)]
+| SnapMirror or NAS copy to AFX
+
+| xref:test-05-volume-management.adoc[Test 5: Volume management]
+| FlexGroup create and manage
+
+| xref:test-06-api-testing.adoc[Test 6: API testing]
+| ONTAP REST API for automation
+
+| xref:appendix-rest-api.adoc[REST API examples]
+| Cookbook of REST calls used with Test 6
+
+| xref:test-07-customer-workload-real-data.adoc[Test 7: Customer workload -- real data]
+| Production datasets on AFX
+
+| xref:test-08-customer-workload-benchmarks.adoc[Test 8: Customer workload -- benchmarks]
+| SPEC SFS, MLCommons, and synthetic benchmark selection
+|===
+
+==== Benchmark guides
+
+[cols="1,3"]
+|===
+| Guide | Description
+
+| xref:appendix-spec-sfs.adoc[SPEC SFS 2020]
+| Exploratory and rules-compliant SPECstorage Solution 2020 runs
+
+| xref:appendix-mlcommons.adoc[MLCommons / MLPerf Storage]
+| Training, checkpointing, and vectorDB workflows
+
+| xref:appendix-synthetic-benchmarks.adoc[Synthetic benchmarks]
+| elbencho, mdtest, and fio recipes
+|===
+
+==== Remaining core tests
+
+[cols="1,3"]
+|===
+| Test | Description
+
+| xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring]
+| System Manager, Harvest, and CLI statistics
+
+| xref:test-10-capacity-management.adoc[Test 10: Capacity management]
+| View and manage storage capacity
+
+| xref:test-11-compute-scaling.adoc[Test 11: Node additions]
+| Add compute nodes during live workloads (optional)
+
+| xref:test-12-node-failure-behavior.adoc[Test 12: Node failure behavior]
+| Storage failover and giveback
+|===
+
+==== Optional functional tests
+
+[cols="1,3"]
+|===
+| Test | Description
+
+| xref:test-flexcache.adoc[Test 13: FlexCache]
+| Read localization between unified ONTAP and AFX
+
+| xref:test-s3.adoc[Test 14: S3 in ONTAP]
+| S3 protocol on AFX
+
+| xref:test-snapshots-snapmirror.adoc[Test 15: Snapshots and SnapMirror]
+| Snapshot and SnapMirror impact during live workloads
+
+| xref:test-ndu.adoc[Test 16: Non-Disruptive Upgrade]
+| Non-disruptive ONTAP upgrade
+|===
+
+==== New feature tests (ONTAP 9.19.1)
+
+[cols="1,3"]
+|===
+| Feature | Description
+
+| xref:feature-global-deduplication.adoc[Global deduplication]
+| Cross-node deduplication across the shared capacity pool
+
+| xref:vdbench-global-dedupe.adoc[VDBench global deduplication]
+| NFS performance and efficiency validation for global deduplication
+
+| xref:feature-dynamic-storage-efficiency.adoc[Dynamic storage efficiency]
+| Adaptive compression and compaction
+
+| xref:feature-aggressive-readahead.adoc[Aggressive readahead]
+| Cross-file sequential read optimization
+
+| xref:feature-fabricpool.adoc[FabricPool tiering]
+| Cold data tiering to S3 (9.19.1P2+)
+|===
+
+==== Remaining references
+
+[cols="1,3"]
+|===
+| Section | Description
+
+| xref:appendix.adoc[Appendix index]
+| Supplemental configuration, benchmark, and operations pages
+
+| xref:appendix-statistics-counters.adoc[Statistics counters]
+| NFS, pNFS, and session-trunking counter definitions
+
+| xref:scripts.adoc[Scripts]
+| Volume, LIF, reinitialization, and NAS benchmark scripts
+
+| xref:additional-references.adoc[Additional references]
+| NetApp technical reports and upstream benchmark documentation
 |===
 
 
