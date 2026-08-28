@@ -237,6 +237,13 @@ a| Trunk IP addresses together for NFSv4.x operations for better performance. Re
 | `-tcp-max-xfer-size` | 1048576 | Sets the max transfer size allowed for NFS mounts to 1MB.
 |===
 
+To apply the recommended options, use the following command. Replace `[SVM]` and `[yourdomain.com]` with your SVM name and NFSv4 ID domain. Set `-rdma` to `disabled` if you are not using RDMA/GPUs.
+
+[source,console]
+----
+set diag; nfs modify -vserver [SVM] -v4.0 disabled -v4-id-domain [yourdomain.com] -v4.1 enabled -v4.1-pnfs enabled -mount-rootonly disabled -nfs-rootonly disabled -v3-64bit-identifiers enabled -v4-64bit-identifiers enabled -v3-hide-snapshot enabled -rdma enabled -v4.1-trunking enabled -tcp-max-xfer-size 1048576
+----
+
 [[disable-storage-efficiencies]]
 === Disable storage efficiencies
 

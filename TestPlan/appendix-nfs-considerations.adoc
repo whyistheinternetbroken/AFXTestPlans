@@ -11,7 +11,7 @@ xref:appendix.adoc[<- Back to Appendix]
 Recommended NFS mount options, fstab configuration, automounter setup, 64-bit file IDs, and pNFS/session trunking validation.
 
 
-*Note:* For benchmark-specific mount options used during performance testing, see xref:test-07-08-performance-testing-considerations.adoc#mount-options[Performance testing considerations: Mount Options].
+*Note:* For benchmark-specific mount options used during performance testing, see xref:test-07-08-performance-testing-considerations.adoc#mount-options[Performance testing considerations: Mount Options]. For rsize/wsize, nconnect, close-to-open consistency, and readahead tuning, see xref:appendix-client-tuning.adoc[Client Tuning].
 
 
 [[nfs-considerations]]
@@ -19,6 +19,56 @@ Recommended NFS mount options, fstab configuration, automounter setup, 64-bit fi
 
 For NFS workloads, NFSv3 can be used and generally will perform better with high metadata workloads (such as high file count workloads that create many files).
 Most EDA workloads make use of NFSv3 -- especially EDA frontend workloads, which tend to be more metadata heavy.
+
+[[what-is-nfs-session-trunking]]
+=== What is NFS session trunking
+
+NFSv4.1 session trunking (link:https://datatracker.ietf.org/doc/html/rfc5661#section-2.10.5[RFC 5661, section 2.10.5]) associates multiple TCP connections with a single NFSv4.1 session (one client ID, one session, multiple transports). The client spreads NFS operations across those connections (typically round-robin) to increase throughput and to keep I/O flowing if one path fails.
+
+In ONTAP, session trunking is supported beginning with 9.14.1 (`-v4.1-trunking enabled`). A trunking group is a set of data LIFs on the *same node* of the same SVM. Trunks do not span nodes. LIFs in a trunking group should be on their home ports, and it is a best practice that they share the same failover group. ONTAP supports up to 16 trunked connections per node from a given client. Session trunks require at least two routable data interfaces per node; pNFS still requires at least one routable interface per node. All SVM data interfaces used for testing should be routable to the clients.
+
+Clients discover trunk members in one of these ways:
+
+* Automatically, using a mount option that causes the client to query `FS_LOCATIONS` (seen in packet captures as a GETATTR for `fs_location4`). RHEL uses `trunkdiscovery`. Ubuntu typically uses `max_connect=n`. On RHEL, `max_connect` is treated as nconnect and does *not* enable session trunking.
+* Manually, by mounting each node-local LIF IP to the same export (and, on some Ubuntu releases, issuing a mount per interface).
+
+When trunking is used with pNFS, each node can form its own session trunk. pNFS then localizes data paths across the cluster while trunking adds parallelism on each node.
+
+For how to confirm trunking is active, see <<pnfs-and-session-trunking-validation>>. For official product behavior, see link:https://docs.netapp.com/us-en/ontap/nfs-trunking/index.html[Learn about ONTAP NFS trunking] and link:https://docs.netapp.com/us-en/ontap/pnfs/pnfs-use-cases-concept.html[pNFS use cases in ONTAP].
+
+[[what-is-nconnect]]
+=== What is nconnect
+
+`nconnect` is a Linux NFS mount option (kernel 5.3 and later; see link:https://man7.org/linux/man-pages/man5/nfs.5.html[nfs(5)]) that opens multiple TCP connections -- up to 16 -- to a *single* NFS server IP address. Without nconnect, a mount typically uses one TCP connection, which can become a throughput bottleneck on high-bandwidth NICs. The client multiplexes RPC traffic across the connections (Linux uses round-robin by default).
+
+ONTAP supports nconnect beginning with 9.8. This test plan uses nconnect primarily with NFSv3. The first mount to a given server IP on a client sets the nconnect value for that IP; later mounts to the same IP inherit the first mount's setting even if they specify a different value.
+
+nconnect can improve single-client throughput, but it multiplies TCP connections. With pNFS, `nconnect=N` can apply to each advertised data-server address (for example, nconnect=4 across 4 pNFS devices can mean up to 16 connections per mount). In large client farms that can exhaust per-node TCP connection limits (see Hardware Universe), prefer lower nconnect values or omit nconnect.
+
+Verify nconnect by counting established connections to port 2049 (`netstat` or `ss`). Recommended values and interaction with pNFS are in xref:appendix-client-tuning.adoc#nconnect[Client Tuning: Nconnect].
+
+[[comparing-nconnect-and-nfs-session-trunking]]
+=== Comparing nconnect and NFS session trunking
+
+Both features add parallelism by using more than one TCP connection. They do it differently:
+
+[cols="1,2,2"]
+|===
+| | *nconnect* | *Session trunking*
+| What it multiplies | Multiple TCP connections to *one* LIF/IP | Multiple TCP connections across *multiple* LIFs (multipathing)
+| NFS versions | NFSv3 and NFSv4.1 (client-dependent) | NFSv4.1 and later only
+| ONTAP | 9.8 and later | 9.14.1 and later (`-v4.1-trunking`)
+| Typical mount option | `nconnect=8` (max 16) | RHEL: `trunkdiscovery`. Ubuntu: `max_connect=n`. Or mount each LIF IP.
+| Network requirement | One data IP is enough; extra NIC queues or LACP can still help | At least two data LIFs per node, same home node, all routable
+| Scale limit | 16 connections per mount endpoint | 16 trunked connections per node per client
+| With pNFS | Connections can be created per pNFS data-server device | One session trunk per node; pNFS localizes data across nodes
+|===
+
+When using pNFS, use only session trunking *or* nconnect -- not both. Combining them can leave nconnect on the metadata server path while data servers use a single connection.
+
+Use nconnect when you have a single endpoint (typical NFSv3 metadata-heavy tests) and want more concurrency without extra LIFs. Use session trunking when you have multiple LIFs per node and want NFSv4.1+ throughput plus path diversity; with pNFS that also gives a trunk per node across the cluster. If extra NICs and LIFs are available, trunking can exceed what nconnect can do on a single LIF.
+
+For this test plan: NFSv3 -- `nconnect=8`; NFSv4.1 + pNFS -- session trunking (`trunkdiscovery` or `max_connect`), not nconnect.
 
 [[recommended-mount-options-with-nfsv3]]
 === Recommended mount options with NFSv3

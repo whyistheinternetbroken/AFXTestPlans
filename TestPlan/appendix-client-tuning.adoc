@@ -25,7 +25,7 @@ These mount options set the NFS read and write transfer sizes for the mount. The
 [[wsize-rsize-recommendation]]
 ==== Recommendation
 
-The recommendation for this test plan is to use `rsize=1048576` and `wsize=1048576` (1MB) for mount points.
+The recommendation for this test plan is to start with 256K `wsize`/`rsize` (`rsize=262144,wsize=262144`) and then move to 1MB (`rsize=1048576,wsize=1048576`) to find the best fit.
 
 [[small-window-sizes]]
 ==== Small transfer sizes
