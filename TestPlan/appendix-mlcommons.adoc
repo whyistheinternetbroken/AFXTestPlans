@@ -213,6 +213,26 @@ mlpstorage closed training unet3d run file \
 
 Confirm the exact distributed options with `mlpstorage closed training unet3d run file --help` for the installed v3 release. `--num-processes` controls data generation; it is not interchangeable with the emulated accelerator count used by `run`.
 
+[[mlcommons-application-block-sizes]]
+=== Application block sizes
+
+MLPerf Storage does not take a fio-style `bs`. Framework readers and checkpoint save/load determine the application I/O size; NFS then splits that I/O at `rsize`/`wsize`. A 1MB mount is appropriate for these sequential-heavy tests so large reads and checkpoint writes are not cut into 64K RPCs. Random 4K/8K database-style I/O is not what these models emit.
+
+How the workloads hit storage (file sizes are samples or checkpoint payloads, not NFS transfer size):
+
+[cols="1,2,2"]
+|===
+| Workload | Application I/O shape | Interaction with NFS/storage
+| U-Net3D | One ~146 MB sample per file; sequential read of large files (medical 3D imaging) | Buffered reads often fill the mount `rsize` (256K or 1MB). Internal histograms on a 1MB mount showed most READs in the 1MB bucket, with a 4K tail from metadata/headers
+| ResNet50 (whatif) | ImageNet-like samples (~100–150 KB) packed into ~100 MB TFRecord files; TensorFlow reader default transfer is 256K | Expect a mix of 128K–256K NFS reads unless you change the reader or the mount is smaller than 256K
+| CosmoFlow (whatif) | ~2.8 MB samples, one per TFRecord; many files | More OPEN/GETATTR/PUTFH relative to READ; file size is larger than 256K so sequential reads still benefit from 256K–1MB mounts
+| RetinaNet | Object-detection ingest; closed/open training | Treat as sequential training ingest; use the same 256K then 1MB mount comparison as U-Net3D
+| Checkpointing | Large sequential writes then reads of 100s of MB to multi-GB files per rank (105 GB–15 TB aggregate depending on Llama3 scale) | Throughput-bound; keep `wsize`/`rsize` at 256K or 1MB. This is the opposite of 8K OLTP
+| VectorDB | Random read/write plus metadata through Milvus | Closer to mixed/small I/O than U-Net3D; compare NFSv3 nconnect vs NFSv4.1 trunking rather than assuming 1MB sequential
+|===
+
+AI/ML training is typically read-heavy sequential ingest of files, with shuffling between files (sequential within a file, random across files) and large sequential checkpoint writes. That is the reverse of classic OLTP (8K random). Use 4K/8K synthetic tests only when you need a four-corners contrast; they do not represent MLPerf training. See xref:appendix-nfs-considerations.adoc#typical-benchmark-block-sizes[typical sizes] and <<read-size-histogram>>.
+
 [[mlcommons-dataset-and-cache-controls]]
 === Dataset and cache controls
 

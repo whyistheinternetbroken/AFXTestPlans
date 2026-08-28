@@ -151,6 +151,31 @@ A larger transfer size can combine application blocks into fewer NFS operations.
 
 Random application I/O is often smaller than the configured maximum and is not forced to use the full `rsize` or `wsize`. Buffered sequential I/O is more likely to approach the negotiated maximum. Direct-I/O benchmark generators remain bounded by the mount maximum but may issue smaller application requests.
 
+[[application-block-sizes]]
+===== Application block sizes and how they interact with storage
+
+The *application I/O size* (fio/elbencho `bs`, database page, hypervisor grain) is not the same as the *NFS transfer size* (`rsize`/`wsize`) or the *ONTAP* `-tcp-max-xfer-size`. Storage sees NFS operations after the client has split or coalesced the application request:
+
+* If application I/O is larger than the mount transfer size, the client issues multiple NFS operations. Internal NFSv4.1 characterization used a 1MB tool block size on a 256K mount and observed four NFS operations on the wire per client request.
+* If application I/O is smaller than the mount maximum, each request is typically one NFS operation at the application size. Raising `rsize`/`wsize` does not enlarge 4K or 8K random I/O.
+* Direct I/O follows the generator's `bs` up to the mount maximum. Buffered sequential I/O is more likely to fill `rsize`/`wsize` because of page cache and readahead.
+
+ONTAP performance characterization commonly reports a "four corners" set: 8K random IOPS, 64K sequential, and 1MB sequential throughput. Historically many lab runs centered on 8K random and 64K sequential; more recent customer and AI/EDA deployments also use 32K–256K random and 64K–1MB sequential. See <<typical-benchmark-block-sizes>> for application examples and xref:test-08-customer-workload-benchmarks.adoc#application-block-sizes-for-benchmarks[Test 8] for how to pick a size for a run.
+
+[[typical-benchmark-block-sizes]]
+====== Typical sizes used in this test plan
+
+[cols="1,2,3"]
+|===
+| Size | Why it is used in benchmarks | Example applications
+| 4K | Matches Linux memory pages, common SSD/NVMe logical blocks, and many guest file systems. Stresses IOPS and latency rather than bandwidth. | Virtual-machine guest file systems; VMDK-aligned random I/O; general OS paging
+| 8K | Standard random "corner" for ONTAP and Fusion-style random workloads. Matches common database pages. | Oracle and PostgreSQL 8K pages; SQL Server 8K pages; OLTP-style random read/write
+| 16K | Mid-size random I/O between database pages and sequential transfers. | MySQL/InnoDB default 16K pages
+| 32K–64K | Sequential and mixed-I/O corner. 64K is the ONTAP NFS default `-tcp-max-xfer-size` and a common EDA sequential size. | SQL Server 64K extents / recommended NTFS allocation unit; EDA sequential and mixed tests; VMware NFS historically negotiated 64K `rsize`/`wsize`
+| 256K | Starting NFS mount transfer size in this plan; large enough to cut RPC count without always using the 1MB maximum. | TensorFlow TFRecord default reader size (~256K); sequential throughput characterization; Azure NetApp Files Linux sequential benchmarks
+| 1MB | ONTAP NFS maximum transfer size; used for high-throughput sequential reads/writes and large AI files. | AI/ML training ingest and checkpoint bursts; media/VDA sequential streams; AFX 1MB sequential characterization
+|===
+
 [[close-to-open-consistency-and-cache-attribute-timers]]
 ==== Close-to-open consistency and attribute caching
 

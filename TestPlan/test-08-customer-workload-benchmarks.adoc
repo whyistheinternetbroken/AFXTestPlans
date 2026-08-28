@@ -20,6 +20,26 @@ For synthetic throughput, IOPS, metadata, or shared-file tests, use xref:appendi
 
 *Note:* Review xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations] for rationale and xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] for copy-ready setup and monitoring commands.
 
+[[application-block-sizes-for-benchmarks]]
+=== Application block sizes and storage
+
+Match the *application I/O size* to the question you are asking. Storage sees NFS operations after the client applies `rsize`/`wsize`. A 1MB application write on a 256K mount becomes four NFS writes; an 8K random read on a 1MB mount remains one 8K NFS read. Details are in xref:appendix-nfs-considerations.adoc#application-block-sizes[NFS: Application block sizes].
+
+ONTAP characterization typically reports 8K random, 64K sequential, and 1MB sequential ("four corners"). Use 4K/8K when the goal is IOPS or database/VM-like latency; use 64K/256K/1MB when the goal is sequential throughput.
+
+[cols="1,2,3"]
+|===
+| Size | Typical benchmark use | Example applications
+| 4K | Random IOPS and latency | Guest file systems, OS paging, VMDK-aligned random I/O
+| 8K | Default random corner | Oracle, PostgreSQL, and SQL Server 8K pages; OLTP
+| 16K | Database random I/O | MySQL/InnoDB 16K pages
+| 32K–64K | Sequential/mixed corner; EDA sequential | SQL Server 64K extents; EDA sequential; VMware NFS 64K transfers
+| 256K | First NFS mount size in this plan; sequential throughput | TensorFlow TFRecord reads; mixed sequential NAS
+| 1MB | Maximum NFS transfer; AI/media throughput | Training ingest, checkpoints, VDA/media streams
+|===
+
+Pick the generator `bs` (or accept SPEC/MLCommons built-in sizes) first, then set the mount so it does not silently split that I/O. Start mounts at 256K and compare 1MB for throughput tests. Keep the mount at or above the application size for sequential work; do not expect a 1MB mount to change 4K/8K random results.
+
 [cols="<1",width="100%"]
 |===
 a| *Test procedure:*

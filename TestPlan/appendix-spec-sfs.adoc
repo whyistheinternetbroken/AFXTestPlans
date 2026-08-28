@@ -139,6 +139,20 @@ That starts at 1 job per client and steps to 8, 12, 16, and 20 concurrent jobs. 
 
 Use NFSv3 for metadata-heavy EDA frontend exploration and compare NFSv4.1 with pNFS/session trunking for backend throughput. Treat protocol comparisons as separate result sets and retain all `sfs_rc`, logs, summaries, mount output, and ONTAP samples.
 
+[[spec-application-block-sizes]]
+=== Application block sizes
+
+SPEC SFS does not use a single `bs`. Each workload issues a mix of transfer sizes defined in `storage2020.yml` (from hundreds of bytes through 256K/512K). The storage array still sees those requests through the NFS mount: anything larger than `rsize`/`wsize` is split. Keep the mount at 256K or 1MB so backend sequential I/O is not fragmented into 64K RPCs unless that is the comparison you intend.
+
+How the EDA profiles relate to application I/O:
+
+* *EDA_FRONTEND* — many small files and metadata (stat/access/create). Data transfers are often small to mid-size; IOPS and RPC rate matter more than a 1MB sequential `bs`. This resembles compile, library, and interactive EDA frontend tools.
+* *EDA_BACKEND* — 50/50 sequential read/write of larger assembly-style files. Sequential 64K–1MB behavior dominates; this is the profile that benefits from larger NFS transfers, pNFS, and session trunking.
+* *EDA_BLENDED* — both, with 3 frontend processes per 2 backend processes, so the wire mix includes small metadata I/O and large sequential I/O in the same run.
+* Other SPECstorage 2020 workloads (SWBUILD, AI_IMAGE, GENOMICS, VDA) likewise mix small metadata with larger sequential transfers; VDA and AI_IMAGE are the more throughput-oriented profiles.
+
+For synthetic isolation of one size, use xref:appendix-synthetic-benchmarks.adoc#synthetic-application-block-sizes[elbencho/fio block-size recipes] instead of editing SPEC workload YAML (editing YAML makes a run non-publishable). Typical application sizes (4K/8K databases, 64K SQL extents, 256K/1MB sequential NAS) are listed in xref:appendix-nfs-considerations.adoc#typical-benchmark-block-sizes[NFS: Typical sizes].
+
 
 [[frontend-eda-workload-breakdown----specsfs-2020]]
 === Frontend EDA workload breakdown -- SPECSFS 2020

@@ -59,6 +59,32 @@ Treat threads (`-t`), fio `numjobs`, mdtest ranks (`-np`), and elbencho service 
 
 Record `clients × jobs × iodepth` (or ranks × items) with every result. Size clients from CPU, RAM, and NIC bandwidth versus the target aggregate load; these starting points are not pass/fail scores.
 
+[[synthetic-application-block-sizes]]
+=== Application block sizes
+
+Set elbencho `-b` and fio `bs` to the *application* I/O size you want storage to see, then set NFS `rsize`/`wsize` at or above that size so the client does not split the request. A 1MB `bs` on a 256K mount becomes four NFS operations; an 8K `bs` on a 1MB mount stays 8K on the wire.
+
+How sizes interact with storage:
+
+* Direct I/O (`--direct` / `direct=1`) issues the generator `bs` (up to the mount maximum). Use it when you want a known application size.
+* Buffered I/O plus readahead can enlarge sequential reads toward `rsize`, which is closer to some applications and farther from a controlled `bs`.
+* Random I/O smaller than the mount maximum is not "filled up" to 256K or 1MB.
+
+Typical sizes for these recipes (ONTAP four-corners practice is 8K random, 64K sequential, and 1MB sequential):
+
+[cols="1,2,3"]
+|===
+| `bs` / `-b` | Why use it here | Example applications
+| 4K | Maximum IOPS/latency corner; Linux page size | Guest file systems, VM random I/O
+| 8K | Default random corner in ONTAP/Fusion-style tests | Oracle, PostgreSQL, SQL Server 8K pages
+| 16K | Database mid-size random | MySQL/InnoDB 16K pages
+| 64K | Sequential/mixed corner; ONTAP NFS default server max unless raised | SQL 64K extents; EDA sequential; VMware NFS 64K transfers
+| 256K | Aligns with this plan's starting mount | TFRecord-style sequential reads; NAS throughput
+| 1MB | Throughput corner; ONTAP NFS maximum | AI ingest/checkpoints, media/VDA sequential
+|===
+
+The recipes below use 1MB for sequential throughput and 4K/8K for random IOPS so those corners stay distinct. Do not mix a 4K `bs` with a "throughput" label. For application examples and mount interaction, see xref:appendix-nfs-considerations.adoc#typical-benchmark-block-sizes[NFS: Typical sizes] and xref:test-08-customer-workload-benchmarks.adoc#application-block-sizes-for-benchmarks[Test 8].
+
 For warm runs, deliberately retain cache state and perform a documented warm-up. For cold runs, use a site-approved cache-reset method and document it; do not claim a cold run solely because the benchmark process restarted.
 
 [[elbencho-recipes]]

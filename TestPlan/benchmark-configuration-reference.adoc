@@ -125,7 +125,7 @@ sudo sysctl -p /etc/sysctl.d/90-netapp-afx-benchmark.conf
 [[nfs-mount-commands]]
 === NFS mount commands
 
-Start throughput comparisons with 256K transfer sizes, then repeat with 1MB. See xref:appendix-nfs-considerations.adoc#wsize-and-rsize[Wsize and rsize] before changing cache-consistency options.
+Start throughput comparisons with 256K transfer sizes, then repeat with 1MB. Application I/O size is separate from those mount values; see xref:appendix-nfs-considerations.adoc#application-block-sizes[Application block sizes]. See xref:appendix-nfs-considerations.adoc#wsize-and-rsize[Wsize and rsize] before changing cache-consistency options.
 
 [source,console]
 ----
