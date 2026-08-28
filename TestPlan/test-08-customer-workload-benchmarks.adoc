@@ -36,9 +36,26 @@ ONTAP characterization typically reports 8K random, 64K sequential, and 1MB sequ
 | 32K–64K | Sequential/mixed corner; EDA sequential | SQL Server 64K extents; EDA sequential; VMware NFS 64K transfers
 | 256K | First NFS mount size in this plan; sequential throughput | TensorFlow TFRecord reads; mixed sequential NAS
 | 1MB | Maximum NFS transfer; AI/media throughput | Training ingest, checkpoints, VDA/media streams
+| >1MB (for example 4–16MB) | Application request size only; NFS still splits at 1MB | HPC MPI-IO, some media frames, large scientific/checkpoint buffers — see <<block-sizes-over-1mb>>
 |===
 
 Pick the generator `bs` (or accept SPEC/MLCommons built-in sizes) first, then set the mount so it does not silently split that I/O. Start mounts at 256K and compare 1MB for throughput tests. Keep the mount at or above the application size for sequential work; do not expect a 1MB mount to change 4K/8K random results.
+
+[[block-sizes-over-1mb]]
+==== Application I/O larger than 1MB
+
+ONTAP NFS and Linux `rsize`/`wsize` stop at **1MB** (`-tcp-max-xfer-size` / mount maximum). Nothing in this plan can issue a 16MB NFS READ or WRITE. A generator `bs` of 4MB or 16MB is still 4 or 16 NFS operations of 1MB on a 1MB mount (more if the mount is 256K). Tool-reported IOPS and latency then describe the *application* request, not a single RPC.
+
+Some applications *do* issue I/O larger than 1MB: HPC MPI-IO and similar codes often use 4–16MB transfers; uncompressed media/VDA frames and some capture pipelines are several MB per frame; scientific HDF5/NetCDF hyperslabs and some AI checkpoint writers use multi-MB buffers. Large *files* or *samples* (for example a ~146 MB U-Net3D file or a ~2.8 MB CosmoFlow sample) are sequential streams of many NFS operations, not one giant RPC. Hadoop/Spark-style 128MB *blocks* are layout units; client packet and read sizes are typically much smaller.
+
+A 16MB `bs` is **not** a standard throughput corner for this plan. Use 1MB sequential when the question is NFS/ONTAP bandwidth. Use 4–16MB only when a customer application actually issues that request size, and label it as application I/O:
+
+* GB/s often matches a well-tuned 1MB sequential run once the pipe is full (diminishing returns).
+* Application latency is roughly the sum of the split RPCs, so it looks much worse than 1MB latency at the same concurrency.
+* Application IOPS fall in proportion to `bs`. Outstanding bytes (`iodepth` × `bs`) grow quickly and can saturate client memory or queues with few jobs.
+* Report ONTAP NFS size histograms and protocol IOPS alongside the tool numbers so a 16MB fio I/O is not compared to a 1MB four-corners result.
+
+Details: xref:appendix-nfs-considerations.adoc#block-sizes-over-1mb[NFS: Sizes larger than 1MB].
 
 Throughput (bytes/s) ≈ IOPS × I/O size. Use 4K/8K when you care about IOPS and per-op latency; use 256K/1MB when you care about GB/s. Average latency rises with concurrency; stop a ramp when p99 or average latency climbs materially and throughput flattens. How jobs, `nconnect`/trunking, direct I/O, readahead, and other knobs move latency is in xref:appendix-nfs-considerations.adoc#throughput-iops-latency[Throughput, IOPS, and latency] and xref:appendix-nfs-considerations.adoc#latency-tweaks[How benchmark tweaks affect latency].
 

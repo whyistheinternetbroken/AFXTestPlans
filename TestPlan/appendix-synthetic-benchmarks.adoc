@@ -83,7 +83,7 @@ Typical sizes for these recipes (ONTAP four-corners practice is 8K random, 64K s
 | 1MB | Throughput corner; ONTAP NFS maximum | AI ingest/checkpoints, media/VDA sequential
 |===
 
-The recipes below use 1MB for sequential throughput and 4K/8K for random IOPS so those corners stay distinct. Do not mix a 4K `bs` with a "throughput" label. For application examples and mount interaction, see xref:appendix-nfs-considerations.adoc#typical-benchmark-block-sizes[NFS: Typical sizes] and xref:test-08-customer-workload-benchmarks.adoc#application-block-sizes-for-benchmarks[Test 8].
+The recipes below use 1MB for sequential throughput and 4K/8K for random IOPS so those corners stay distinct. Do not mix a 4K `bs` with a "throughput" label. Do not use 4–16MB `bs` as a substitute for the 1MB throughput corner; NFS still caps each RPC at 1MB. For application examples, mount interaction, and when a larger application `bs` is justified, see xref:appendix-nfs-considerations.adoc#typical-benchmark-block-sizes[NFS: Typical sizes] and xref:test-08-customer-workload-benchmarks.adoc#block-sizes-over-1mb[Test 8: I/O larger than 1MB].
 
 [[synthetic-throughput-iops-latency]]
 ==== Throughput, IOPS, and latency

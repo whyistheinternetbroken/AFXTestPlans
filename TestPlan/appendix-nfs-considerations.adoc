@@ -174,7 +174,13 @@ ONTAP performance characterization commonly reports a "four corners" set: 8K ran
 | 32K–64K | Sequential and mixed-I/O corner. 64K is the ONTAP NFS default `-tcp-max-xfer-size` and a common EDA sequential size. | SQL Server 64K extents / recommended NTFS allocation unit; EDA sequential and mixed tests; VMware NFS historically negotiated 64K `rsize`/`wsize`
 | 256K | Starting NFS mount transfer size in this plan; large enough to cut RPC count without always using the 1MB maximum. | TensorFlow TFRecord default reader size (~256K); sequential throughput characterization; Azure NetApp Files Linux sequential benchmarks
 | 1MB | ONTAP NFS maximum transfer size; used for high-throughput sequential reads/writes and large AI files. | AI/ML training ingest and checkpoint bursts; media/VDA sequential streams; AFX 1MB sequential characterization
+| >1MB (4–16MB) | Not an NFS transfer size. The client splits each application I/O at `rsize`/`wsize` (at most 1MB). | HPC MPI-IO; some media frames; large scientific or checkpoint buffers. Decision and labeling: xref:test-08-customer-workload-benchmarks.adoc#block-sizes-over-1mb[Test 8: I/O larger than 1MB]
 |===
+
+[[block-sizes-over-1mb]]
+====== Sizes larger than 1MB
+
+ONTAP `-tcp-max-xfer-size` and negotiated `rsize`/`wsize` cannot exceed 1MB, so a 16MB application write is sixteen 1MB NFS writes on a 1MB mount. Applications that issue multi-megabyte requests still exist; the storage path does not grow to match them. For whether a 16MB generator `bs` is useful versus misleading, see xref:test-08-customer-workload-benchmarks.adoc#block-sizes-over-1mb[Test 8].
 
 [[throughput-iops-latency]]
 ===== Throughput, IOPS, and latency
