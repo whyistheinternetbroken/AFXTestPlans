@@ -76,6 +76,8 @@ If the workload creates many large files (>1GB) in a single folder, modify the v
 AFX::> set advanced; vol modify -vserver [SVM] -volume [FlexGroup name] -workflow data
 ----
 
+Changing this setting from the default is not recommended for production workloads unless directed by support. Due to the nature of benchmark tools, changing this option enforces a round robin placement of files and file parts across constituent volumes to ensure even distribution of data (at the potential cost of latency for remote placement).
+
 If the workload is VMware datastores hosted on a FlexGroup volume, disable the -gdd option:
 
 [source,console]
@@ -96,7 +98,7 @@ In general, snapshots in ONTAP are not detrimental to overall system performance
 [[mount-options]]
 == Mount options
 
-Mount options, in general, are variable depending on use cases. This section attempts to show a general use case mount option list that was used in our internal performance testing. If the NFS server is configured properly (see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration]) then you won't need to specify NFS versions or wsize/rsize options.
+Mount options, in general, are variable depending on use cases. This section attempts to show a general use case mount option list that was used in our internal performance testing. If the NFS server is configured properly (see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration]), clients will negotiate NFS version and transfer size automatically. For throughput tests, you can still set `wsize`/`rsize` explicitly as described in <<nfs-wsize-and-rsize>>.
 Base options (applies to all clients/scenaros):
 
 [source,console]
@@ -112,6 +114,25 @@ RHEL: trunkdiscovery
 Ubuntu (depends on version): trunkdiscovery (newer releases)
                              max_connect=4 (older releases)
 ----
+
+[[nfs-wsize-and-rsize]]
+=== NFS wsize and rsize
+
+The NFS `wsize` and `rsize` mount options control the maximum write and read transfer size for a mount. These values directly affect how much data can be sent in a single NFS operation, which in turn affects throughput, IOPS, and latency.
+
+Using larger transfer sizes can improve performance for throughput tests because more data is moved per NFS operation. That reduces the number of RPCs required to complete a large sequential read or write, which lowers protocol and network overhead and allows the client to better utilize available bandwidth.
+
+ONTAP supports transfer sizes up to 1MB. Clients negotiate the transfer size to the value configured on the NFS server (`-tcp-max-xfer-size`) unless `wsize` and `rsize` are specified as mount options. Those mount options can request a smaller size, but they cannot exceed the maximum transfer size set by the NFS server.
+
+For large file operations and throughput tests, set the mount size to either 256K (`262144`) or 1MB (`1048576`):
+
+[source,console]
+----
+-o rsize=262144,wsize=262144
+-o rsize=1048576,wsize=1048576
+----
+
+For additional background on transfer size tradeoffs, see xref:appendix-client-tuning.adoc#wsize-and-rsize[Client Tuning: Wsize and rsize].
 
 *RDMA specific options*
 
@@ -184,6 +205,37 @@ The following section covers some general networking guidance for client and sto
 == Additional ONTAP feature considerations
 
 The following covers specific ONTAP feature configuration modifications that are not covered in <<nfs-export-policy-configuration>>, <<volume-configuration>>, <<mount-options>>, <<client-configuration>>, or <<network-configuration>>.
+
+[[nfs-server-recommendations]]
+=== NFS server recommendations
+
+The following NFS server options are recommended for benchmark tests. For additional NFS mount, pNFS, and session trunking guidance, see xref:appendix-nfs-considerations.adoc[NFS Considerations] (link:https://github.com/whyistheinternetbroken/AFXTestPlans/blob/main/TestPlan/appendix-nfs-considerations.adoc[GitHub]).
+
+.NFS server options for benchmark tests
+[cols="1,1,2"]
+|===
+| NFS option | Recommended value | Reason
+| `-v4.0` | disabled | We don't want clients mounting NFSv4.0 at all.
+a| `-v4-id-domain`
+| Same value as clients listed in `/etc/idmapd.conf`
+a| We want to avoid name/group name squashing to nobody when using NFSv4.x (see link:https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf[TR-4067] starting on page 42 for details).
+| `-v4.1` | enabled | We want to use v4.1 for NFSv4.x.
+| `-v4.1-pnfs` | enabled | We want to use parallel NFS to ensure data locality on the cluster to improve performance.
+a| `-mount-rootonly`
+| disabled
+a| We want to ensure we don't limit the number of ports available for mounts (see link:https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf[TR-4067] starting on page 9 for details).
+a| `-nfs-rootonly`
+| disabled
+a| We want to ensure we don't limit the number of ports available for NFS (see link:https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf[TR-4067] starting on page 9 for details).
+| `-v3-64bit-identifiers` | enabled | We don't want file ID collisions in high file count environments using NFSv3.
+| `-v4-64bit-identifiers` | enabled | We don't want file ID collisions in high file count environments using NFSv4.x.
+| `-v3-hide-snapshot` | enabled | Prevent `.snapshot` directory from being used in any benchmark operations.
+| `-rdma` | enabled (if using RDMA) | Enable to use RDMA. If not using RDMA/GPUs leave disabled.
+a| `-v4.1-trunking`
+| enabled
+a| Trunk IP addresses together for NFSv4.x operations for better performance. Requires more than 1 IP per node, per SVM to function properly. To check if trunking is being used, see xref:appendix-nfs-considerations.adoc[NFS Considerations] (link:https://github.com/whyistheinternetbroken/AFXTestPlans/blob/main/TestPlan/appendix-nfs-considerations.adoc[GitHub]).
+| `-tcp-max-xfer-size` | 1048576 | Sets the max transfer size allowed for NFS mounts to 1MB.
+|===
 
 [[disable-storage-efficiencies]]
 === Disable storage efficiencies

@@ -179,7 +179,7 @@ The following shows the NFS server options that should be configured for this te
 | v4-id-domain | [domain name]*
 | v4.1-pnfs | Enabled
 | v4.1-trunking | Enabled
-| tcp-max-transfer-size | 262144
+| tcp-max-xfer-size | 1048576
 | v3-64bit-identifiers | Enabled
 | v4-64bit-identifiers | Enabled
 | v3 | Enabled
@@ -193,6 +193,8 @@ The following shows the NFS server options that should be configured for this te
 |===
 
 _*The NFSv4 ID domain can be any value, provided it matches what is set on the NFS clients._
+
+`-tcp-max-xfer-size 1048576` sets the NFS server maximum transfer size to 1MB. Clients negotiate to that value unless you specify `wsize` and `rsize` mount options. Those options can request a smaller size (for example 256K / `262144`), but they cannot exceed the maximum set on the NFS server. For throughput-oriented mount guidance, see xref:test-07-08-performance-testing-considerations.adoc#nfs-wsize-and-rsize[Performance testing considerations: NFS wsize and rsize].
 
 To verify the NFSv4 ID domain on the client:
 
@@ -220,7 +222,7 @@ link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/ONTAP/NAS/
 
 [source,console]
 ----
-set advanced; nfs modify -vserver [SVM] -v3 enabled -v4.1 enabled -v4.0 disabled -v4-id-domain [yourdomain.com] -v4.1-pnfs enabled -v4.1-trunking enabled -v4-64bit-identifiers enabled -v3-64bit-identifiers enabled -chown-mode unrestricted -tcp-max-xfer-size 262144 -mount-rootonly disabled -nfs-rootonly disabled -v3-hide-snapshot enabled -rdma [enabled optional]
+set advanced; nfs modify -vserver [SVM] -v3 enabled -v4.1 enabled -v4.0 disabled -v4-id-domain [yourdomain.com] -v4.1-pnfs enabled -v4.1-trunking enabled -v4-64bit-identifiers enabled -v3-64bit-identifiers enabled -chown-mode unrestricted -tcp-max-xfer-size 1048576 -mount-rootonly disabled -nfs-rootonly disabled -v3-hide-snapshot enabled -rdma [enabled optional]
 ----
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
