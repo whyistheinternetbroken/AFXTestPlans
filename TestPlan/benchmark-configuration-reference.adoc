@@ -1,0 +1,290 @@
+= Benchmark Configuration Reference
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:setup.adoc[← Back to Setup]
+
+This page consolidates the client, NFS mount, ONTAP, and statistics commands used by this test plan. Copy a block, replace every value in square brackets, and review the accompanying warnings before running it.
+
+*Important:* These settings are intended for an isolated benchmark environment. Changing NFS server behavior, volume workflow, cache consistency, storage efficiency, or client writeback settings can affect production latency, consistency, recovery, and capacity. Do not apply benchmark settings to production workloads unless directed by NetApp Support.
+
+[[benchmark-placeholders]]
+== Placeholders
+
+[cols="1,2"]
+|===
+| Placeholder | Replace with
+| `[SVM]` | Storage VM that serves the test volume
+| `[VOLUME]` | FlexGroup benchmark volume name
+| `[JUNCTION]` | Junction path, for example `/benchmark`
+| `[EXPORT_POLICY]` | Export policy assigned to the volume
+| `[CLIENTS]` | Comma-separated client IPs or CIDRs
+| `[ID_DOMAIN]` | Domain in the clients' `/etc/idmapd.conf`
+| `[LIF_IP]` | Data LIF used for the mount
+| `[MOUNT]` | Local client mount point
+| `[NIC]` | Client network interface
+| `[RDMA_DEVICE]` | Client RDMA device, for example `mlx5_0`
+| `[SAMPLE_ID]` | Unique statistics sample name
+|===
+
+[[client-configuration-commands]]
+== Client configuration
+
+Run the applicable commands on every load generator. Keep client hardware, operating-system versions, mounts, and tuning consistent so one client does not become the bottleneck.
+
+[[client-nic-commands]]
+=== NIC and RDMA
+
+[source,console]
+----
+# Inspect and increase NIC rings.
+sudo ethtool -g [NIC]
+sudo ethtool -G [NIC] rx 8192 tx 8192
+
+# RDMA only: enable PFC priority 3 and DSCP trust on NVIDIA/Mellanox NICs.
+sudo mlnx_qos -i [NIC] --pfc 0,0,0,1,0,0,0,0
+sudo mlnx_qos -i [NIC] --trust dscp
+
+# Alternative PFC configuration using iproute2-dcb.
+sudo dcb pfc set dev [NIC] prio-pfc 3:on
+
+# RDMA only: set RoCE traffic class (TOS 106 / DSCP AF31).
+echo 106 | sudo tee /sys/class/infiniband/[RDMA_DEVICE]/cma_roce_tos
+----
+
+Apply PFC and RoCE settings only when the end-to-end network is configured for RDMA. The NIC commands are not persistent unless they are incorporated into the site's network configuration.
+
+[[client-os-commands]]
+=== Client operating-system tuning
+
+[source,console]
+----
+# Dynamic settings for a benchmark run.
+sudo sysctl -w sunrpc.rdma_slot_table_entries=200
+sudo sysctl -w sunrpc.tcp_slot_table_entries=64
+sudo sysctl -w vm.dirty_background_bytes=2147483648
+sudo sysctl -w vm.dirty_bytes=5368709120
+sudo sysctl -w vm.dirty_background_ratio=0
+sudo sysctl -w vm.dirty_ratio=0
+sudo sysctl -w vm.dirty_expire_centisecs=300
+sudo sysctl -w vm.dirty_writeback_centisecs=100
+----
+
+`sunrpc.rdma_slot_table_entries` applies to RDMA. `sunrpc.tcp_slot_table_entries=64` is a benchmark starting point for NFSv3; verify client distribution support before making it persistent. Dirty-page byte settings require clients with enough RAM and should be reduced on smaller clients.
+
+[source,console]
+----
+# Persistent example. Review values for client RAM and protocol before use.
+sudo tee /etc/sysctl.d/90-netapp-afx-benchmark.conf >/dev/null <<'EOF'
+sunrpc.rdma_slot_table_entries = 200
+sunrpc.tcp_slot_table_entries = 64
+vm.dirty_background_bytes = 2147483648
+vm.dirty_bytes = 5368709120
+vm.dirty_background_ratio = 0
+vm.dirty_ratio = 0
+vm.dirty_expire_centisecs = 300
+vm.dirty_writeback_centisecs = 100
+EOF
+sudo sysctl -p /etc/sysctl.d/90-netapp-afx-benchmark.conf
+----
+
+[[nfs-mount-commands]]
+=== NFS mount commands
+
+Start throughput comparisons with 256K transfer sizes, then repeat with 1MB. See xref:appendix-nfs-considerations.adoc#wsize-and-rsize[Wsize and rsize] before changing cache-consistency options.
+
+[source,console]
+----
+# NFSv3: general metadata and random-I/O benchmark starting point.
+sudo mkdir -p [MOUNT]
+sudo mount -t nfs -o vers=3,tcp,hard,intr,nconnect=8,rsize=262144,wsize=262144 \
+  [LIF_IP]:[JUNCTION] [MOUNT]
+
+# NFSv4.1 on RHEL: pNFS and automatic session-trunk discovery.
+sudo mount -t nfs4 -o vers=4.1,tcp,hard,intr,trunkdiscovery,rsize=262144,wsize=262144 \
+  [LIF_IP]:[JUNCTION] [MOUNT]
+
+# NFSv4.1 on Ubuntu: repeat for each node-local trunk LIF as required.
+sudo mount -t nfs4 -o vers=4.1,tcp,hard,intr,max_connect=8,rsize=262144,wsize=262144 \
+  [LIF_IP]:[JUNCTION] [MOUNT]
+
+# NFSv4.1 over RDMA. Add the client-specific trunk option when supported.
+sudo mount -t nfs4 -o vers=4.1,rdma,hard,intr,write=eager,rsize=262144,wsize=262144 \
+  [LIF_IP]:[JUNCTION] [MOUNT]
+----
+
+For the 1MB comparison, replace both `262144` values with `1048576`. For read-only or read-mostly data that can tolerate stale attributes, compare defaults with `nocto,actimeo=600`; do not use those options for shared multi-writer tests. Do not combine nconnect and session trunking when using pNFS.
+
+[[client-mount-verification-commands]]
+=== Mount verification
+
+[source,console]
+----
+findmnt -t nfs,nfs4 [MOUNT]
+nfsstat -m
+ss -tn dst :2049
+cat /proc/fs/nfsfs/servers
+cat /proc/fs/nfsfs/volumes
+----
+
+Confirm the negotiated NFS version, `rsize`, `wsize`, transport, and nconnect/trunking behavior before each run. For RDMA, verify that `mountstats` reports the RDMA transport and check client RDMA counters.
+
+[[client-readahead-commands]]
+=== Readahead
+
+[source,console]
+----
+MOUNT=[MOUNT]
+BDEV=$(awk -v m="$MOUNT" '$5 == m {print $3}' /proc/self/mountinfo)
+cat "/sys/class/bdi/$BDEV/read_ahead_kb"
+
+# 15x a 256K rsize. Use 15360 for a 1MB rsize.
+echo 3840 | sudo tee "/sys/class/bdi/$BDEV/read_ahead_kb"
+----
+
+Session trunking can create multiple backing-device entries. Apply the value to every entry associated with the mount. Compare tuned and default readahead for sequential reads; do not assume it benefits random I/O.
+
+[[ontap-server-configuration-commands]]
+== ONTAP server configuration
+
+[[ontap-nfs-server-command]]
+=== NFS server
+
+Set `-rdma enabled` only when RDMA is configured end to end. The command uses diagnostic privilege because some benchmark options are not intended as general production defaults.
+
+[source,console]
+----
+set diag; nfs modify -vserver [SVM] -v3 enabled -v4.0 disabled -v4.1 enabled -v4-id-domain [ID_DOMAIN] -v4.1-pnfs enabled -v4.1-trunking enabled -v3-64bit-identifiers enabled -v4-64bit-identifiers enabled -v3-hide-snapshot enabled -mount-rootonly disabled -nfs-rootonly disabled -chown-mode unrestricted -v4.x-session-num-slots 64 -tcp-max-xfer-size 1048576 -rdma disabled
+----
+
+[source,console]
+----
+set advanced; nfs show -vserver [SVM] -fields v3,v4.0,v4.1,v4-id-domain,v4.1-pnfs,v4.1-trunking,v3-64bit-identifiers,v4-64bit-identifiers,v3-hide-snapshot,mount-rootonly,nfs-rootonly,v4.x-session-num-slots,tcp-max-xfer-size,rdma
+export-policy rule show -vserver [SVM] -policyname [EXPORT_POLICY]
+volume show -vserver [SVM] -volume [VOLUME] -fields junction-path,policy,files,files-used,snapshot-policy,snapdir-access
+network interface show -vserver [SVM] -data-protocol nfs -fields home-node,home-port,address,status-admin,status-oper,is-home
+----
+
+[[ontap-export-policy-commands]]
+=== Export policy
+
+[source,console]
+----
+export-policy rule create -vserver [SVM] -policyname default -clientmatch [CLIENTS] -rorule any -rwrule never
+export-policy create -vserver [SVM] -policyname [EXPORT_POLICY]
+export-policy rule create -vserver [SVM] -policyname [EXPORT_POLICY] -clientmatch [CLIENTS] -rorule any -rwrule any -superuser any -anon 0 -chown-mode unrestricted -ntfs-unix-security-ops ignore
+----
+
+Limit `[CLIENTS]` to the benchmark clients. Do not expose a wide-open benchmark policy to production networks.
+
+[[ontap-volume-commands]]
+=== Benchmark FlexGroup volume
+
+[source,console]
+----
+set diag; volume create -vserver [SVM] -volume [VOLUME] -size [SIZE] -junction-path [JUNCTION] -unix-permissions 777 -files-set-maximum true -maxdir-size 4G -is-large-size-enabled true -snapshot-policy none -autosize-mode grow_shrink -policy [EXPORT_POLICY] -snapdir-access false
+----
+
+Use `-maxdir-size 4G` only for tests that intentionally create millions of entries in one directory. Prefer spreading metadata across directories. Monitor capacity and inode use throughout the run.
+
+[source,console]
+----
+# Benchmark-only FlexGroup placement behavior.
+set advanced; volume modify -vserver [SVM] -volume [VOLUME] -workflow data
+
+# VMware datastore benchmark only.
+set diag; volume modify -vserver [SVM] -volume [VOLUME] -granular-data disabled
+----
+
+Changing `-workflow` from its default is not recommended for production unless directed by support. It enforces round-robin placement of files and file parts across constituents, improving benchmark distribution at the potential cost of remote-placement latency.
+
+[[ontap-storage-efficiency-commands]]
+=== Storage efficiency
+
+Disable optional efficiencies only when the benchmark methodology requires raw performance without efficiency processing:
+
+[source,console]
+----
+volume efficiency off -vserver [SVM] -volume [VOLUME]
+aggregate efficiency modify -aggregate data* -cross-volume-background-dedupe false -cross-volume-inline-dedupe false
+aggregate efficiency wise-tsse modify -aggregate data* -enable-workload-informed-tsse false
+----
+
+Record every change and restore the environment after testing. Dynamic storage efficiency behavior can be part of the test objective; do not disable it when measuring that feature.
+
+[[statistics-capture-commands]]
+== Statistics capture
+
+Use a unique `[SAMPLE_ID]` for each workload, protocol, transfer size, client count, and concurrency point. Start collection immediately before the measured interval and stop it immediately afterward.
+
+[[live-statistics-commands]]
+=== Live cluster and volume views
+
+[source,console]
+----
+set advanced -confirmations off
+statistics show-periodic -counter nfs-ops|data-sent|data-recv -interval 1
+qos statistics volume performance show -vserver [SVM] -volume [VOLUME]
+network connections active show -service nfs
+nfs connected-clients show -vserver [SVM]
+----
+
+[[sample-statistics-commands]]
+=== Reusable sample workflow
+
+[source,console]
+----
+# Choose nfsv3 or nfsv4_1 to match the mount.
+statistics start -object nfsv4_1 -vserver [SVM] -sample-id [SAMPLE_ID]
+
+# Run the measured workload, then stop and display the sample.
+statistics stop -sample-id [SAMPLE_ID]
+statistics show -sample-id [SAMPLE_ID]
+
+# Common filtered views.
+statistics show -sample-id [SAMPLE_ID] -counter *percent*
+statistics show -sample-id [SAMPLE_ID] -counter *latency*
+statistics show -sample-id [SAMPLE_ID] -counter *size_hist*
+statistics show -sample-id [SAMPLE_ID] -counter *getattr*
+----
+
+[[pnfs-trunking-statistics-commands]]
+=== pNFS and session-trunking validation
+
+[source,console]
+----
+set diag -confirmations off
+nfs show -vserver [SVM] -fields v4.1,v4.1-pnfs,v4.1-trunking
+pnfs devices show -vserver [SVM]
+pnfs devices mappings show -vserver [SVM]
+statistics start -object nfsv4_1|nfsv4_1_diag -sample-id [SAMPLE_ID]
+
+# After the workload:
+statistics stop -sample-id [SAMPLE_ID]
+statistics show -object nfsv4_1 -counter *layout* -sample-id [SAMPLE_ID]
+statistics show -object nfsv4_1_diag -counter *session* -sample-id [SAMPLE_ID]
+----
+
+[[feature-statistics-commands]]
+=== Dynamic storage efficiency statistics
+
+[source,console]
+----
+statistics start -object tsse -sample-id [SAMPLE_ID]
+statistics stop -sample-id [SAMPLE_ID]
+statistics show -object tsse -sample-id [SAMPLE_ID] -counter *dse*
+----
+
+Object and counter availability varies by ONTAP release and privilege. See xref:appendix-statistics-counters.adoc[Statistics Counters] for counter descriptions and examples, xref:feature-dynamic-storage-efficiency.adoc[Dynamic Storage Efficiency] for its focused counter set, and xref:test-09-performance-monitoring.adoc[Test 9] for System Manager and Harvest monitoring.
+
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:appendix-nfs-considerations.adoc[< Previous]
+>| xref:datasets-workloads.adoc[Next >]
+|===
+// navigation-links:end

@@ -35,6 +35,86 @@ The official EDA workload is a blend of two component workloads:
 
 In the blended workload, the process ratio is maintained at 3 frontend processes for every 2 backend processes as load increases.
 
+[[spec-run-types]]
+=== Exploratory and publishable runs
+
+Use exploratory runs to validate mounts, size clients, and find a useful load range. Results are not publishable when you alter workload definitions, use the SM2020 automatic-search options, or otherwise depart from the official run rules. A disclosable result must follow the current link:https://www.spec.org/storage2020/docs/runrules.pdf[SPECstorage Solution 2020 Run and Reporting Rules], including the required load points and reporting package.
+
+The official user guide and run rules are authoritative if they differ from this test plan:
+
+* link:https://www.spec.org/storage2020/docs/usersguide.pdf[SPECstorage Solution 2020 User's Guide]
+* link:https://www.spec.org/storage2020/docs/runrules.pdf[Run and Reporting Rules]
+
+[[spec-client-sizing]]
+=== Prime client and load-generator sizing
+
+Run `SM2020` from one Prime client. The Prime client coordinates the run and collects results; load generators issue the workload. Configure passwordless SSH from the Prime client, install the benchmark at the same path on all Linux clients, and mount the same AFX paths on every listed client.
+
+Start with at least four modern load generators, then add clients when CPU, memory, NIC, or RPC concurrency on the clients approaches saturation before ONTAP does. Distribute `CLIENT_MOUNTPOINTS` in round-robin order across clients and volumes/LIFs so the first load points do not create an artificial hotspot.
+
+The official rules give these approximate resources for each unit of business load:
+
+[cols="1,1,1"]
+|===
+| Workload | Client RAM per load unit | Storage per load unit
+| AI_IMAGE | 1.7 GiB per job | 100 GiB per job
+| EDA_BLENDED | 520 MiB per job | 11 GiB per job
+| GENOMICS | 416 MiB per job | 3.5 GiB per job
+| SWBUILD | 650 MiB per build | 5 GiB per build
+| VDA | 100 MiB per stream | 24 GiB per stream
+|===
+
+Keep client CPU below sustained saturation and leave RAM for the operating system, NFS cache, and benchmark processes. If one client reaches its NIC limit, add load generators rather than only increasing load on that host.
+
+[[spec-installation-and-preflight]]
+=== Installation and preflight
+
+. Install Python 3.8.2 or later and PyYAML on the Prime client.
+. Install the benchmark using its supplied manager:
++
+[source,console]
+----
+python3 SM2020 --install-dir=[INSTALL_PATH]
+----
+. Confirm that every client can access the benchmark path and its assigned NFS mount without a password prompt.
+. Verify the test directories are writable and have enough capacity/inodes for the highest planned load.
+. Apply the client and ONTAP baseline from xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference], then record protocol, mount options, client count, and software versions.
+
+[[spec-sfs-rc-example]]
+=== Minimal `sfs_rc` example
+
+Copy the supplied `sfs_rc` and change only the site-specific values. For an exploratory EDA run:
+
+[source,config]
+----
+BENCHMARK=EDA_BLENDED
+LOAD=1
+INCR_LOAD=1
+NUM_RUNS=10
+CLIENT_MOUNTPOINTS=client01:/mnt/afx/eda1 client02:/mnt/afx/eda2 client03:/mnt/afx/eda3 client04:/mnt/afx/eda4
+----
+
+Use the exact workload name supported by the installed release. For a publishable run, use at least ten uniformly spaced load points and follow all current run-rule requirements. `LOAD` may also be an explicit increasing list for exploratory sweeps.
+
+Run from the Prime client and use a unique suffix:
+
+[source,console]
+----
+python3 SM2020 -r sfs_rc -s eda_baseline_256k
+----
+
+[[spec-concurrency-method]]
+=== Concurrency and load-ramp method
+
+. Run a low-load smoke test to confirm orchestration, mounts, free space, and result collection.
+. Establish a baseline with the same number of load generators and mount points planned for the full run.
+. Increase `LOAD` in even steps. Monitor client CPU/RAM/NIC utilization and ONTAP throughput, IOPS, latency, and protocol counters.
+. Stop increasing load when throughput no longer scales, response time rises materially, clients saturate, or capacity/inode limits approach the planned guardrail.
+. Repeat the final useful points at least three times for engineering comparisons. Use the official number and spacing of points for a disclosable run.
+. Change one variable per comparison: protocol, transfer size, trunking/nconnect, client count, or ONTAP feature.
+
+Use NFSv3 for metadata-heavy EDA frontend exploration and compare NFSv4.1 with pNFS/session trunking for backend throughput. Treat protocol comparisons as separate result sets and retain all `sfs_rc`, logs, summaries, mount output, and ONTAP samples.
+
 
 [[frontend-eda-workload-breakdown----specsfs-2020]]
 === Frontend EDA workload breakdown -- SPECSFS 2020
@@ -87,7 +167,7 @@ The following table shows the NFS operations involved in the SPECSFS 2020 EDA_BA
 |===
 
 
-*Note:* Since backend EDA workloads are read/write heavy with very little metadata, it is worth using NFSv4.1 with pNFS and session trunking. See xref:appendix-nfs-considerations.adoc[NFS Considerations] and xref:appendix-client-tuning.adoc[Client Tuning].
+*Note:* Since backend EDA workloads are read/write heavy with very little metadata, it is worth using NFSv4.1 with pNFS and session trunking. See xref:appendix-nfs-considerations.adoc[NFS Considerations].
 
 
 [[definition-of-relevant-operations-in-spec-sfs-2020]]
@@ -126,7 +206,7 @@ The following section defines the operations mentioned in <<frontend-eda-workloa
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:appendix-rest-api.adoc[< Previous]
+| xref:test-08-customer-workload-benchmarks.adoc[< Previous]
 >| xref:appendix-mlcommons.adoc[Next >]
 |===
 // navigation-links:end

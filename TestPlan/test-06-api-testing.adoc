@@ -34,6 +34,6 @@ a| *Expected outcome(s):*
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:test-05-volume-management.adoc[< Previous]
->| xref:test-07-08-performance-testing-considerations.adoc[Next >]
+>| xref:appendix-rest-api.adoc[Next >]
 |===
 // navigation-links:end

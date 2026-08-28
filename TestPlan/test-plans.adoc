@@ -14,8 +14,8 @@ The following sections outline the testing NetApp encourages customers to comple
 [[test-plans]]
 == Test plans
 
-The following sections outline the testing NetApp encourages customers complete as part of this test plan. A notes section is included for your own use, but it would be invaluable to NetApp if following these tests, those notes were passed on as feedback about NetApp AFX or the test plan itself. To submit feedback, email mailto:parisi@netapp.com[parisi@netapp.com].
-Test scenarios that are executed outside of these guidelines are fine and it is still of high value to provide the results of such tests. Capture those custom scenarios in the Comments section of the closest relevant test, or send the steps, expected results, achieved results, and collected data to mailto:parisi@netapp.com[parisi@netapp.com].
+The following sections outline the testing NetApp encourages customers complete as part of this test plan. A notes section is included for your own use, but it would be invaluable to NetApp if following these tests, those notes were passed on as feedback about NetApp AFX or the test plan itself. To submit feedback, email mailto:ng-afx-testplans@netapp.com[ng-afx-testplans@netapp.com].
+Test scenarios that are executed outside of these guidelines are fine and it is still of high value to provide the results of such tests. Capture those custom scenarios in the Comments section of the closest relevant test, or send the steps, expected results, achieved results, and collected data to mailto:ng-afx-testplans@netapp.com[ng-afx-testplans@netapp.com].
 All tests have a 'Comments' section. It is appreciated if any comments -- even those not directly related to the executed tests -- are provided as either part of the tests or separately.
 
 *Note:* Images in these test plans may differ from your actual lab environment. For questions, please reach out to your account team.
@@ -39,9 +39,9 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 | Create and validate data, management, and intercluster LIFs
 | xref:test-03-create-network-interfaces.adoc[Test 3]
 
-| Test 4: Data migration
+| Test 4: Data migration (optional)
 | Migrate existing ONTAP data to AFX using SnapMirror or NAS copy tools
-| xref:test-04-data-migration.adoc[Test 4]
+| xref:test-04-data-migration.adoc[Test 4: Data migration (optional)]
 
 | Test 5: Volume management
 | Create and manage FlexGroup volumes on AFX
@@ -56,7 +56,7 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 | xref:test-07-customer-workload-real-data.adoc[Test 7]
 
 | Test 8: Customer workload -- benchmarks
-| Run SPEC SFS 2020 or MLcommons benchmarks against AFX
+| Run SPEC SFS, MLCommons, or synthetic benchmarks against AFX
 | xref:test-08-customer-workload-benchmarks.adoc[Test 8]
 
 | Test 9: Performance monitoring
@@ -110,6 +110,10 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 | Cross-node deduplication across the shared capacity pool (new in 9.19.1)
 | xref:feature-global-deduplication.adoc[Global Deduplication Feature Test]
 
+| VDBench Global Deduplication
+| NFS performance and storage-efficiency validation for global deduplication
+| xref:vdbench-global-dedupe.adoc[VDBench Global Deduplication Test Plan]
+
 | Dynamic Storage Efficiency
 | Adaptive compression and compaction for space savings
 | xref:feature-dynamic-storage-efficiency.adoc[Dynamic SE Feature Test]
@@ -127,11 +131,11 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 
 For NFS export policy, volume configuration, mount options, client and network configuration, and ONTAP feature settings used during performance testing, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations (Tests 7 and 8)].
 
-For NFS server configuration reference, see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration].
+For baseline configuration and workload selection, see xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] and xref:datasets-workloads.adoc[Datasets and Workloads]. Benchmark-specific guidance is available for xref:appendix-spec-sfs.adoc[SPECstorage Solution 2020], xref:appendix-mlcommons.adoc[MLPerf Storage], and xref:appendix-synthetic-benchmarks.adoc[synthetic benchmarks].
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:datasets-workloads.adoc[< Previous]
+| xref:test-07-08-performance-testing-considerations.adoc[< Previous]
 >| xref:test-01-validate-cluster-setup.adoc[Next >]
 |===
 // navigation-links:end

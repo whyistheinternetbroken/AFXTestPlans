@@ -51,7 +51,7 @@ From an application/solution perspective, relevant workloads include:
 [[if-you-are-currently-using-ontap]]
 ==== If you are currently using ONTAP
 
-If ONTAP is currently running your production workloads, this test plan will use SnapMirror to efficiently and quickly replicate volumes to NetApp AFX (see xref:test-04-data-migration.adoc[Test 4: Data migration]).
+If ONTAP is currently running your production workloads, this test plan will use SnapMirror to efficiently and quickly replicate volumes to NetApp AFX (see xref:test-04-data-migration.adoc[Test 4: Data migration (optional)]).
 
 Some considerations:
 
@@ -101,17 +101,15 @@ Most modern clients have support for specific NFS features that workloads runnin
 *Note:* When using NFSv4.x, use only NFSv4.1 and later.
 
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 | Feature | Purpose | NFSv3 | NFSv4.1+
-| Nconnect | Multiple TCP connections per single mount point for increased performance and scale. +
-  +
-Nconnect + pNFS = OK +
-Nconnect + session trunking =  OK +
-Nconnect + session trunking + pNFS = not recommended | Yes | Yes
-| Trunking | Combines multiple interfaces into one connection to provide increased throughput and resiliency. (Not to be used with nconnect) | No | Yes
+| Nconnect | Multiple TCP connections to one LIF/IP for increased concurrency. Use it primarily for NFSv3 in this test plan. | Yes | Client-dependent
+| Session trunking | Multiple connections across multiple node-local LIFs for NFSv4.1 throughput and path diversity. | No | Yes
 | pNFS | Data locality for improved latency and parallel access to single file portions of large files for better performance when using FlexGroup volumes. | No | Yes
 |===
+
+When using pNFS, choose either nconnect or session trunking; do not combine both. For feature selection and client-specific mount options, see xref:appendix-nfs-considerations.adoc#comparing-nconnect-and-nfs-session-trunking[Comparing nconnect and NFS session trunking].
 
 
 [[volume-type-recommendation]]
@@ -231,7 +229,7 @@ This can impact both NFSv3 and NFSv4.x. +
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:setup.adoc[< Previous]
->| xref:test-plans.adoc[Next >]
+| xref:benchmark-configuration-reference.adoc[< Previous]
+>| xref:test-07-08-performance-testing-considerations.adoc[Next >]
 |===
 // navigation-links:end

@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-This section covers hardware requirements, client configurations, networking, and NFS server configuration. See also xref:appendix-client-tuning.adoc[Client Tuning] for detailed NFS performance tuning.
+This section covers hardware requirements, client configurations, networking, and NFS server configuration. See xref:appendix-nfs-considerations.adoc[NFS Considerations] for protocol and client-tuning details and xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] for copy-ready commands.
 
 
 [[recommended-setup-and-prerequisites]]
@@ -59,95 +59,19 @@ Ubuntu 24.04.1 LTS
 Doca-all 3.4.0 3.4.0-085000 with rpcrdma module
 ----
 
-A combined client tuning script is available at:
-link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/Clients[https://github.com/whyistheinternetbroken/Benchmarking/tree/main/Clients]
+A combined client tuning script is available at link:https://github.com/whyistheinternetbroken/Benchmarking/tree/main/Clients[Benchmarking/Clients]. For the reviewed command set and warnings used by this test plan, see xref:benchmark-configuration-reference.adoc#client-configuration-commands[Client configuration].
 
 
 [[client-network-and-nic-tuning]]
 ===== Client network & NIC tuning
 
-The following NIC settings were used in our internal benchmark configurations. Apply them on each client. A script that automates these steps is available at: link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/Clients/tune-client-nic.sh[Clients/tune-client-nic.sh].
-
-*Set RX/TX ring buffers to 8192:*
-
-[source,console]
-----
-# Replace ens1f0np0 with your interface name
-sudo ethtool -G ens1f0np0 rx 8192 tx 8192
-----
-
-*Verify ring buffer settings:*
-
-[source,console]
-----
-sudo ethtool -g ens1f0np0
-----
-
-*Enable PFC (Priority Flow Control) on priority 3 -- Mellanox/NVIDIA NICs (mlnx_qos):*
-
-[source,console]
-----
-sudo mlnx_qos -i ens1f0np0 --pfc 0,0,0,1,0,0,0,0
-sudo mlnx_qos -i ens1f0np0 --trust dscp
-----
-
-*Enable PFC using iproute2-dcb (alternative):*
-
-[source,console]
-----
-sudo dcb pfc set dev ens1f0np0 prio-pfc 3:on
-----
-
-*Set RoCE traffic class using cma_roce_tos (TOS=106, corresponding to DSCP AF31):*
-
-[source,console]
-----
-# List available RDMA devices
-ls /sys/class/infiniband/
-
-# Set TOS for each device (replace mlx5_0 with your device name)
-sudo sh -c 'echo 106 > /sys/class/infiniband/mlx5_0/cma_roce_tos'
-----
-
-*Note:* These settings are not persistent across reboots. Use the provided script with the `--persistent` flag or configure via systemd/udev rules for production use.
+Internal benchmark clients used RX/TX rings of 8192. RDMA clients also used PFC priority 3, DSCP trust, and RoCE TOS 106. Apply these only when the end-to-end network design supports them. See xref:benchmark-configuration-reference.adoc#client-nic-commands[NIC and RDMA commands].
 
 
 [[client-os-tuning]]
 ===== Client OS tuning
 
-The following kernel parameters improve dirty page writeback behavior and RDMA slot allocation for high-throughput NFS workloads. A script that automates these steps is available at: link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/Clients/tune-client-os.sh[Clients/tune-client-os.sh].
-
-*Apply settings dynamically (non-persistent):*
-
-[source,console]
-----
-sudo sysctl -w sunrpc.rdma_slot_table_entries=200
-sudo sysctl -w vm.dirty_background_bytes=2147483648
-sudo sysctl -w vm.dirty_bytes=5368709120
-sudo sysctl -w vm.dirty_background_ratio=0
-sudo sysctl -w vm.dirty_ratio=0
-sudo sysctl -w vm.dirty_expire_centisecs=300
-sudo sysctl -w vm.dirty_writeback_centisecs=100
-----
-
-*Apply settings persistently (survives reboots):*
-
-[source,console]
-----
-cat <<'EOF' | sudo tee /etc/sysctl.d/90-netapp-afx-benchmark.conf
-# NetApp AFX Benchmark Client OS Tuning
-sunrpc.rdma_slot_table_entries = 200
-vm.dirty_background_bytes = 2147483648
-vm.dirty_bytes = 5368709120
-vm.dirty_background_ratio = 0
-vm.dirty_ratio = 0
-vm.dirty_expire_centisecs = 300
-vm.dirty_writeback_centisecs = 100
-EOF
-
-# Apply immediately without reboot
-sudo sysctl -p /etc/sysctl.d/90-netapp-afx-benchmark.conf
-----
+Dirty-page writeback and TCP/RDMA slot-allocation settings are consolidated in xref:benchmark-configuration-reference.adoc#client-os-commands[Client operating-system tuning]. Size dirty-page byte values for client RAM and validate changes before making them persistent.
 
 
 [[networking-requirements]]
@@ -170,31 +94,7 @@ All data network interfaces in an ONTAP SVM should be routable to all clients fo
 [[nfs-server-configuration]]
 ==== NFS server configuration
 
-The following shows the NFS server options that should be configured for this test plan. Other NFS server options can be enabled as well (for instance, NFSv4 ACL support), but they are outside of the scope of this NetApp AFX-focused test plan.
-
-[cols="1,1"]
-|===
-| Option | Value
-| v4.1 | Enabled
-| v4-id-domain | [domain name]*
-| v4.1-pnfs | Enabled
-| v4.1-trunking | Enabled
-| tcp-max-xfer-size | 1048576
-| v3-64bit-identifiers | Enabled
-| v4-64bit-identifiers | Enabled
-| v3 | Enabled
-| v4.1-read-delegation | Disabled
-| v4.1-write-delegation | Disabled
-| rdma | Enabled (optional)
-| v4.0 | Disabled
-| v3-hide-snapshot | Enabled
-| mount-rootonly | Disabled
-| nfs-rootonly | Disabled
-|===
-
-_*The NFSv4 ID domain can be any value, provided it matches what is set on the NFS clients._
-
-`-tcp-max-xfer-size 1048576` sets the NFS server maximum transfer size to 1MB. Clients negotiate to that value unless you specify `wsize` and `rsize` mount options. Those options can request a smaller size (for example 256K / `262144`), but they cannot exceed the maximum set on the NFS server. For throughput-oriented mount guidance, see xref:test-07-08-performance-testing-considerations.adoc#nfs-wsize-and-rsize[Performance testing considerations: NFS wsize and rsize].
+Configure NFSv3 and NFSv4.1, pNFS, session trunking, 64-bit identifiers, a 1MB server transfer maximum, and the benchmark session-slot value before validation. The NFSv4 ID domain must match the clients. Use xref:benchmark-configuration-reference.adoc#ontap-nfs-server-command[the consolidated NFS server command] so setup and benchmark procedures share one source of truth.
 
 To verify the NFSv4 ID domain on the client:
 
@@ -213,21 +113,11 @@ Domain = user-domain.company.com
 [[benchmark-cli-configuration]]
 ===== Benchmark CLI configuration
 
-The following shows the NFS CLI command used for internal performance benchmark runs. For full test context, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations (Tests 7 and 8)].
-
-A script that connects to the cluster via SSH and applies this configuration is available at:
-link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/ONTAP/NAS/configure-nfs-server.sh[ONTAP/NAS/configure-nfs-server.sh]
-
-*Note:* RDMA reduces latency and increases throughput for most workloads -- roughly 10-30%.
-
-[source,console]
-----
-set advanced; nfs modify -vserver [SVM] -v3 enabled -v4.1 enabled -v4.0 disabled -v4-id-domain [yourdomain.com] -v4.1-pnfs enabled -v4.1-trunking enabled -v4-64bit-identifiers enabled -v3-64bit-identifiers enabled -chown-mode unrestricted -tcp-max-xfer-size 1048576 -mount-rootonly disabled -nfs-rootonly disabled -v3-hide-snapshot enabled -rdma [enabled optional]
-----
+Use xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] for client, mount, ONTAP, verification, and statistics commands. The automation equivalent is link:https://github.com/whyistheinternetbroken/Benchmarking/blob/main/ONTAP/NAS/configure-nfs-server.sh[configure-nfs-server.sh]. For the rationale and production caveats behind benchmark-only changes, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations].
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:overview.adoc[< Previous]
->| xref:datasets-workloads.adoc[Next >]
+>| xref:appendix-nfs-considerations.adoc[Next >]
 |===
 // navigation-links:end

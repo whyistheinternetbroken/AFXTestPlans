@@ -970,3 +970,11 @@ rd=rd_seqread,wd=wd_seqr,iorate=max,elapsed=300,interval=10,warmup=30
 rd=rd_seqwrite,wd=wd_seqw,iorate=max,elapsed=300,interval=10,warmup=30
 rd=rd_randread,wd=wd_randr,iorate=max,elapsed=300,interval=10,warmup=30
 ----
+
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:feature-global-deduplication.adoc[< Previous]
+>| xref:feature-dynamic-storage-efficiency.adoc[Next >]
+|===
+// navigation-links:end

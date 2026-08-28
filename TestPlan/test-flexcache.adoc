@@ -21,7 +21,7 @@ NetApp FlexCache volumes provide a way to localize reads on remote datasets by p
 
 . Navigate to the NetApp AFX System Manager and login
 
-. Peer the clusters (if necessary) This step may not be necessary if you’ve already peered the clusters for SnapMirror. Follow the steps in xref:test-04-data-migration.adoc[Test 4: Data migration] to peer clusters.
+. Peer the clusters (if necessary) This step may not be necessary if you’ve already peered the clusters for SnapMirror. Follow the steps in xref:test-04-data-migration.adoc[Test 4: Data migration (optional)] to peer clusters.
 
 . Create a SVM peer for the FlexCache volume You may need to re-peer the clusters in some cases.
 

@@ -60,14 +60,14 @@ This test plan covers training, checkpointing, and vectorDB benchmarks against N
 
 Mount FlexGroup (or other data) volumes from NetApp AFX on every client that participates. Prefer dedicated mount points per workload family so training, checkpoints, and vectorDB data do not share the same directory tree.
 
-For general NFS guidance, see xref:appendix-nfs-considerations.adoc[NFS Considerations] and xref:appendix-client-tuning.adoc[Client Tuning]. Workload-specific recommendations for this test plan:
+For general NFS guidance, see xref:appendix-nfs-considerations.adoc[NFS Considerations]. Copy mount commands from xref:benchmark-configuration-reference.adoc#nfs-mount-commands[NFS mount commands]. Workload-specific recommendations:
 
 [cols="1,2,3",options="header"]
 |===
 | Workload | Recommended NFS version | Recommended mount options / notes
-| Training (sequential read-heavy) | NFSv4.1 with pNFS and session trunking | Ubuntu 22+: `vers=4.1,tcp,hard,intr,nocto,actimeo=3600,max_connect=8,rsize=1048576,wsize=1048576`. RHEL 9.x+: use `trunkdiscovery` instead of `max_connect=8`. `nocto` and long `actimeo` suit static training datasets.
-| Checkpointing (sequential write + restore reads + SETATTR) | NFSv4.1 with pNFS and session trunking | Same base as training (`vers=4.1,tcp,hard,intr,max_connect=8` or `trunkdiscovery`, `rsize=1048576,wsize=1048576`). Prefer *without* `nocto` (or use a shorter `actimeo`) so attribute updates during checkpoint write/restore are not overly stale. Ensure the checkpoint folder is on shared NFS so all hosts can read what peers wrote.
-| VectorDB (random read/write + metadata) | NFSv3 *or* NFSv4.1 | NFSv3: `vers=3,tcp,hard,intr,nconnect=8,rsize=1048576,wsize=1048576` often works well for metadata-heavy / random patterns. NFSv4.1: keep trunking (`max_connect` / `trunkdiscovery`) but avoid aggressive `nocto`/`actimeo` unless you validate query correctness. Point Milvus Docker volumes at the NFS mount (see <<vectordb-on-nfs>>).
+| Training (sequential read-heavy) | NFSv4.1 with pNFS and session trunking | Start at 256K and compare 1MB. Static datasets can benefit from `nocto` and a longer `actimeo`, but record that choice.
+| Checkpointing (sequential write + restore reads + SETATTR) | NFSv4.1 with pNFS and session trunking | Start at 256K and compare 1MB. Keep default close-to-open behavior so attribute updates are visible. Place checkpoints on shared NFS.
+| VectorDB (random read/write + metadata) | NFSv3 *or* NFSv4.1 | Compare NFSv3 with nconnect against NFSv4.1 with trunking. Keep default cache-consistency settings and point Milvus volumes at NFS (see <<vectordb-on-nfs>>).
 |===
 
 *Note:* Always use `hard` mounts for benchmarks. Soft mounts can mask storage issues with application-level timeouts.
@@ -160,6 +160,70 @@ mlpstorage closed training unet3d run file \
 ----
 
 For full help: `mlpstorage --help_all` or append `--help` at any subcommand level.
+
+[[mlcommons-workload-selection]]
+=== Select the workload and division
+
+Use `closed` when results must be comparable under the official rules. Use `open` only when the rule set permits and fully document every tuning change. Use `whatif` for engineering exploration; label those results clearly because they cannot be submitted.
+
+For an official submission, follow the current upstream `Rules.md`, generate the required system description, and run `mlpstorage validate` on the completed result directory. Passing a local benchmark run alone does not make the result submission-compliant.
+
+* *Training* measures dataset ingest and is the primary sequential-read test. Start with U-Net3D or RetinaNet for closed/open work; use ResNet50 or CosmoFlow only when their what-if I/O shape is the objective.
+* *Checkpointing* measures large coordinated writes and restore reads. Select the Llama3 scale whose checkpoint fits capacity and client memory.
+* *VectorDB* measures random read/write and metadata behavior through Milvus. Use it when index build, query, or RAG-style storage is the objective.
+* *KV-cache* is optional in this plan and should be reported separately from training/checkpointing.
+
+[[mlcommons-client-sizing-and-ramp]]
+=== Client, process, and accelerator sizing
+
+The emulated accelerator count determines the requested data rate; `--num-processes` determines dataset-generation parallelism and, where supported, worker concurrency. Do not scale only one value and assume the clients can feed it.
+
+. Begin with one client and the smallest valid accelerator/process count.
+. Increase emulated accelerators or workers in a controlled sequence such as 1, 2, 4, 8, and 16.
+. Add clients independently when a client approaches CPU, RAM, NIC, or NFS-RPC saturation.
+. Stop when aggregate throughput plateaus, latency rises materially, the achieved sample rate misses the benchmark target, or a client becomes the bottleneck.
+. Repeat the useful upper points at least three times with unchanged configuration.
+
+Every client must have identical code and mount paths. Reserve memory for the OS, NFS page cache, framework workers, and MPI. Run the matching `datasize` command again whenever accelerator count/type or declared host memory changes.
+
+For a distributed training run, pass the participating hosts from the launcher:
+
+[source,console]
+----
+mlpstorage closed training unet3d run file \
+  --hosts client01 client02 client03 client04 \
+  --num-accelerators 8 --accelerator-type h100 \
+  --client-host-memory-in-gb 64 \
+  --data-dir /mnt/afx/mlperf/unet3d/data \
+  --results-dir /mnt/afx/mlperf/results
+----
+
+Confirm the exact distributed options with `mlpstorage closed training unet3d run file --help` for the installed v3 release. `--num-processes` controls data generation; it is not interchangeable with the emulated accelerator count used by `run`.
+
+[[mlcommons-dataset-and-cache-controls]]
+=== Dataset and cache controls
+
+Generate enough data for the selected mode and retain the `datasize` output with the result. For engineering tests, size the dataset beyond aggregate client RAM when the objective is sustained storage reads rather than a cache test. Do not silently reuse a smaller dataset after increasing clients or host memory.
+
+Choose and record one cache condition:
+
+* *Warm:* run a documented warm-up and preserve client/server cache state.
+* *Cold:* unmount/remount or use a site-approved cache-reset procedure, then verify the intended state. Never use an undocumented cache purge on shared production systems.
+
+Keep training data, checkpoint data, vectorDB data, and results in separate directories. Do not place the results directory inside a dataset path that workers scan.
+
+[[mlcommons-repeatability-and-results]]
+=== Repeatability and result capture
+
+Before each measured run, save:
+
+* Git commit/tag and `mlpstorage version`
+* division, workload/model/index, backend, accelerator type/count, process count, and host memory
+* client inventory, OS/kernel, MPI version, CPU/RAM/NIC, and client count
+* `mount` output, NFS transfer size, trunking/nconnect choice, and readahead
+* dataset file count/capacity, cache condition, ONTAP release, SVM/volume, and enabled features
+
+Use a unique `--results-dir` and statistics `[SAMPLE_ID]` for each point. Capture ONTAP samples with xref:benchmark-configuration-reference.adoc#statistics-capture-commands[Statistics capture], retain stdout/stderr, and compare medians plus run-to-run variation rather than only the best run. Upstream validation and submission rules remain authoritative.
 
 
 [[about-checkpointing-in-mlcommons-benchmark]]
@@ -391,7 +455,7 @@ RetinaNet is a closed/open training model in v3.0 (object detection-style ingest
 [[nfs-operation-breakdown-for-model-runs]]
 ==== NFS operation breakdown for model runs
 
-The following table shows a breakdown of the NFS operations observed during training runs of each model in internal testing. Use it to help decide how to configure storage and clients for these benchmark runs.
+The following table shows exploratory internal-lab observations from May 2025. These are not MLCommons submission metrics. The runs used different generated datasets than the illustrative `datasize` examples above, so their file counts should not be compared directly.
 
 These were generated using default NFS mount options and a 1 MB `rsize`.
 
@@ -438,6 +502,6 @@ The following table shows the incoming block sizes observed for each training wo
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:appendix-spec-sfs.adoc[< Previous]
->| xref:appendix-statistics-counters.adoc[Next >]
+>| xref:appendix-synthetic-benchmarks.adoc[Next >]
 |===
 // navigation-links:end

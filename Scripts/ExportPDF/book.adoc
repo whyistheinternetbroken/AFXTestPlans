@@ -16,7 +16,13 @@ include::../../TestPlan/overview.adoc[]
 
 include::../../TestPlan/setup.adoc[]
 
+include::../../TestPlan/appendix-nfs-considerations.adoc[]
+
+include::../../TestPlan/benchmark-configuration-reference.adoc[]
+
 include::../../TestPlan/datasets-workloads.adoc[]
+
+include::../../TestPlan/test-07-08-performance-testing-considerations.adoc[]
 
 include::../../TestPlan/test-plans.adoc[]
 
@@ -32,11 +38,17 @@ include::../../TestPlan/test-05-volume-management.adoc[]
 
 include::../../TestPlan/test-06-api-testing.adoc[]
 
-include::../../TestPlan/test-07-08-performance-testing-considerations.adoc[]
+include::../../TestPlan/appendix-rest-api.adoc[]
 
 include::../../TestPlan/test-07-customer-workload-real-data.adoc[]
 
 include::../../TestPlan/test-08-customer-workload-benchmarks.adoc[]
+
+include::../../TestPlan/appendix-spec-sfs.adoc[]
+
+include::../../TestPlan/appendix-mlcommons.adoc[]
+
+include::../../TestPlan/appendix-synthetic-benchmarks.adoc[]
 
 include::../../TestPlan/test-09-performance-monitoring.adoc[]
 
@@ -65,16 +77,6 @@ include::../../TestPlan/feature-aggressive-readahead.adoc[]
 include::../../TestPlan/feature-fabricpool.adoc[]
 
 include::../../TestPlan/appendix.adoc[]
-
-include::../../TestPlan/appendix-nfs-considerations.adoc[]
-
-include::../../TestPlan/appendix-client-tuning.adoc[]
-
-include::../../TestPlan/appendix-rest-api.adoc[]
-
-include::../../TestPlan/appendix-spec-sfs.adoc[]
-
-include::../../TestPlan/appendix-mlcommons.adoc[]
 
 include::../../TestPlan/appendix-statistics-counters.adoc[]
 

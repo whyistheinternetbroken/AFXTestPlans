@@ -11,7 +11,7 @@ xref:appendix.adoc[<- Back to Appendix]
 Recommended NFS mount options, fstab configuration, automounter setup, 64-bit file IDs, and pNFS/session trunking validation.
 
 
-*Note:* For benchmark-specific mount options used during performance testing, see xref:test-07-08-performance-testing-considerations.adoc#mount-options[Performance testing considerations: Mount Options]. For rsize/wsize, nconnect, close-to-open consistency, and readahead tuning, see xref:appendix-client-tuning.adoc[Client Tuning].
+*Note:* For copy-ready client, mount, ONTAP, and statistics commands, see xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference]. For benchmark rationale, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations].
 
 
 [[nfs-considerations]]
@@ -36,6 +36,7 @@ When trunking is used with pNFS, each node can form its own session trunk. pNFS 
 
 For how to confirm trunking is active, see <<pnfs-and-session-trunking-validation>>. For official product behavior, see link:https://docs.netapp.com/us-en/ontap/nfs-trunking/index.html[Learn about ONTAP NFS trunking] and link:https://docs.netapp.com/us-en/ontap/pnfs/pnfs-use-cases-concept.html[pNFS use cases in ONTAP].
 
+[[nconnect]]
 [[what-is-nconnect]]
 === What is nconnect
 
@@ -45,7 +46,7 @@ ONTAP supports nconnect beginning with 9.8. This test plan uses nconnect primari
 
 nconnect can improve single-client throughput, but it multiplies TCP connections. With pNFS, `nconnect=N` can apply to each advertised data-server address (for example, nconnect=4 across 4 pNFS devices can mean up to 16 connections per mount). In large client farms that can exhaust per-node TCP connection limits (see Hardware Universe), prefer lower nconnect values or omit nconnect.
 
-Verify nconnect by counting established connections to port 2049 (`netstat` or `ss`). Recommended values and interaction with pNFS are in xref:appendix-client-tuning.adoc#nconnect[Client Tuning: Nconnect].
+Verify nconnect by counting established connections to port 2049 (`netstat` or `ss`). See <<nconnect-recommendation>> for the test-plan recommendation.
 
 [[comparing-nconnect-and-nfs-session-trunking]]
 === Comparing nconnect and NFS session trunking
@@ -119,6 +120,132 @@ AI/ML training and inference workloads with NFSv4.1
 
 
 *Note:* Trunkdiscovery mount option will automatically find the network paths that are a part of the trunking group.
+
+[[client-tuning-considerations]]
+=== Client tuning considerations
+
+Client tuning should be changed one variable at a time and validated against the target workload. The recommendations below are starting points for benchmark tests, not universal production settings. For client hardware, NIC, and operating-system prerequisites, see xref:setup.adoc#clients[Setup: Clients].
+
+[[wsize-and-rsize]]
+==== Wsize and rsize
+
+The NFS `rsize` and `wsize` mount options set the maximum read and write transfer sizes for a mount. ONTAP enforces the upper limit configured by `-tcp-max-xfer-size`; clients can negotiate that value or request a smaller value, but cannot exceed the server maximum.
+
+[[wsize-rsize-recommendation]]
+===== Recommendation
+
+Start with 256K (`rsize=262144,wsize=262144`) and then test 1MB (`rsize=1048576,wsize=1048576`) to find the best fit. Larger transfers can reduce the RPC count and protocol overhead for throughput workloads. Smaller transfers can reduce per-operation latency for latency-sensitive workloads.
+
+[[small-window-sizes]]
+===== Small transfer sizes
+
+When the mount transfer size is smaller than the application I/O size, the client must split one application request into multiple NFS operations. For example, a 64K application request over an 8K mount transfer size requires eight NFS operations, increasing operation count and CPU/network overhead.
+
+[[large-window-sizes]]
+===== Large transfer sizes
+
+A larger transfer size can combine application blocks into fewer NFS operations. This often benefits sequential reads and writes, but larger requests can take longer to complete. If latency is more important than aggregate throughput, test a transfer size closer to the application's I/O size.
+
+[[other-considerations]]
+===== Other transfer-size considerations
+
+Random application I/O is often smaller than the configured maximum and is not forced to use the full `rsize` or `wsize`. Buffered sequential I/O is more likely to approach the negotiated maximum. Direct-I/O benchmark generators remain bounded by the mount maximum but may issue smaller application requests.
+
+[[close-to-open-consistency-and-cache-attribute-timers]]
+==== Close-to-open consistency and attribute caching
+
+NFS clients cache data and attributes to avoid a server request for every application access. Close-to-open consistency (`cto`, the default) revalidates a file when it is opened. Attribute timers (`acregmin`, `acregmax`, `acdirmin`, and `acdirmax`) control how long file and directory attributes can remain cached.
+
+[[cto-recommendation]]
+===== Recommendation
+
+Use default `cto` behavior for shared read/write datasets where clients must observe changes promptly. Consider `nocto` with a longer `actimeo` only for read-only or read-mostly datasets whose update workflow can tolerate stale attributes. For read-heavy EDA libraries, `nocto,actimeo=600` is a useful test point; do not apply it blindly to multi-writer workloads.
+
+[[how-attribute-cache-timers-work]]
+===== How attribute cache timers work
+
+The client begins with the minimum timer and increases the trusted interval toward the maximum while attributes remain valid. `actimeo=N` sets all four attribute-cache timers to the same value. A larger value reduces GETATTR traffic but increases the period during which metadata can be stale.
+
+[[close-to-open-cto-consistency]]
+===== Close-to-open (`cto`) consistency
+
+With `cto`, opening a file triggers validation against the server so the application receives the server's current contents. Directory-entry visibility is still influenced by directory attribute-cache timers. Use `cto` for shared home directories, collaborative build trees, and mixed read/write/metadata workloads.
+
+[[no-close-to-open-nocto-consistency]]
+===== No close-to-open (`nocto`) consistency
+
+With `nocto`, the client trusts its cached view until the attribute timers expire. This can substantially reduce metadata traffic for static datasets, but newly created or removed files and recent content changes might not be visible immediately. Avoid it when multiple clients concurrently modify shared files.
+
+[[nconnect-recommendation]]
+==== Nconnect recommendation
+
+For NFSv3 benchmark workloads, begin with `nconnect=8` and compare against 1, 4, and 16 connections. For NFSv4.1 with pNFS, use session trunking instead of combining nconnect and trunking.
+
+[[nfs-readahead]]
+==== NFS readahead
+
+NFS readahead requests sequential file blocks before the application asks for them. Older Linux releases commonly set readahead to 15 times the mount's `rsize`; RHEL 8.3+ and Ubuntu 18.04+ commonly default to 128 KiB regardless of `rsize`, which can constrain sequential-read throughput.
+
+[cols="1,1"]
+|===
+| Rsize | 15x readahead
+| 64 KiB | 960 KiB
+| 256 KiB | 3,840 KiB
+| 1 MiB | 15,360 KiB
+|===
+
+[[readahead-recommendation]]
+===== Recommendation
+
+For sequential-read tests, compare the client default with readahead set to 15 times `rsize`. For random or latency-sensitive tests, retain the default unless measurements show a benefit.
+
+[[managing-readahead-values-on-clients]]
+===== Managing readahead values on clients
+
+Readahead is associated with the backing-device (`bdi`) entry for an NFS mount. The following commands identify the entry and view or set the value in KiB:
+
+[source,console]
+----
+MOUNT=/mnt/afx
+BDEV=$(awk -v m="$MOUNT" '$5 == m {print $3}' /proc/self/mountinfo)
+cat "/sys/class/bdi/$BDEV/read_ahead_kb"
+echo 3840 | sudo tee "/sys/class/bdi/$BDEV/read_ahead_kb"
+----
+
+[[viewing-readahead-values-on-clients]]
+===== Viewing readahead values on clients
+
+Use `/proc/self/mountinfo` instead of assuming a block-device name:
+
+[source,console]
+----
+awk -v m="/mnt/afx" '$5 == m {print $3}' /proc/self/mountinfo
+----
+
+[[readahead-view-example]]
+Example output:
+
+[source,console]
+----
+0:30
+----
+
+Session trunking can expose multiple backing-device entries for the same path. Apply and verify the setting for every entry returned.
+
+[[manually-setting-readahead]]
+===== Manually setting readahead
+
+Writing `read_ahead_kb` changes the active mount dynamically but does not survive an unmount or reboot:
+
+[source,console]
+----
+echo 15360 | sudo tee /sys/class/bdi/0:30/read_ahead_kb
+----
+
+[[persistently-setting-readahead]]
+===== Persistently setting readahead for NFS mounts
+
+Persist readahead with a tested `udev` rule or a client startup/mount script. Because backing-device identifiers can change, use a rule that checks `/proc/fs/nfsfs/volumes` rather than hard-coding `0:N`. See link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-nfs-read-ahead[Linux NFS read-ahead best practices] for an example.
 
 
 [[using-fstab]]
@@ -227,7 +354,7 @@ AFX::*> pnfs devices invalidate -global-device-table-id *
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:appendix.adoc[< Previous]
->| xref:appendix-client-tuning.adoc[Next >]
+| xref:setup.adoc[< Previous]
+>| xref:benchmark-configuration-reference.adoc[Next >]
 |===
 // navigation-links:end

@@ -15,7 +15,7 @@ This page is a companion for Test 7 (real data workloads) and Test 8 (benchmark 
 [[performance-testing-considerations]]
 == Performance testing considerations
 
-Performance testing is generally intended to find the edges of what a system can achieve in specific workload scenarios. Most of the time, the ONTAP default settings do not need to be adjusted to see good performance for most workloads, but in some cases, you may want to adjust some configurations to optimize the system. This section covers some genera considerations and configuration guidelines rather than serving as an actual test.
+Performance testing is generally intended to find the edges of what a system can achieve in specific workload scenarios. Most of the time, the ONTAP default settings do not need to be adjusted to see good performance for most workloads, but in some cases, you may want to adjust some configurations to optimize the system. This section covers some general considerations and configuration guidelines rather than serving as an actual test.
 
 [[nfs-export-policy-configuration]]
 == NFS export policy configuration
@@ -98,9 +98,9 @@ In general, snapshots in ONTAP are not detrimental to overall system performance
 [[mount-options]]
 == Mount options
 
-Mount options, in general, are variable depending on use cases. This section attempts to show a general use case mount option list that was used in our internal performance testing. If the NFS server is configured properly (see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration]), clients will negotiate NFS version and transfer size automatically. For throughput tests, you can still set `wsize`/`rsize` explicitly as described in <<nfs-wsize-and-rsize>>.
+Mount options vary by protocol, client release, and workload. The canonical NFSv3/NFSv4.1 selection guidance is in xref:appendix-nfs-considerations.adoc[NFS Considerations]; copy-ready mount commands are in xref:benchmark-configuration-reference.adoc#nfs-mount-commands[NFS mount commands].
 
-Base options (applies to all clients/scenaros):
+Base options (applies to all clients/scenarios):
 
 [source,console]
 ----
@@ -119,21 +119,7 @@ Ubuntu (depends on version): trunkdiscovery (newer releases)
 [[nfs-wsize-and-rsize]]
 === NFS wsize and rsize
 
-The NFS `wsize` and `rsize` mount options control the maximum write and read transfer size for a mount. These values directly affect how much data can be sent in a single NFS operation, which in turn affects throughput, IOPS, and latency.
-
-Using larger transfer sizes can improve performance for throughput tests because more data is moved per NFS operation. That reduces the number of RPCs required to complete a large sequential read or write, which lowers protocol and network overhead and allows the client to better utilize available bandwidth.
-
-ONTAP supports transfer sizes up to 1MB. Clients negotiate the transfer size to the value configured on the NFS server (`-tcp-max-xfer-size`) unless `wsize` and `rsize` are specified as mount options. Those mount options can request a smaller size, but they cannot exceed the maximum transfer size set by the NFS server.
-
-For large file operations and throughput tests, set the mount size to either 256K (`262144`) or 1MB (`1048576`):
-
-[source,console]
-----
--o rsize=262144,wsize=262144
--o rsize=1048576,wsize=1048576
-----
-
-For additional background on transfer size tradeoffs, see xref:appendix-client-tuning.adoc#wsize-and-rsize[Client Tuning: Wsize and rsize].
+Transfer size affects RPC count, throughput, and latency. Begin with 256K and compare against 1MB rather than assuming the largest value is always best. See xref:appendix-nfs-considerations.adoc#wsize-and-rsize[Wsize and rsize].
 
 *RDMA specific options*
 
@@ -159,7 +145,7 @@ Some workloads might benefit from special mount options during benchmark tests. 
 | `acdirmin` | Sets the minimum time (seconds) the client caches attributes for a directory before revalidating. Default is typically 30s. | Workloads with frequent directory listing or creation (e.g., build systems, mail spools with Maildir format) where directory freshness matters.
 | `acdirmax` | Sets the maximum time (seconds) the client caches attributes for a directory. Default is typically 60s. | Stable directory structures that rarely change — raising this reduces GETATTR calls (e.g., large static directory trees, archival storage).
 | `clientaddr` | Specifies the client IP address to advertise to the NFS server for callback communication (NFSv4/v4.1+). The server uses this address to send delegation recalls and other callbacks. | Multi-homed clients or environments with complex networking (e.g., clients with multiple NICs, VPN/overlay networks, or NAT) where the auto-detected address may be incorrect.
-| `nconnect` | Creates multiple TCP connections (up to the specified count) to the NFS server for a single mount, allowing parallel I/O over separate connections. | High-throughput, I/O-intensive workloads that are bottlenecked by a single TCP stream (e.g., large file transfers, HPC/scientific computing, video editing, database backups, big data analytics). Particularly beneficial on high-bandwidth networks (10 GbE+).
+| `nconnect` | Creates multiple TCP connections to one LIF/IP. | NFSv3 tests that need more concurrency than one TCP flow. Do not combine it with session trunking when using pNFS; see xref:appendix-nfs-considerations.adoc#comparing-nconnect-and-nfs-session-trunking[the comparison].
 | `krb5,krb5i,krb5p` | Specifies what Kerberos security flavor to use with the mount. Requires Kerberos configuration to work properly. See link:https://www.netapp.com/media/19384-tr-4616.pdf[TR-4616: NFS Kerberos in ONTAP with Active Directory] for details. | Securing NFS mounts; has a negative impact on performance.
 |===
 
@@ -168,14 +154,9 @@ Some workloads might benefit from special mount options during benchmark tests. 
 
 The client configuration used for our internal benchmarking is covered in xref:setup.adoc#clients[Setup: Clients]. The following contains some additional configuration considerations. This list is not considered exhaustive and will be modified over time to accommodate additional use cases/scenarios.
 
-[[nfs-readahead]]
 === NFS readahead
 
-From: https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-linux-nfs-read-ahead
-
-_NFS read-ahead predictively requests blocks from a file in advance of I/O requests by the application. It's designed to improve client sequential read throughput. Until recently, all modern Linux distributions set the read-ahead value to be equivalent of 15 times the mounted filesystems rsize._
-_RHEL 8.3 and Ubuntu 18.04 introduced changes that might negatively impact client sequential read performance. Unlike earlier releases, these distributions set read-ahead to a default of 128 KiB regardless of the rsize mount option used. Upgrading from releases with the larger read-ahead value to releases with the 128-KiB default experienced decreases in sequential read performance. However, read-ahead values may be tuned upward both dynamically and persistently. For example, testing with SAS GRID found the 15,360 KiB read value optimal compared to 3,840 KiB, 960 KiB, and 128 KiB. Not enough tests have been run beyond 15,360 KiB to determine positive or negative impact._
-For steps on how to view/set NFS readahead values, see xref:appendix-client-tuning.adoc#managing-readahead-values-on-clients[Client Tuning: Managing readahead values].
+Modern RHEL and Ubuntu clients commonly default to 128 KiB readahead, which can constrain sequential reads. Compare that default with 15 times the mount `rsize`; see xref:appendix-nfs-considerations.adoc#nfs-readahead[NFS readahead].
 
 [[network-configuration]]
 == Network configuration
@@ -238,26 +219,14 @@ a| Trunk IP addresses together for NFSv4.x operations for better performance. Re
 | `-tcp-max-xfer-size` | 1048576 | Sets the max transfer size allowed for NFS mounts to 1MB.
 |===
 
-To apply the recommended options, use the following command. Replace `[SVM]` and `[yourdomain.com]` with your SVM name and NFSv4 ID domain. Set `-rdma` to `disabled` if you are not using RDMA/GPUs.
-
-[source,console]
-----
-set diag; nfs modify -vserver [SVM] -v4.0 disabled -v4-id-domain [yourdomain.com] -v4.1 enabled -v4.1-pnfs enabled -mount-rootonly disabled -nfs-rootonly disabled -v3-64bit-identifiers enabled -v4-64bit-identifiers enabled -v3-hide-snapshot enabled -rdma enabled -v4.1-trunking enabled -tcp-max-xfer-size 1048576
-----
+Apply the complete option set with xref:benchmark-configuration-reference.adoc#ontap-nfs-server-command[the copy-ready NFS server command].
 
 [[disable-storage-efficiencies]]
 === Disable storage efficiencies
 
 In general, storage efficiencies are one of the selling points for a production workload, as they can generate large space savings across a variety of workloads. However, in performance benchmarking, they offer less value (as many simulated workloads are either uncompressible or are zero-byte workloads and always deduplicating). As a result, we recommend disabling all storage efficiencies while performing benchmark tests.
 
-[source,console]
-----
-vol efficiency off -volume [name] -vserver [SVM]
-
-aggr efficiency modify -aggregate data* -cross-volume-background-dedupe false -cross-volume-inline-dedupe false
-
-aggr efficiency wise-tsse modify -aggregate data* -enable-workload-informed-tsse false
-----
+The copy-ready commands and restoration warning are in xref:benchmark-configuration-reference.adoc#ontap-storage-efficiency-commands[Storage efficiency].
 
 === Aggressive readahead
 
@@ -266,7 +235,7 @@ Aggressive readahead can help improve read performance for specific workloads (s
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:test-06-api-testing.adoc[< Previous]
->| xref:test-07-customer-workload-real-data.adoc[Next >]
+| xref:datasets-workloads.adoc[< Previous]
+>| xref:test-plans.adoc[Next >]
 |===
 // navigation-links:end

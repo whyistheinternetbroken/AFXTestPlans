@@ -234,7 +234,7 @@ curl -k -X POST
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:appendix-client-tuning.adoc[< Previous]
->| xref:appendix-spec-sfs.adoc[Next >]
+| xref:test-06-api-testing.adoc[< Previous]
+>| xref:test-07-customer-workload-real-data.adoc[Next >]
 |===
 // navigation-links:end

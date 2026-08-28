@@ -16,53 +16,36 @@ For EDA workloads, we can leverage link:https://www.spec.org/storage2020/[SPEC S
 
 For AI/ML workloads, we will leverage link:https://mlcommons.org/benchmarks/storage/[MLPerf Storage (MLCommons)], which can also act as a throughput-specific benchmark.
 
-For details on installing, configuring, and running these benchmarks, see xref:appendix-spec-sfs.adoc[SPEC SFS 2020] and xref:appendix-mlcommons.adoc[MLCommons / MLPerf Storage].
+For synthetic throughput, IOPS, metadata, or shared-file tests, use xref:appendix-synthetic-benchmarks.adoc[Synthetic Benchmarks].
 
-*Note:* For workload performance considerations (NFS, client/network, and ONTAP feature settings), see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations (Tests 7 and 8)].
+*Note:* Review xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations] for rationale and xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] for copy-ready setup and monitoring commands.
 
 [cols="<1",width="100%"]
 |===
 a| *Test procedure:*
 
-. Create a FlexGroup volume in the NetApp AFX cluster.
-
-. Navigate to the Storage -> Volumes menu in System Manager
-+
-image::images/test-08-image-01.png[width=25%,link=images/test-08-image-01.png]
-
-. Click + Add
-+
-image::images/test-08-image-02.png[width=25%,link=images/test-08-image-02.png]
-
-. Enter the volume name, capacity and select “High throughput” to create a FlexGroup
-+
-image::images/test-08-image-03.png[width=25%,link=images/test-08-image-03.png]
-
-. Optionally, click “More options” to disable/enable data protection features and add export policies and rules
-+
-image::images/test-08-image-04.png[width=50%,link=images/test-08-image-04.png]
-
-. Click save. Mount NetApp AFX volume using NAS protocol of your choice. Mount using NFS or SMB. For best results, use multiple simultaneous clients rather that testing a single client’s performance.
-
-. Find the export path of your data volume in System Manager.
-+
-image::images/test-08-image-05.png[width=25%,link=images/test-08-image-05.png]
-
-. Mount the volume using NFS. Optionally, include the mount path in /etc/fstab or automounter* *Recommended NFS versions and mount options are found in the xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS considerations in the Appendix].*
-
-. Generate datasets. For detailed steps on how to run the benchmarks, see xref:appendix-spec-sfs.adoc[SPEC SFS 2020] and xref:appendix-mlcommons.adoc[MLCommons / MLPerf Storage].
-
-. Run benchmarks on datasets. While benchmarks are running, move on to xref:test-09-performance-monitoring.adoc[Test 9: Performance monitoring].
+. Select the benchmark that best represents the objective:
+** SPEC SFS for standardized EDA, software-build, AI-image, genomics, or VDA workload curves.
+** MLCommons for AI training ingest, checkpointing, vector database, or optional KV-cache behavior.
+** elbencho, mdtest, or fio for controlled synthetic throughput, IOPS, metadata, and shared-file experiments.
+. Size and create a dedicated benchmark FlexGroup by using xref:benchmark-configuration-reference.adoc#ontap-volume-commands[Benchmark FlexGroup volume]. Review xref:datasets-workloads.adoc#ontap-limits-considerations[ONTAP limits] and ensure capacity and inode headroom for the largest planned dataset.
+. Configure exports, ONTAP NFS options, clients, and mounts with xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference].
+. Validate protocol, transfer size, pNFS/trunking or nconnect, client paths, free space, and write access before generating data.
+. Follow the selected execution guide: xref:appendix-spec-sfs.adoc[SPEC SFS], xref:appendix-mlcommons.adoc[MLCommons], or xref:appendix-synthetic-benchmarks.adoc[Synthetic Benchmarks].
+. Run a smoke test, then ramp load while monitoring clients and ONTAP. Change one variable at a time and repeat each final point.
+. Capture results and configuration metadata. Use xref:test-09-performance-monitoring.adoc[Test 9] for dashboards and xref:benchmark-configuration-reference.adoc#statistics-capture-commands[Statistics capture] for CLI samples.
 
 a| *Expected outcome(s):*
 
-* Benchmarks should show the performance capabilities of this system.
+* Dataset generation and benchmark initialization complete without mount, capacity, inode, or client-resource errors.
+* Every measured point produces a result set and matching ONTAP statistics sample with the configuration metadata needed for repeatable comparisons.
+* Exploratory results are labeled separately from rules-compliant SPEC or MLCommons results.
 |===
 
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:test-07-customer-workload-real-data.adoc[< Previous]
->| xref:test-09-performance-monitoring.adoc[Next >]
+>| xref:appendix-spec-sfs.adoc[Next >]
 |===
 // navigation-links:end

@@ -1,0 +1,270 @@
+= Appendix: Synthetic Benchmarks
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:appendix.adoc[← Back to Appendix]
+
+This appendix provides reusable elbencho, mdtest, and fio recipes for controlled NFS tests. Use them to isolate throughput, IOPS, metadata, and shared-file behavior; use application benchmarks when the objective is application-level characterization.
+
+*Warning:* Every path below must point to a dedicated benchmark directory or file. Verify the expanded path before running write, delete, or cleanup phases. Never target a production directory, raw device, or shared dataset.
+
+[[synthetic-tool-selection]]
+== Tool selection
+
+[cols="1,2,2"]
+|===
+| Tool | Best fit | Use with care
+| elbencho | Simple throughput/IOPS tests, multi-file metadata, and coordinated multi-client runs | Its direct-I/O and distributed behavior must match the test objective
+| mdtest | Create, stat, read, and remove rates for files/directories across MPI clients | File count multiplies by MPI ranks; calculate capacity and inode use first
+| fio | Precise block-size, read/write mix, queue depth, duration, and latency control | A file on NFS is not the same as a local block device; never point block recipes at an unverified device
+|===
+
+Authoritative sources:
+
+* link:https://github.com/breuner/elbencho[elbencho]
+* link:https://ior.readthedocs.io/en/latest/userDoc/mdtest.html[mdtest / IOR documentation]
+* link:https://fio.readthedocs.io/en/latest/fio_doc.html[fio documentation]
+
+[[synthetic-test-method]]
+== Common test method
+
+. Create a unique empty directory for each test and verify its mount, capacity, and inode headroom.
+. Record the tool version, command/job file, clients, CPU/RAM/NIC, OS/kernel, mount output, ONTAP release, and volume settings.
+. Size the dataset beyond aggregate client RAM for sustained storage tests. Use an explicitly smaller dataset only when measuring cache behavior.
+. Run a short smoke test, then a warm-up. Use measured phases of at least 5 minutes for stable throughput/IOPS unless the workload naturally requires longer.
+. Repeat each final point at least three times. Report median, variation, throughput/IOPS, and latency percentiles.
+. Start with 1–2 workers per client. Ramp threads/jobs and clients independently, for example 1, 2, 4, 8, then 16.
+. Stop increasing concurrency when aggregate throughput/IOPS plateaus, latency rises materially, clients saturate, or capacity/inode guardrails are reached.
+. Change one variable per comparison. Use xref:benchmark-configuration-reference.adoc#statistics-capture-commands[Statistics capture] for each measured interval.
+
+For warm runs, deliberately retain cache state and perform a documented warm-up. For cold runs, use a site-approved cache-reset method and document it; do not claim a cold run solely because the benchmark process restarted.
+
+[[elbencho-recipes]]
+== elbencho
+
+Install the same version on every client and verify it with `elbencho --version`. Replace every bracketed value.
+
+[[elbencho-large-file-throughput]]
+=== Sequential large-file throughput
+
+[source,console]
+----
+# Pre-create a dataset larger than aggregate client RAM.
+elbencho -w -t 2 -b 1M -s [FILE_SIZE] --direct \
+  --jsonfile [RESULTS]/seq-write.json "[MOUNT]/elbencho-large-[1-8]"
+
+# Read it for at least five minutes.
+elbencho -r -t 2 -b 1M --direct --timelimit 300 --latpercent \
+  --jsonfile [RESULTS]/seq-read.json "[MOUNT]/elbencho-large-[1-8]"
+----
+
+Use 256K mounts first, repeat on 1MB mounts, and keep elbencho block size constant while comparing mount transfer size. A direct-I/O run reduces Linux client page-cache effects, but the NFS server can still cache data; a buffered run answers a different question and must be labeled.
+
+[[elbencho-random-iops]]
+=== Random throughput and high IOPS
+
+[source,console]
+----
+# Random 1MB throughput read.
+elbencho -r -t 2 -b 1M --iodepth 8 --direct --rand \
+  --timelimit 300 --latpercent "[MOUNT]/elbencho-large-[1-8]"
+
+# Random 4K IOPS read. Change -b to 8K for the 8K point.
+elbencho -r -t 2 -b 4K --iodepth 16 --direct --rand \
+  --timelimit 300 --latpercent "[MOUNT]/elbencho-large-[1-8]"
+
+# Random 4K overwrite. Run only on disposable benchmark files.
+elbencho -w -t 2 -b 4K --iodepth 16 --direct --rand \
+  --timelimit 300 --latpercent "[MOUNT]/elbencho-large-[1-8]"
+----
+
+For random writes, pre-create and retain the same file set for every comparison or regenerate it consistently.
+
+[[elbencho-metadata]]
+=== Multi-file metadata
+
+[source,console]
+----
+# Each worker uses DIRS_PER_THREAD x FILES_PER_DIR files.
+elbencho -d -w -t 2 -n [DIRS_PER_THREAD] -N [FILES_PER_DIR] \
+  -s 4K -b 4K --latpercent [MOUNT]/elbencho-meta
+
+elbencho --stat -t 2 -n [DIRS_PER_THREAD] -N [FILES_PER_DIR] \
+  --latpercent [MOUNT]/elbencho-meta
+
+# Cleanup only the tree created above.
+elbencho -F -D -t 2 -n [DIRS_PER_THREAD] -N [FILES_PER_DIR] \
+  [MOUNT]/elbencho-meta
+----
+
+Calculate `clients × threads × directories × files` before running. Spread very high file counts across directories unless single-directory scalability is the explicit objective.
+
+[[elbencho-distributed-shared-file]]
+=== One shared file from multiple clients
+
+Start service mode on every client:
+
+[source,console]
+----
+elbencho --service
+----
+
+Run the coordinator from one host. In shared-filesystem mode, elbencho divides the shared path across service hosts:
+
+[source,console]
+----
+elbencho --hosts [CLIENT01],[CLIENT02],[CLIENT03],[CLIENT04] \
+  -w -t 2 -b 1M -s [SHARED_FILE_SIZE] --direct --latpercent \
+  --jsonfile [RESULTS]/shared-write.json [MOUNT]/one-shared-file
+
+elbencho --hosts [CLIENT01],[CLIENT02],[CLIENT03],[CLIENT04] \
+  -r -t 2 -b 1M --direct --timelimit 300 --latpercent \
+  --jsonfile [RESULTS]/shared-read.json [MOUNT]/one-shared-file
+
+elbencho --hosts [CLIENT01],[CLIENT02],[CLIENT03],[CLIENT04] --quit
+----
+
+Do not add `--nosvcshare`; that option tells every service to process the full dataset and can overlap shared-file ranges.
+
+[[mdtest-recipes]]
+== mdtest
+
+Use the mdtest installed with the IOR suite. Ensure MPI host access and identical mount paths on all clients.
+
+[[mdtest-file-metadata]]
+=== File create, stat, read, and remove
+
+[source,console]
+----
+mpirun --hostfile [HOSTFILE] -np [RANKS] mdtest \
+  -d [MOUNT]/mdtest-file -u -F -n [ITEMS_PER_RANK] -i 3 \
+  -w 3901 -e 3901 -r
+----
+
+`-u` creates a unique working directory per rank, `-F` tests files only, and `-i 3` repeats the iteration. The small write/read phase confirms access; use elbencho or fio for sustained data throughput.
+
+[[mdtest-directory-metadata]]
+=== Directory create, stat, and remove
+
+[source,console]
+----
+mpirun --hostfile [HOSTFILE] -np [RANKS] mdtest \
+  -d [MOUNT]/mdtest-dir -u -D -n [ITEMS_PER_RANK] -i 3
+----
+
+Run file and directory tests separately so results remain interpretable. Record both aggregate and per-rank rates and check whether one client or FlexGroup constituent becomes a hotspot.
+
+[[fio-recipes]]
+== fio
+
+Use time-based runs so every concurrency point has the same measured duration. The examples use disposable files on NFS.
+
+[[fio-throughput]]
+=== Sequential throughput
+
+[source,ini]
+----
+[global]
+directory=[MOUNT]/fio
+ioengine=libaio
+direct=1
+time_based=1
+ramp_time=60
+runtime=300
+group_reporting=1
+size=[SIZE_PER_JOB]
+bs=1M
+iodepth=8
+numjobs=2
+filename_format=seq.$jobnum
+
+[sequential]
+rw=[write|read]
+----
+
+Create separate write and read copies by replacing `[write|read]` with `write` or `read`. Run with `fio throughput.fio --output-format=json --output=[RESULTS]/throughput.json`. Pre-create data before reporting read performance and separate write/read runs when write cache state would bias the read phase.
+
+[[fio-random-iops]]
+=== 4K and 8K random IOPS
+
+[source,ini]
+----
+[global]
+directory=[MOUNT]/fio
+ioengine=libaio
+direct=1
+time_based=1
+ramp_time=60
+runtime=300
+group_reporting=1
+size=[SIZE_PER_JOB]
+iodepth=16
+numjobs=2
+filename_format=random.$jobnum
+randrepeat=0
+
+[random-4k]
+rw=[randread|randwrite]
+bs=4K
+----
+
+Create separate read and write copies by replacing `[randread|randwrite]`. Duplicate the job file with `bs=8K` for the 8K comparison. Keep read and write results separate unless a mixed workload is explicitly required; for a mixed point use `rw=randrw` and record `rwmixread`.
+
+[[fio-distributed-shared-file]]
+=== One shared file with non-overlapping client ranges
+
+Divide the file into one region per client and one subregion per job. Create a job file per client by replacing `[CLIENT_OFFSET]`, `[CLIENT_REGION_SIZE]`, and `[JOB_REGION_SIZE]`; no two clients may use the same range.
+
+[source,ini]
+----
+[global]
+filename=[MOUNT]/one-shared-file
+ioengine=libaio
+direct=1
+rw=randread
+bs=1M
+iodepth=8
+numjobs=2
+time_based=1
+ramp_time=60
+runtime=300
+group_reporting=1
+offset=[CLIENT_OFFSET]
+size=[JOB_REGION_SIZE]
+offset_increment=[JOB_REGION_SIZE]
+
+[shared-range]
+----
+
+For example, with four clients and a 4 TiB file, assign client offsets 0, 1 TiB, 2 TiB, and 3 TiB; each client gets a 1 TiB region. With two jobs, use a 512 GiB job size and offset increment. Start each client-specific job through a synchronized orchestration barrier and retain all JSON outputs:
+
+[source,console]
+----
+fio [CLIENT_JOB_FILE].fio --output-format=json --output=[RESULTS]/[CLIENT].json
+----
+
+Do not use an identical offset on all clients: overlapping random writes make both performance and data-integrity results ambiguous.
+
+[[synthetic-result-metadata]]
+== Result checklist
+
+For every result, retain:
+
+* complete command or fio job file and tool version
+* start/end time, warm-up, duration, repetitions, and cache condition
+* client count, workers/jobs, queue depth, block size, file count, and dataset size
+* client CPU/RAM/NIC utilization and mount output
+* ONTAP cluster/SVM/volume configuration and statistics sample
+* cleanup status and remaining capacity/inodes
+
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:appendix-mlcommons.adoc[< Previous]
+>| xref:test-09-performance-monitoring.adoc[Next >]
+|===
+// navigation-links:end
