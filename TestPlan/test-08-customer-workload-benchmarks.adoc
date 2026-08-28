@@ -18,7 +18,7 @@ For AI/ML workloads, we will leverage link:https://mlcommons.org/benchmarks/stor
 
 For synthetic throughput, IOPS, metadata, or shared-file tests, use xref:appendix-synthetic-benchmarks.adoc[Synthetic Benchmarks].
 
-*Note:* Review xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations] for rationale and xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] for copy-ready setup and monitoring commands.
+*Note:* Review xref:general-guidance.adoc[General guidance] for a short checklist, xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations] for rationale, and xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] for copy-ready setup and monitoring commands.
 
 [[application-block-sizes-for-benchmarks]]
 === Application block sizes and storage

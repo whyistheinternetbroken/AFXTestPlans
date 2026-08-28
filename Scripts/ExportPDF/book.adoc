@@ -16,6 +16,8 @@ include::../../TestPlan/overview.adoc[]
 
 include::../../TestPlan/setup.adoc[]
 
+include::../../TestPlan/general-guidance.adoc[]
+
 include::../../TestPlan/appendix-nfs-considerations.adoc[]
 
 include::../../TestPlan/benchmark-configuration-reference.adoc[]

@@ -21,6 +21,7 @@ Send test-plan feedback, results, and questions to mailto:ng-afx-testplans@netap
 
 * xref:TestPlan/overview.adoc[Overview] -- purpose, support, release features, documentation, and licensing
 * xref:TestPlan/setup.adoc[Setup] -- lab prerequisites and initial configuration
+* xref:TestPlan/general-guidance.adoc[General guidance] -- short client, network, ONTAP, and benchmark reminders with links to the detailed pages
 * xref:TestPlan/appendix-nfs-considerations.adoc[NFS considerations] and xref:TestPlan/benchmark-configuration-reference.adoc[benchmark configuration reference] -- protocol and benchmark foundations
 * xref:TestPlan/datasets-workloads.adoc[Datasets and workloads] -- workload selection, volume guidance, and ONTAP limits
 * xref:TestPlan/test-plans.adoc[Test plan index] -- core, optional, and feature test links, including xref:TestPlan/test-04-data-migration.adoc[Test 4: Data migration (optional)]

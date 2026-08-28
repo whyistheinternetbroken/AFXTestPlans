@@ -12,6 +12,8 @@ This page consolidates the client, NFS mount, ONTAP, and statistics commands use
 
 *Important:* These settings are intended for an isolated benchmark environment. Changing NFS server behavior, volume workflow, cache consistency, storage efficiency, or client writeback settings can affect production latency, consistency, recovery, and capacity. Do not apply benchmark settings to production workloads unless directed by NetApp Support.
 
+For a short checklist of client, network, ONTAP, and test reminders, see xref:general-guidance.adoc[General guidance].
+
 [[benchmark-execution-pages]]
 == Benchmark execution pages
 

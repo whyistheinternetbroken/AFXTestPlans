@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-This section covers hardware requirements, client configurations, networking, and NFS server configuration. See xref:appendix-nfs-considerations.adoc[NFS Considerations] for protocol and client-tuning details and xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] for copy-ready commands.
+This section covers hardware requirements, client configurations, networking, and NFS server configuration. See xref:general-guidance.adoc[General guidance] for a short checklist, xref:appendix-nfs-considerations.adoc[NFS Considerations] for protocol and client-tuning details, and xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference] for copy-ready commands.
 
 
 [[recommended-setup-and-prerequisites]]
@@ -118,6 +118,6 @@ Use xref:benchmark-configuration-reference.adoc[Benchmark Configuration Referenc
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:overview.adoc[< Previous]
->| xref:appendix-nfs-considerations.adoc[Next >]
+>| xref:general-guidance.adoc[Next >]
 |===
 // navigation-links:end

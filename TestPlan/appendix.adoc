@@ -20,6 +20,9 @@ The supplemental material is grouped by when it is most useful in the primary re
 |===
 | Section | Description
 
+| xref:general-guidance.adoc[General guidance]
+| Short client, network, ONTAP, and benchmark reminders with links to the detailed pages
+
 | xref:appendix-nfs-considerations.adoc[NFS Considerations]
 | Recommended NFS mount options (NFSv3, NFSv4.1), fstab, automounter, 64-bit file IDs, pNFS and session trunking validation
 

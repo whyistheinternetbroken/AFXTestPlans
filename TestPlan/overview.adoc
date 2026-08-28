@@ -30,12 +30,13 @@ Using the general NetApp support avenues is the preferred method of reporting an
 | Version | Date | Summary
 | 1.0 | July 2026 | Initial release
 | 1.1 | August 2026 | Consolidated NFS/client guidance, added copy-ready benchmark configuration and statistics commands, expanded SPEC SFS and MLCommons workflows, and added elbencho/mdtest/fio recipes
+| 1.2 | August 2026 | Added a general-guidance summary for client, network, ONTAP, and benchmark tests
 |===
 
 [[table-of-contents]]
 === Table of contents
 
-Read the test plan in this order. Start with setup and NFS/benchmark configuration before running Tests 1–8.
+Read the test plan in this order. Start with setup, the general-guidance checklist, and NFS/benchmark configuration before running Tests 1–8.
 
 [cols="1,3"]
 |===
@@ -49,6 +50,9 @@ Read the test plan in this order. Start with setup and NFS/benchmark configurati
 
 | xref:setup.adoc[Setup]
 | Hardware, clients, networking, and NFS server prerequisites
+
+| xref:general-guidance.adoc[General guidance]
+| Short client, network, ONTAP, and benchmark reminders with links to the detailed pages
 
 | xref:appendix-nfs-considerations.adoc[NFS considerations]
 | Protocol selection, mount options, nconnect vs session trunking, transfer sizes, and client tuning

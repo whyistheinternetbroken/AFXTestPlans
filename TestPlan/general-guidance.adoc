@@ -1,0 +1,71 @@
+= General guidance
+:toc: left
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: highlight.js
+:doctype: book
+
+xref:setup.adoc[← Back to Setup]
+
+Short reminders for benchmark work. Each item links to the page that explains it. Copy-ready commands are in xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference]. Do not apply benchmark-only settings to production unless directed by NetApp Support.
+
+[[general-guidance-client]]
+== Client
+
+* Use at least four modern, high-spec NFS clients (CPU, RAM, 100GbE or faster) that can reach every data LIF. Keep OS, kernel, and tuning the same on every host. xref:setup.adoc#clients[Setup: Clients]
+* Apply NIC ring and (if used) RDMA PFC/DSCP/TOS settings only when the fabric matches. xref:setup.adoc#client-network-and-nic-tuning[Setup: Client network] and xref:benchmark-configuration-reference.adoc#client-nic-commands[NIC and RDMA commands]
+* Size dirty-page writeback and RPC/RDMA slots for client RAM before making them persistent. xref:benchmark-configuration-reference.adoc#client-os-commands[Client OS tuning]
+* Prefer NFSv3 for metadata-heavy EDA frontend; prefer NFSv4.1 with pNFS and session trunking for large sequential I/O. xref:appendix-nfs-considerations.adoc#nfs-considerations[NFS considerations]
+* Start mounts at 256K `rsize`/`wsize`, then compare 1MB. The server maximum is 1MB. xref:appendix-nfs-considerations.adoc#wsize-rsize-recommendation[Wsize and rsize]
+* With pNFS, use nconnect *or* session trunking — not both. xref:appendix-nfs-considerations.adoc#comparing-nconnect-and-nfs-session-trunking[Comparing nconnect and session trunking]
+* Keep default close-to-open (`cto`). Use `nocto` and a long `actimeo` only for static, read-mostly data. xref:appendix-nfs-considerations.adoc#cto-recommendation[Close-to-open]
+* For sequential reads, compare default readahead with about 15× `rsize`. Leave the default for random IOPS tests. xref:appendix-nfs-considerations.adoc#nfs-readahead[NFS readahead]
+* Match the NFSv4 ID domain on clients and the NFS server. xref:setup.adoc#nfs-server-configuration[Setup: NFS server]
+* Copy mount and verification commands from one place. xref:benchmark-configuration-reference.adoc#nfs-mount-commands[NFS mount commands]
+
+[[general-guidance-network]]
+== Network
+
+* Make every SVM data LIF routable to every client (required for pNFS and session trunking). xref:setup.adoc#networking-requirements[Setup: Networking] and xref:test-07-08-performance-testing-considerations.adoc#storage-network-considerations[Storage network considerations]
+* Plan at least two data IPs per node for trunking; pNFS still needs at least one routable IP per node (maximum 16 per node per SVM). xref:appendix-nfs-considerations.adoc#what-is-nfs-session-trunking[Session trunking]
+* Use jumbo frames (MTU 9000) end to end and LACP-bonded ports on the storage nodes. xref:test-07-08-performance-testing-considerations.adoc#storage-network-considerations[Storage network considerations]
+* For RoCE/RDMA, enable PFC priority 3 and a lossless path; mis-set QoS raises latency. xref:test-07-08-performance-testing-considerations.adoc#client-network-considerations[Client network considerations]
+* Spread client mounts across data IPs (DNS round-robin or equivalent). xref:test-07-08-performance-testing-considerations.adoc#storage-network-considerations[Storage network considerations]
+* Create and validate data, management, and intercluster LIFs before load. xref:test-03-create-network-interfaces.adoc[Test 3: Create network interfaces]
+
+[[general-guidance-ontap]]
+== ONTAP
+
+* Start on ONTAP 9.19.1 or later. Use FlexGroup volumes so the working set can spread across nodes. xref:setup.adoc#setup-required[Setup] and xref:datasets-workloads.adoc#volume-type-recommendation[Volume type]
+* Enable NFSv3 and NFSv4.1, pNFS, session trunking, 64-bit file IDs, 1MB `-tcp-max-xfer-size`, and hide `.snapshot`. Disable NFSv4.0. xref:benchmark-configuration-reference.adoc#ontap-nfs-server-command[NFS server command] and xref:test-07-08-performance-testing-considerations.adoc#nfs-server-recommendations[NFS server recommendations]
+* Open the data export only to test clients (`superuser`/`anon` as required). Keep vsroot readable for path traversal. xref:test-07-08-performance-testing-considerations.adoc#nfs-export-policy-configuration[Export policy]
+* Create the benchmark FlexGroup with `snapshot-policy none`, high file/dir limits, and `snapdir-access false`. xref:benchmark-configuration-reference.adoc#ontap-volume-commands[Benchmark FlexGroup volume]
+* Disable storage efficiency only for isolated synthetic/uncompressible runs; restore it afterward. xref:test-07-08-performance-testing-considerations.adoc#disable-storage-efficiencies[Disable storage efficiencies]
+* Use `-workflow data` only when many large files land in one folder; it is not a production default. Disable granular data for VMware on FlexGroup. xref:test-07-08-performance-testing-considerations.adoc#special-considerations----flexgroup-volumes[FlexGroup special considerations]
+* A manual snapshot of the *empty* volume can restore the volume after a run; client deletes and overwrites still grow that snapshot — watch capacity. xref:test-08-customer-workload-benchmarks.adoc#overwrites-and-deletes[Overwrites and deletes] and xref:test-07-08-performance-testing-considerations.adoc#why-snapshots-are-disabled[Why snapshots are disabled]
+* Size the volume for capacity *and* inodes. xref:datasets-workloads.adoc#ontap-limits-considerations[ONTAP limits]
+* Capture ONTAP samples with every measured point. xref:benchmark-configuration-reference.adoc#statistics-capture-commands[Statistics capture] and xref:test-09-performance-monitoring.adoc[Test 9]
+
+[[general-guidance-benchmark]]
+== Benchmark tests
+
+* Use a dedicated FlexGroup and mount path. Never point write/delete recipes at production data. xref:appendix-synthetic-benchmarks.adoc[Synthetic benchmarks] and xref:benchmark-configuration-reference.adoc[Benchmark configuration reference]
+* Choose SPEC SFS, MLCommons, or synthetic from the objective, not from habit. xref:test-08-customer-workload-benchmarks.adoc[Test 8]
+* Set generator `bs` to the application I/O size. NFS still splits at `rsize`/`wsize` (max 1MB). Do not treat 4–16MB `bs` as an NFS throughput corner. xref:test-08-customer-workload-benchmarks.adoc#application-block-sizes-for-benchmarks[Application block sizes]
+* Throughput ≈ IOPS × I/O size. Report IOPS/latency for 4K/8K and GB/s for 256K/1MB. Stop a ramp when p99 climbs and throughput flattens. xref:appendix-nfs-considerations.adoc#throughput-iops-latency[Throughput, IOPS, and latency]
+* Measure first-write, overwrite, and delete in separate phases unless the application mixes them. xref:test-08-customer-workload-benchmarks.adoc#overwrites-and-deletes[Overwrites and deletes]
+* Start at 1–2 jobs per client; ramp jobs and client count independently (1, 2, 4, 8, 16). Change one variable at a time. xref:test-08-customer-workload-benchmarks.adoc[Test 8 procedure] and xref:appendix-synthetic-benchmarks.adoc#synthetic-concurrency[Jobs per run]
+* Label direct I/O vs buffered, warm vs cold, and cache-consistency options. They are different tests. xref:appendix-nfs-considerations.adoc#latency-tweaks[How benchmark tweaks affect latency]
+* SPEC SFS uses a mixed op stream (EDA frontend includes create, overwrite, and unlink). Do not compare it to a single sequential first-write. xref:appendix-spec-sfs.adoc[SPEC SFS 2020]
+* MLCommons training and checkpointing are sequential GB/s problems, not 4K IOPS tests. xref:appendix-mlcommons.adoc[MLCommons]
+* Repeat final points and keep configuration metadata with the results. xref:appendix-synthetic-benchmarks.adoc#synthetic-test-method[Synthetic test method]
+* Read the rationale before changing NFS, volume, or efficiency defaults. xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations]
+
+// navigation-links:start
+[cols="1,1",frame=none,grid=none]
+|===
+| xref:setup.adoc[< Previous]
+>| xref:appendix-nfs-considerations.adoc[Next >]
+|===
+// navigation-links:end

@@ -11,7 +11,7 @@ xref:appendix.adoc[<- Back to Appendix]
 Recommended NFS mount options, fstab configuration, automounter setup, 64-bit file IDs, and pNFS/session trunking validation.
 
 
-*Note:* For copy-ready client, mount, ONTAP, and statistics commands, see xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference]. For benchmark rationale, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations].
+*Note:* For a short checklist, see xref:general-guidance.adoc[General guidance]. For copy-ready client, mount, ONTAP, and statistics commands, see xref:benchmark-configuration-reference.adoc[Benchmark Configuration Reference]. For benchmark rationale, see xref:test-07-08-performance-testing-considerations.adoc[Performance testing considerations].
 
 
 [[nfs-considerations]]
@@ -436,7 +436,7 @@ AFX::*> pnfs devices invalidate -global-device-table-id *
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:setup.adoc[< Previous]
+| xref:general-guidance.adoc[< Previous]
 >| xref:benchmark-configuration-reference.adoc[Next >]
 |===
 // navigation-links:end
