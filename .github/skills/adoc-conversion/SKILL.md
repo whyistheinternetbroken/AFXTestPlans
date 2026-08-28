@@ -26,8 +26,7 @@ Convert a DOCX document into a multi-file AsciiDoc set with consistent navigatio
    - `:icons: font`
    - `:source-highlighter: highlight.js`
 4. Create landing pages:
-   - `TestPlan/overview.adoc` as the document start (table of contents, feedback, version)
-   - `README.adoc` at the repo root only because GitHub always renders a README; keep it a short pointer to `TestPlan/overview.adoc`
+   - `README.adoc` at the repo root as the document start (table of contents, feedback, version)
    - Place all other AsciiDoc pages and the `images/` folder under `TestPlan/`
    - Keep repo root lean: prefer only `README.adoc`, `TestPlan/`, and `Scripts/` (plus unavoidable `.github` / `.gitignore`)
    - PDF export tooling lives under `Scripts/ExportPDF/` (`book.adoc`, export scripts, `PDF-EXPORT.adoc`, `Gemfile`)
@@ -45,7 +44,7 @@ Convert a DOCX document into a multi-file AsciiDoc set with consistent navigatio
 - Keep *Datasets and workloads* through *ONTAP limitations* together unless user requests a different split.
 - Keep performance test configuration details together in the performance test plan file.
 - Place scripts into a dedicated `scripts.adoc` page under `TestPlan/`.
-- From `README.adoc`, use `xref:TestPlan/<page>.adoc[...]`. From pages under `TestPlan/`, use peer `xref:<page>.adoc[...]` and `xref:overview.adoc[...]` for the document start.
+- From `README.adoc`, use `xref:TestPlan/<page>.adoc[...]`. From pages under `TestPlan/`, use peer `xref:<page>.adoc[...]` and `xref:../README.adoc[...]` for the document start.
 - Keep image paths as `images/...` relative to pages under `TestPlan/` (images live in `TestPlan/images/`).
 - Add NAS script references (for this repo, include:
   `https://github.com/whyistheinternetbroken/Benchmarking/tree/main/ONTAP`).
@@ -58,14 +57,13 @@ Convert a DOCX document into a multi-file AsciiDoc set with consistent navigatio
 
 ## Output checklist
 
-- [ ] `README.adoc` exists at repo root and points to `TestPlan/overview.adoc`
-- [ ] `TestPlan/overview.adoc` is the document start (TOC, feedback, version)
+- [ ] `README.adoc` exists at repo root as the document start (TOC, feedback, version)
 - [ ] All other `.adoc` files and `images/` live under `TestPlan/`
 - [ ] Every page has `:toc: left`
 - [ ] `TestPlan/test-plans.adoc` links all test pages
 - [ ] `TestPlan/appendix.adoc` links each appendix subsection page
 - [ ] `TestPlan/scripts.adoc` exists with NAS scripts link
-- [ ] Cross-links resolve (including `overview.adoc` as the document start)
+- [ ] Cross-links resolve (including `../README.adoc` back-links)
 - [ ] Any consolidation/conflict decisions are documented in notes
 
 ## Table formatting conventions

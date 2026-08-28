@@ -16,7 +16,7 @@ This section covers hardware requirements, client configurations, networking, an
 [[setup-required]]
 === Setup required
 
-Hardware installation and initial configuration documentation links can be found in xref:overview.adoc#documentation-requirements[Documentation requirements]. This test plan assumes that the initial setup and configuration has already been performed.
+Hardware installation and initial configuration documentation links can be found in xref:../README.adoc#documentation-requirements[Documentation requirements]. This test plan assumes that the initial setup and configuration has already been performed.
 
 *Note:* It is recommended that the AFX system starts no earlier than ONTAP version 9.19.1RC1. That release is the first release to support >16PB Storage Availability Zones and xref:feature-fabricpool.adoc[FabricPool]. If starting on an earlier release, then a cluster reinitialization (data wipe) would be required when moving to ONTAP 9.19.1 to gain support for those features. A reinitialization script is available at: xref:scripts.adoc#netapp-afx-reinitialization-script[NetApp AFX reinitialization script] (link:https://github.com/whyistheinternetbroken/AFX[GitHub]).
 
@@ -117,7 +117,7 @@ Use xref:benchmark-configuration-reference.adoc[Benchmark Configuration Referenc
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:overview.adoc[< Previous]
+| xref:../README.adoc[< Previous]
 >| xref:general-guidance.adoc[Next >]
 |===
 // navigation-links:end

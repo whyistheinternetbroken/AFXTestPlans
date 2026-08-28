@@ -9,10 +9,10 @@
 :title-page:
 :description: NetApp AFX Test Plan for ONTAP 9.19.1 (PDF export)
 
-// Master document for PDF export. Pages remain standalone under TestPlan/; this file only aggregates them.
+// Master document for PDF export. Pages remain standalone (README at repo root; the rest under TestPlan/). This file only aggregates them.
 // Build with: Scripts/ExportPDF/export-pdf.ps1  (or Scripts/ExportPDF/export-pdf.sh)
 
-include::../../TestPlan/overview.adoc[]
+include::../../README.adoc[]
 
 include::../../TestPlan/setup.adoc[]
 

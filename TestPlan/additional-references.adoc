@@ -49,6 +49,6 @@
 [cols="1,1",frame=none,grid=none]
 |===
 | xref:scripts.adoc[< Previous]
->| xref:overview.adoc[Next >]
+>| xref:../README.adoc[Next >]
 |===
 // navigation-links:end

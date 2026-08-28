@@ -6,7 +6,7 @@
 :source-highlighter: highlight.js
 :doctype: book
 
-xref:overview.adoc[<- Back to Overview]
+xref:../README.adoc[<- Back to Overview]
 
 The following sections provide supplemental reference information for this test plan.
 
