@@ -99,6 +99,7 @@ In general, snapshots in ONTAP are not detrimental to overall system performance
 == Mount options
 
 Mount options, in general, are variable depending on use cases. This section attempts to show a general use case mount option list that was used in our internal performance testing. If the NFS server is configured properly (see xref:setup.adoc#nfs-server-configuration[Setup: NFS Server Configuration]), clients will negotiate NFS version and transfer size automatically. For throughput tests, you can still set `wsize`/`rsize` explicitly as described in <<nfs-wsize-and-rsize>>.
+
 Base options (applies to all clients/scenaros):
 
 [source,console]
