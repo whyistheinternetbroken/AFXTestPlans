@@ -40,6 +40,8 @@ ONTAP characterization typically reports 8K random, 64K sequential, and 1MB sequ
 
 Pick the generator `bs` (or accept SPEC/MLCommons built-in sizes) first, then set the mount so it does not silently split that I/O. Start mounts at 256K and compare 1MB for throughput tests. Keep the mount at or above the application size for sequential work; do not expect a 1MB mount to change 4K/8K random results.
 
+Throughput (bytes/s) ≈ IOPS × I/O size. Use 4K/8K when you care about IOPS and per-op latency; use 256K/1MB when you care about GB/s. Average latency rises with concurrency; stop a ramp when p99 or average latency climbs materially and throughput flattens. How jobs, `nconnect`/trunking, direct I/O, readahead, and other knobs move latency is in xref:appendix-nfs-considerations.adoc#throughput-iops-latency[Throughput, IOPS, and latency] and xref:appendix-nfs-considerations.adoc#latency-tweaks[How benchmark tweaks affect latency].
+
 [cols="<1",width="100%"]
 |===
 a| *Test procedure:*

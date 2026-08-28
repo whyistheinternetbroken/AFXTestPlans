@@ -176,6 +176,55 @@ ONTAP performance characterization commonly reports a "four corners" set: 8K ran
 | 1MB | ONTAP NFS maximum transfer size; used for high-throughput sequential reads/writes and large AI files. | AI/ML training ingest and checkpoint bursts; media/VDA sequential streams; AFX 1MB sequential characterization
 |===
 
+[[throughput-iops-latency]]
+===== Throughput, IOPS, and latency
+
+For a given access pattern, these three metrics move together:
+
+Throughput (bytes/s) ≈ IOPS × application I/O size
+
+So a 1MB sequential stream at 1,000 IOPS is about 1 GB/s, while 8K random at 1,000 IOPS is only about 8 MB/s. Report the metric that matches the question: IOPS and latency for small random/OLTP; GB/s for sequential AI, media, and backend EDA.
+
+Block size effects:
+
+* *Small (4K/8K):* highest IOPS potential, lowest bytes moved per operation, lowest per-operation data-transfer time. Limited by RPC rate, metadata, lock/consistency traffic, and client/server CPU rather than NIC bandwidth.
+* *Medium (32K/64K):* mixed. Often the first size where sequential throughput becomes interesting while IOPS remain visible.
+* *Large (256K/1MB):* highest throughput potential, fewest IOPS for the same bandwidth, longer time to complete each operation. Limited by NIC, disk/WAFL throughput, and per-RPC service time.
+
+Latency behavior in general:
+
+* Each NFS operation pays a floor of network round-trip plus server queueing and media time. More RPCs (small `bs`, or a large `bs` split by a small `rsize`) add that floor more often.
+* Average latency usually rises as concurrency (jobs, threads, `iodepth`, SPEC `LOAD`) rises. Outstanding I/O ≈ IOPS × latency; when the system is busy, new requests wait.
+* Tail latency (p99/max) often rises earlier than the average. Treat a material jump in p99 as a stop signal even if average GB/s is still climbing.
+* Client-reported latency is not the same as ONTAP protocol latency. Cache hits, readahead, and `nocto` make the application look fast while storage counters stay quiet. Direct I/O and cold runs move the number closer to storage.
+* Reads and writes differ: sequential reads can be helped by readahead (lower apparent latency, higher throughput); writes wait on stability, slot limits, and server write path. Metadata ops (getattr, lookup, create) are latency-sensitive even when byte throughput is low.
+
+[[latency-tweaks]]
+===== How benchmark tweaks affect latency
+
+Change one variable at a time. Capture average, p99, IOPS, and throughput at each point.
+
+[cols="1,2,2"]
+|===
+| Tweak | Typical throughput / IOPS effect | Typical latency effect
+| Larger application `bs` | Throughput up, IOPS down for the same concurrency | Per-operation latency up (more data per request). Application wait for a single I/O can grow even when GB/s improves
+| Smaller application `bs` | IOPS up, throughput down | Per-operation latency down; aggregate application progress can still be worse because more RPCs and more queueing
+| Mount `rsize`/`wsize` below application `bs` | More NFS ops, extra CPU/network overhead, often lower throughput | Extra RTT per application I/O; average and tail latency usually worse for sequential work
+| Mount `rsize`/`wsize` at 256K then 1MB | Sequential throughput often improves | Per-RPC service time may rise; RPC count falls. Compare both; do not assume 1MB is always lower latency
+| More jobs / threads / `iodepth` / SPEC `LOAD` | Throughput and IOPS rise until a plateau | Average latency climbs; p99 often climbs first. Stop when latency rises materially at the same time throughput flattens
+| More clients (same jobs per client) | Aggregate throughput/IOPS scale if the cluster has headroom | Per-client latency can stay flat longer than stacking jobs on one host. Hot spots (one LIF, one constituent) raise latency without raising cluster GB/s
+| `nconnect` or session trunking | More parallel TCP paths; sequential throughput often up | Can hide per-connection queueing. Combining both with pNFS can leave odd paths and inconsistent latency
+| pNFS | Data locality; large sequential reads/writes often faster | Remote layout or missing LIFs add latency. Validate with pNFS counters rather than assuming locality
+| Direct I/O | Throughput/IOPS reflect storage more closely | Higher, more honest storage latency. Buffered I/O can look fast from cache and is a different test
+| Client readahead (15× `rsize`) | Sequential read throughput often up | Sequential read latency can drop; random-read latency and wasted reads can get worse — leave default for random/IOPS tests
+| `nocto` / large `actimeo` | Less GETATTR/OPEN traffic; metadata-heavy throughput can rise | Lower metadata latency for static data; hidden stale-cache behavior, not a storage improvement
+| RDMA | Higher throughput, fewer CPU cycles per byte | Lower per-op latency when the fabric is healthy. Mis-set PFC/DSCP raises latency sharply
+| Storage efficiency off (benchmark-only) | Can raise raw write throughput for uncompressible data | Can lower write-path CPU latency. Do not compare to a production efficiency-on baseline without labeling it
+| `--workflow data` / even FlexGroup placement | More even constituent use; better aggregate GB/s in some tests | Possible extra remote-placement latency versus default locality
+|===
+
+Record block size, mount transfer size, concurrency, cache condition, and both client and ONTAP latency. A result that quotes only GB/s or only IOPS is incomplete.
+
 [[close-to-open-consistency-and-cache-attribute-timers]]
 ==== Close-to-open consistency and attribute caching
 

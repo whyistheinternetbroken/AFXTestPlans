@@ -233,6 +233,8 @@ How the workloads hit storage (file sizes are samples or checkpoint payloads, no
 
 AI/ML training is typically read-heavy sequential ingest of files, with shuffling between files (sequential within a file, random across files) and large sequential checkpoint writes. That is the reverse of classic OLTP (8K random). Use 4K/8K synthetic tests only when you need a four-corners contrast; they do not represent MLPerf training. See xref:appendix-nfs-considerations.adoc#typical-benchmark-block-sizes[typical sizes] and <<read-size-histogram>>.
 
+Training and checkpointing are throughput problems (GB/s to keep accelerators busy, or to finish a checkpoint quickly). IOPS at 4K/8K is the wrong headline metric. Apparent training latency includes GPU `sleep()` plus storage; a cache-warm run can look like low storage latency while ONTAP counters show little READ traffic. Raise `--num-accelerators` only until sample rate plateaus or storage/client latency (and p99 if you capture it) climbs. VectorDB is closer to IOPS/latency. Details: xref:appendix-nfs-considerations.adoc#throughput-iops-latency[Throughput, IOPS, and latency] and xref:appendix-nfs-considerations.adoc#latency-tweaks[How benchmark tweaks affect latency].
+
 [[mlcommons-dataset-and-cache-controls]]
 === Dataset and cache controls
 

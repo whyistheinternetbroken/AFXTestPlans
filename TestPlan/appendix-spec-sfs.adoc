@@ -153,6 +153,8 @@ How the EDA profiles relate to application I/O:
 
 For synthetic isolation of one size, use xref:appendix-synthetic-benchmarks.adoc#synthetic-application-block-sizes[elbencho/fio block-size recipes] instead of editing SPEC workload YAML (editing YAML makes a run non-publishable). Typical application sizes (4K/8K databases, 64K SQL extents, 256K/1MB sequential NAS) are listed in xref:appendix-nfs-considerations.adoc#typical-benchmark-block-sizes[NFS: Typical sizes].
 
+SPECstorage reports business-metric load against *response time*. That response time is application-visible latency for the mixed op stream. As `LOAD` increases, throughput (oprate) rises and response time rises. A useful engineering stop is when response time increases sharply while oprate flattens — the same pattern as p99 climbing on a fio ramp. Frontend-heavy mix is IOPS- and metadata-latency bound; backend-heavy mix is sequential throughput bound and more sensitive to `rsize`/`wsize` and pNFS. See xref:appendix-nfs-considerations.adoc#throughput-iops-latency[Throughput, IOPS, and latency].
+
 
 [[frontend-eda-workload-breakdown----specsfs-2020]]
 === Frontend EDA workload breakdown -- SPECSFS 2020

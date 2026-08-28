@@ -85,6 +85,15 @@ Typical sizes for these recipes (ONTAP four-corners practice is 8K random, 64K s
 
 The recipes below use 1MB for sequential throughput and 4K/8K for random IOPS so those corners stay distinct. Do not mix a 4K `bs` with a "throughput" label. For application examples and mount interaction, see xref:appendix-nfs-considerations.adoc#typical-benchmark-block-sizes[NFS: Typical sizes] and xref:test-08-customer-workload-benchmarks.adoc#application-block-sizes-for-benchmarks[Test 8].
 
+[[synthetic-throughput-iops-latency]]
+==== Throughput, IOPS, and latency
+
+* Sequential 1MB: report GB/s and latency percentiles. IOPS will be relatively low; that is expected.
+* Random 4K/8K: report IOPS plus average and p99 latency. GB/s will be relatively low; that is expected.
+* Random 1MB: a throughput-oriented random test, not an IOPS corner. Latency per op is higher than 4K/8K at the same queue depth.
+
+Raising `-t`, `numjobs`, or `iodepth` increases outstanding I/O. Throughput/IOPS should rise until a plateau; latency, especially p99, will rise before or at that plateau. Keep `ramp_time` (fio) or a warm-up so startup is not counted as latency. Direct I/O (`--direct` / `direct=1`) raises observed latency versus a warm buffered run because it skips client cache. Enable elbencho `--latpercent` or fio latency output on every measured run. Full tweak list: xref:appendix-nfs-considerations.adoc#latency-tweaks[How benchmark tweaks affect latency].
+
 For warm runs, deliberately retain cache state and perform a documented warm-up. For cold runs, use a site-approved cache-reset method and document it; do not claim a cold run solely because the benchmark process restarted.
 
 [[elbencho-recipes]]
