@@ -29,8 +29,7 @@ Using the general NetApp support avenues is the preferred method of reporting an
 |===
 | Version | Date | Summary
 | 1.0 | July 2026 | Initial release
-| 1.1 | August 2026 | Consolidated NFS/client guidance, added copy-ready benchmark configuration and statistics commands, expanded SPEC SFS and MLCommons workflows, and added elbencho/mdtest/fio recipes
-| 1.2 | August 2026 | Added a general-guidance summary for client, network, ONTAP, and benchmark tests
+| 1.1 | August 2026 | Consolidated NFS/client guidance; copy-ready benchmark configuration and statistics commands; SPEC SFS, MLCommons, and elbencho/mdtest/fio workflows; application block-size, overwrite/delete, and latency guidance; general-guidance checklist (client, network, ONTAP, benchmark tests)
 |===
 
 [[table-of-contents]]
