@@ -102,7 +102,7 @@ For warm runs, deliberately retain cache state and perform a documented warm-up.
 
 A write into a new or empty file is a first write. A write over existing data is an overwrite and must free the previous blocks, so GB/s is usually lower and write latency higher than the fill of the same `bs` and concurrency. Random `-w` on pre-created files is an overwrite.
 
-Do not delete during a measured write unless you are testing that interference. Elbencho `-F`/`-D`, mdtest unlink, and filesystem `rm` belong in a cleanup phase after the result is captured. Wait for space and inode reclaim, or use a new directory, before the next fill. Overwrite comparisons reuse the same pre-created files.
+Do not delete during a measured write unless you are testing that interference. Elbencho `-F`/`-D`, mdtest unlink, and filesystem `rm` belong in a cleanup phase after the result is captured, or skip them by restoring an empty-volume baseline snapshot. Wait for space and inode reclaim, or use a new directory or snapshot restore, before the next fill. Overwrite comparisons reuse the same pre-created files. Client deletes and overwrites grow any snapshot that is present, including that baseline, so watch capacity.
 
 Application-level summary: xref:test-08-customer-workload-benchmarks.adoc#overwrites-and-deletes[Test 8: Overwrites and deletes].
 

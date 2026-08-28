@@ -91,7 +91,7 @@ AFX::> set diag; vol modify -vserver [SVM] -volume [FlexGroup name] -granular-da
 In general, snapshots in ONTAP are not detrimental to overall system performance. However, in benchmarking, we would disable snapshots for two reasons:
 
 * Granular control over the environment -- We can create snapshots when we want to create them to better control the scenarios when snapshots are created and make it easier to measure their impact.
-* Data churn -- Many benchmark tests will create a lot of data and then subsequently overwrite or delete that data, which will rapidly grow the size of any existing snapshots on the volume. To avoid space allocation issues, we disable snapshots. Overwrite and delete also change the write path versus a first fill; isolate those phases as described in xref:test-08-customer-workload-benchmarks.adoc#overwrites-and-deletes[Test 8: Overwrites and deletes].
+* Data churn -- Many benchmark tests will create a lot of data and then subsequently overwrite or delete that data, which will rapidly grow the size of any existing snapshots on the volume. To avoid space allocation issues, we disable the snapshot *policy*. A single manual snapshot of the *empty* volume is useful as a restore point so you can return the volume to empty without client-side deletes; see xref:test-08-customer-workload-benchmarks.adoc#overwrites-and-deletes[Test 8: Overwrites and deletes]. If clients still delete or overwrite files while that snapshot exists, the snapshot grows — watch capacity. Overwrite and delete also change the write path versus a first fill; isolate those phases as described in the same Test 8 section.
 
 *Note:* Snapdir access is also disabled to prevent unwanted filesystem crawls across snapshots.
 
