@@ -42,6 +42,8 @@ include::../../TestPlan/test-06-api-testing.adoc[]
 
 include::../../TestPlan/appendix-rest-api.adoc[]
 
+include::../../TestPlan/appendix-rest-api-personality-differences.adoc[]
+
 include::../../TestPlan/test-07-customer-workload-real-data.adoc[]
 
 include::../../TestPlan/test-08-customer-workload-benchmarks.adoc[]

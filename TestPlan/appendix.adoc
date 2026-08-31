@@ -34,6 +34,9 @@ The supplemental material is grouped by when it is most useful in the primary re
 
 | xref:appendix-rest-api.adoc[REST API Examples]
 | ONTAP REST API examples: authentication, FlexGroup creation, deletion, network interfaces, SnapMirror, NFS server config, export policy rules
+
+| xref:appendix-rest-api-personality-differences.adoc[REST API personality differences]
+| ONTAP 9.20.1 Swagger diff between AFX/OAM/disaggregated ONTAP and Unified ONTAP; lists endpoints available in one personality only
 |===
 
 === Performance benchmark references
