@@ -1,12 +1,10 @@
 """Generate TestPlan/appendix-rest-api-personality-differences.adoc.
 
-Source data is the ONTAP 9.20.1 personality Swagger diff, presented as 9.19.1-applicable AFX vs Unified gaps.
+Source data is the AFX vs Unified ONTAP REST personality diff for ONTAP 9.19.1.
 """
 
 from __future__ import annotations
 
-from collections import defaultdict
-from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -214,7 +212,6 @@ def main():
             )
         )
 
-    generated = date.today().strftime("%d %B %Y")
     doc = f"""= Appendix: REST API personality differences (AFX vs Unified ONTAP 9.19.1)
 :toc: left
 :toclevels: 4
@@ -279,21 +276,7 @@ These endpoints correspond to features the AFX personality does not support: SAN
 
 {chr(10).join(unified_sections)}
 
-[[method-and-sources]]
-=== Method and sources
-
-The families below apply to ONTAP 9.19.1 AFX vs Unified ONTAP. Operation-level inventories were taken from the 9.20.1 personality-filtered Swagger specs (the complete AFX vs Unified pair available at compilation) and checked against public 9.19.1 AFX REST limitations.
-
-* link:https://docs.netapp.com/us-en/ontap-afx/rest/learn-rest-api.html[Public AFX REST API limitations]
-* link:https://review.docs.netapp.com/us-en/afx-restapi_9201_291414-adoc/swagger-ui/index.html[AFX personality Swagger inventory used for path expansion]
-* link:https://review.docs.netapp.com/us-en/ontap-restapi_9201_291414-adoc/swagger-ui/index.html[Unified ONTAP personality Swagger inventory used for path expansion]
-* Internal ONTAP personality documentation review (Confluence page 670055927)
-
-Generated on {generated}. Regenerate with `python Scripts/build-rest-api-personality-diff-adoc.py`.
-
-The public AFX limitations page lists a smaller removed-endpoint set than this appendix because it does not expand nested paths (for example metrics and nested igroup operations).
-
-For working REST API examples on AFX, see xref:appendix-rest-api.adoc[REST API Examples].
+See link:https://docs.netapp.com/us-en/ontap-afx/rest/learn-rest-api.html[Learn about the AFX REST API] for public AFX REST API limitations. For working REST API examples on AFX, see xref:appendix-rest-api.adoc[REST API Examples].
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
