@@ -10,6 +10,8 @@ xref:appendix.adoc[← Back to Appendix]
 
 ONTAP REST API examples for authentication, FlexGroup volume creation, deletion, network interfaces, SnapMirror, NFS server configuration, and export policy rules.
 
+For endpoints that exist on Unified ONTAP but not AFX (and the reverse), see xref:appendix-rest-api-personality-differences.adoc[REST API personality differences].
+
 
 [[rest-api-examples-for-testing]]
 == REST API examples for testing.

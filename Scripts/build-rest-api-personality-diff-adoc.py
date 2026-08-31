@@ -1,6 +1,6 @@
 """Generate TestPlan/appendix-rest-api-personality-differences.adoc.
 
-Source data matches the ONTAP 9.20.1 Swagger personality diff (AFX vs Unified).
+Source data is the ONTAP 9.20.1 personality Swagger diff, presented as 9.19.1-applicable AFX vs Unified gaps.
 """
 
 from __future__ import annotations
@@ -215,7 +215,7 @@ def main():
         )
 
     generated = date.today().strftime("%d %B %Y")
-    doc = f"""= Appendix: REST API personality differences (AFX vs Unified ONTAP)
+    doc = f"""= Appendix: REST API personality differences (AFX vs Unified ONTAP 9.19.1)
 :toc: left
 :toclevels: 4
 :sectnums:
@@ -225,7 +225,7 @@ def main():
 
 xref:appendix.adoc[<- Back to Appendix]
 
-Operation-level REST API differences between the AFX/OAM/disaggregated ONTAP personality and Unified ONTAP for ONTAP 9.20.1. Only endpoints with at least one HTTP operation present in one personality and absent from the other are listed.
+Operation-level REST API differences between the AFX/OAM/disaggregated ONTAP personality and Unified ONTAP for ONTAP 9.19.1. Only endpoints with at least one HTTP operation present in one personality and absent from the other are listed.
 
 
 [[rest-api-personality-differences]]
@@ -235,7 +235,7 @@ This appendix supports xref:test-06-api-testing.adoc[Test 6: API testing]. Use i
 
 AFX, OAM, and disaggregated ONTAP refer to the same NAS and S3 focused personality in this document. Common REST APIs shared by both personalities are intentionally excluded.
 
-NOTE: This is a specification comparison based on generated OpenAPI inventories, not a live runtime probe. An endpoint listed here may still be restricted at runtime (for example, diagnostic privilege only).
+NOTE: This is a specification comparison, not a live runtime probe. An endpoint listed here may still be restricted at runtime (for example, diagnostic privilege only). On 9.19.1 AFX, some Unified-only families such as `/storage/aggregates` may still appear in on-box Swagger while not supporting Unified aggregate CRUD.
 
 [[summary-metrics]]
 === Summary
@@ -282,16 +282,16 @@ These endpoints correspond to features the AFX personality does not support: SAN
 [[method-and-sources]]
 === Method and sources
 
-Operation-level inventories were extracted from the embedded OpenAPI specification in each personality's staged Swagger UI and diffed by HTTP method plus path.
+The families below apply to ONTAP 9.19.1 AFX vs Unified ONTAP. Operation-level inventories were taken from the 9.20.1 personality-filtered Swagger specs (the complete AFX vs Unified pair available at compilation) and checked against public 9.19.1 AFX REST limitations.
 
-* link:https://review.docs.netapp.com/us-en/afx-restapi_9201_291414-adoc/swagger-ui/index.html[AFX 9.20.1 Swagger inventory]
-* link:https://review.docs.netapp.com/us-en/ontap-restapi_9201_291414-adoc/swagger-ui/index.html[Unified ONTAP 9.20.1 Swagger inventory]
 * link:https://docs.netapp.com/us-en/ontap-afx/rest/learn-rest-api.html[Public AFX REST API limitations]
-* Internal ONTAP 9.20.1 personality documentation review (Confluence page 670055927)
+* link:https://review.docs.netapp.com/us-en/afx-restapi_9201_291414-adoc/swagger-ui/index.html[AFX personality Swagger inventory used for path expansion]
+* link:https://review.docs.netapp.com/us-en/ontap-restapi_9201_291414-adoc/swagger-ui/index.html[Unified ONTAP personality Swagger inventory used for path expansion]
+* Internal ONTAP personality documentation review (Confluence page 670055927)
 
 Generated on {generated}. Regenerate with `python Scripts/build-rest-api-personality-diff-adoc.py`.
 
-The public AFX limitations page lists a smaller removed-endpoint set than this appendix because it reflects an earlier release. The 9.20.1 inventories above are the current source of truth for this comparison.
+The public AFX limitations page lists a smaller removed-endpoint set than this appendix because it does not expand nested paths (for example metrics and nested igroup operations).
 
 For working REST API examples on AFX, see xref:appendix-rest-api.adoc[REST API Examples].
 // navigation-links:start

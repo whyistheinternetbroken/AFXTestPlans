@@ -48,7 +48,7 @@ All tests have a 'Comments' section. It is appreciated if any comments -- even t
 | xref:test-05-volume-management.adoc[Test 5]
 
 | Test 6: API testing
-| Validate ONTAP REST API for customer automation workflows
+| Validate ONTAP REST API for customer automation; see xref:appendix-rest-api.adoc[REST API Examples] and xref:appendix-rest-api-personality-differences.adoc[REST API personality differences]
 | xref:test-06-api-testing.adoc[Test 6]
 
 | Test 7: Customer workload -- real data

@@ -33,6 +33,7 @@ Using the general NetApp support avenues is the preferred method of reporting an
 | Version | Date | Summary
 | 1.0 | July 2026 | Initial release
 | 1.1 | August 2026 | Consolidated NFS/client guidance; copy-ready benchmark configuration and statistics commands; SPEC SFS, MLCommons, and elbencho/mdtest/fio workflows; application block-size, overwrite/delete, and latency guidance; general-guidance checklist (client, network, ONTAP, benchmark tests)
+| 1.2 | August 2026 | REST API personality differences appendix (AFX vs Unified ONTAP 9.19.1); Test 6 and appendix index links for expected SAN, MetroCluster, aggregate, and SAZ gaps
 |===
 
 [[table-of-contents]]
@@ -95,6 +96,9 @@ Read the test plan in this order. Start with setup, the general-guidance checkli
 
 | xref:TestPlan/appendix-rest-api.adoc[REST API examples]
 | Cookbook of REST calls used with Test 6
+
+| xref:TestPlan/appendix-rest-api-personality-differences.adoc[REST API personality differences]
+| Endpoints present in AFX or Unified ONTAP only (ONTAP 9.19.1)
 
 | xref:TestPlan/test-07-customer-workload-real-data.adoc[Test 7: Customer workload -- real data]
 | Production datasets on AFX
@@ -230,6 +234,7 @@ New features in this release of ONTAP:
 NetApp documentation for NetApp AFX can be found here:
 
 * link:https://docs.netapp.com/us-en/ontap-afx/[NetApp AFX general documentation]
+* link:https://docs.netapp.com/us-en/ontap-afx/rest/learn-rest-api.html[Learn about the AFX REST API]
 * link:https://docs.netapp.com/us-en/ontap-technical-reports/afx/afx-learn-about.html[NetApp AFX technical reports]
 * xref:TestPlan/additional-references.adoc[Additional references] (Optional)
 

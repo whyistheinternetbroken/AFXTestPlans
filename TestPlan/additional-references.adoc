@@ -10,6 +10,14 @@
 [[additional-references]]
 == Additional references
 
+=== NetApp ONTAP REST API and AFX
+
+* link:https://docs.netapp.com/us-en/ontap-afx/rest/learn-rest-api.html[Learn about the AFX REST API]
+* link:https://docs.netapp.com/us-en/ontap-afx/rest/api-reference.html[REST API reference for AFX storage systems]
+* link:https://docs.netapp.com/us-en/ontap-restapi/[ONTAP REST API (Unified ONTAP)]
+* xref:appendix-rest-api.adoc[REST API Examples] (this test plan)
+* xref:appendix-rest-api-personality-differences.adoc[REST API personality differences] (this test plan)
+
 === NetApp ONTAP and NFS
 
 * link:https://www.netapp.com/media/10720-tr-4067.pdf[TR-4067: NFS best practice and implementation guide for ONTAP]

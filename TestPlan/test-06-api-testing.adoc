@@ -29,7 +29,7 @@ a| *Test procedure:*
 a| *Expected outcome(s):*
 
 * REST API calls used with unified ONTAP are tested.
-* The same REST API calls are tested against NetApp AFX and are successful, with the exception of SAN-related and aggregate-related calls.
+* The same REST API calls are tested against NetApp AFX and are successful, except for personality-specific gaps listed in xref:appendix-rest-api-personality-differences.adoc[REST API personality differences] (SAN, NVMe, Fibre Channel, MetroCluster, aggregates, LUNs, namespaces, and AFX-only storage availability zone endpoints).
 |===
 
 // navigation-links:start

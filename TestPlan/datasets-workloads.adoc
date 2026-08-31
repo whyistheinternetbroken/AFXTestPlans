@@ -134,7 +134,8 @@ To create a FlexGroup volume in System Manager:
 * Select "High throughput" to create a FlexGroup
 
 To leverage REST API, see:
-xref:appendix-rest-api.adoc[REST API Examples]
+xref:appendix-rest-api.adoc[REST API Examples],
+xref:appendix-rest-api-personality-differences.adoc[REST API personality differences],
 and the link:https://docs.netapp.com/us-en/ontap-afx/rest/api-reference.html[REST API Reference].
 
 [[s3-specific-features]]

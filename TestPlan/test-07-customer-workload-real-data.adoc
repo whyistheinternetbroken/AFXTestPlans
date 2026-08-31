@@ -40,7 +40,7 @@ a| *Expected outcome(s):*
 // navigation-links:start
 [cols="1,1",frame=none,grid=none]
 |===
-| xref:appendix-rest-api.adoc[< Previous]
+| xref:appendix-rest-api-personality-differences.adoc[< Previous]
 >| xref:test-08-customer-workload-benchmarks.adoc[Next >]
 |===
 // navigation-links:end
