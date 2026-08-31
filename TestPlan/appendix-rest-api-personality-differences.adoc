@@ -8,7 +8,7 @@
 
 xref:appendix.adoc[<- Back to Appendix]
 
-Operation-level REST API differences between the AFX/OAM/disaggregated ONTAP personality and Unified ONTAP for ONTAP 9.19.1. Only endpoints with at least one HTTP operation present in one personality and absent from the other are listed.
+Operation-level REST API differences between the AFX personality and Unified ONTAP for ONTAP 9.19.1. Only endpoints with at least one HTTP operation present in one personality and absent from the other are listed.
 
 
 [[rest-api-personality-differences]]
@@ -16,9 +16,7 @@ Operation-level REST API differences between the AFX/OAM/disaggregated ONTAP per
 
 This appendix supports xref:test-06-api-testing.adoc[Test 6: API testing]. Use it when validating customer automation against NetApp AFX and comparing expected gaps with unified ONTAP behavior.
 
-AFX, OAM, and disaggregated ONTAP refer to the same NAS and S3 focused personality in this document. Common REST APIs shared by both personalities are intentionally excluded.
-
-NOTE: This is a specification comparison, not a live runtime probe. An endpoint listed here may still be restricted at runtime (for example, diagnostic privilege only). On 9.19.1 AFX, some Unified-only families such as `/storage/aggregates` may still appear in on-box Swagger while not supporting Unified aggregate CRUD.
+Common REST APIs shared by both personalities are intentionally excluded.
 
 [[summary-metrics]]
 === Summary
@@ -91,7 +89,7 @@ NOTE: This is a specification comparison, not a live runtime probe. An endpoint 
 |===
 
 [[available-only-in-afx]]
-=== Available only in AFX / OAM / disaggregated ONTAP
+=== Available only in AFX
 
 These endpoints reflect the disaggregated storage model, where capacity is presented as storage availability zones rather than user-visible aggregates.
 
